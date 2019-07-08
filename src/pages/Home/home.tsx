@@ -1,16 +1,17 @@
 import * as React from 'react'
 import logo from './logo.svg'
-import { IFarmState } from './farmReducer';
+import { IHomeState, defaultHomeState } from './homeReducer';
 import { navPath } from '../../navigation';
 import { Link } from 'react-router-dom';
 
-export interface IFarmProps extends IFarmState {
-    incCounter: () => void
+export interface IHomeProps extends IHomeState {
+    setTitle: (title: string) => void,
 }
 
-export default class Farm extends React.Component<IFarmProps> {
-    _incCounter() {
-        this.props.incCounter()
+export default class Home extends React.Component<IHomeProps> {
+    _setTitle() {
+        const title = this.props.title === defaultHomeState.title ? "To Farm" : defaultHomeState.title
+        this.props.setTitle(title + '')
     }
     render() {
         return <div className="App">
@@ -18,15 +19,15 @@ export default class Farm extends React.Component<IFarmProps> {
                 <img src={logo} className="App-logo" alt="logo" />
                 <p>TypeScript - pain first, then nice</p>
                 <Link
-                    to={navPath.HOME_PAGE}
+                    to={navPath.FARM_PAGE}
                     className="App-link">
-                    {"To Home"}
+                    {this.props.title || "To Farm"}
                 </Link>
-                <span>Count: {this.props.counter} </span>
+
                 <button
                     className="btn"
-                    onClick={this._incCounter.bind(this)}
-                >Inc++</button>
+                    onClick={this._setTitle.bind(this)}
+                >Change title</button>
             </header>
         </div>
     }
