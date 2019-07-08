@@ -20,7 +20,7 @@ export default class Farm extends React.Component<IFarmProps> {
         return <div className="App">
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
-                <p>TypeScript - сначала боль, потом приятно</p>
+                <p>TypeScript - pain first, then nice</p>
                 <a
                     className="App-link"
                     href="https://reactjs.org"
