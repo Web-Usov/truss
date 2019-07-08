@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "352cf05383af732d6a44ece0fb34f36a",
+    "revision": "5c9fb8b1a8e25ddd924efd5b46ad2455",
     "url": "/truss/index.html"
   },
   {
-    "revision": "309664b66d8ae0b5a5ad",
+    "revision": "a43d511e607ee393e3d5",
     "url": "/truss/static/css/main.c391d196.chunk.css"
   },
   {
@@ -12,8 +12,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/truss/static/js/2.b6bba7a9.chunk.js"
   },
   {
-    "revision": "309664b66d8ae0b5a5ad",
-    "url": "/truss/static/js/main.8548fa52.chunk.js"
+    "revision": "a43d511e607ee393e3d5",
+    "url": "/truss/static/js/main.01f2533b.chunk.js"
   },
   {
     "revision": "bfe8d3fde6021925c1a2",
