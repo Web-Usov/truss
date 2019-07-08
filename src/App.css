@@ -21,6 +21,21 @@
 
 .App-link {
   color: #61dafb;
+  margin-bottom: 20px;
+}
+
+.btn{
+  padding: 8px 15px;
+  margin: 5px;
+  background-color: rgb(140, 182, 221);
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+
+}
+
+.btn:hover{
+  background-color: rgb(171, 201, 230);
 }
 
 @keyframes App-logo-spin {
