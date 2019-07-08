@@ -12,7 +12,8 @@ class App extends React.Component {
 					<Route path={navPath.HOME_PAGE} component={Home} exact />
 					<Route path={navPath.FARM_PAGE} component={Farm} />
 				</Switch>
-			</main>)
+			</main>
+		)
 	}
 }
 
