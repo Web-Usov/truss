@@ -21,7 +21,7 @@ export default class Home extends React.Component<IHomeProps> {
                 <Link
                     to={navPath.FARM_PAGE}
                     className="App-link">
-                    {this.props.title || "To Farm"}
+                    {this.props.title || "To Farm )"}
                 </Link>
 
                 <button
