@@ -1,14 +1,14 @@
 import { FarmActions, INC_COUNTER } from "./farmTypes";
 
-export interface IFarmState {
+export interface IFarmStore {
     counter: number,
 }
 
-export const defaultFarmState : IFarmState = {
+export const defaultFarmState : IFarmStore = {
     counter: 0
 }
 
-export const farmReducer = (state: IFarmState = defaultFarmState, action: FarmActions): IFarmState => {
+export const farmReducer = (state: IFarmStore = defaultFarmState, action: FarmActions): IFarmStore => {
     switch (action.type) {
         case INC_COUNTER:
             return {

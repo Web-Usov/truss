@@ -1,7 +1,7 @@
-import Farm from './Farm'
+import UIFarm from './Farm'
 import Home from './Home'
 
 export {
-    Farm,
+    UIFarm,
     Home 
 }
