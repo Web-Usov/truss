@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "1e531542f1861ad8d801b9ec54a6b117",
+    "revision": "efc5fb49aaebec5a8657cb8c74b9278b",
     "url": "/truss/index.html"
   },
   {
-    "revision": "b77ba849ffab5b88b63e",
-    "url": "/truss/static/css/main.c391d196.chunk.css"
+    "revision": "f7bb1a465a2332f82370",
+    "url": "/truss/static/css/main.c86cc0db.chunk.css"
   },
   {
-    "revision": "ebd8f8a5d392d66e1579",
-    "url": "/truss/static/js/2.9fc449f4.chunk.js"
+    "revision": "18ce276feb2f7b31a537",
+    "url": "/truss/static/js/2.d45cfde3.chunk.js"
   },
   {
-    "revision": "b77ba849ffab5b88b63e",
-    "url": "/truss/static/js/main.e3313916.chunk.js"
+    "revision": "f7bb1a465a2332f82370",
+    "url": "/truss/static/js/main.19d9e3b2.chunk.js"
   },
   {
     "revision": "bfe8d3fde6021925c1a2",
