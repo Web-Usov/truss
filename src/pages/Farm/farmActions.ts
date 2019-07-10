@@ -1,8 +1,7 @@
-import { FarmActions, INC_COUNTER } from "./farmTypes";
+import { FarmActions, FARM_UPDATE } from "./farmTypes";
+import { ClassFarm } from "src/models/Farm";
 
-
-export const incCounter = () : FarmActions => {
-    return {
-        type:INC_COUNTER,
-    }
-}
+export const update = (workSpace : ClassFarm) : FarmActions => ({
+    type:FARM_UPDATE,
+    workSpace
+})

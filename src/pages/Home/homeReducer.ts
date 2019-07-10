@@ -1,14 +1,14 @@
 import { SET_TITLE, HomeActions } from "./homeTypes";
 
-export interface IHomeState {
+export interface IHomeStore {
     title: string,
 }
 
-export const defaultHomeState : IHomeState = {
+export const defaultHomeState : IHomeStore = {
     title: 'Hello, world!',
 }
 
-export const homeReducer = (state: IHomeState = defaultHomeState, action: HomeActions): IHomeState => {
+export const homeReducer = (state: IHomeStore = defaultHomeState, action: HomeActions): IHomeStore => {
     switch (action.type) {
         case SET_TITLE:
             return {

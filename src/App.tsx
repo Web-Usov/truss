@@ -4,7 +4,15 @@ import { navPath } from './navigation'
 import { Switch, Route } from 'react-router-dom';
 import './App.css';
 
-class App extends React.Component {
+interface IAppProps {
+
+}
+
+class App extends React.Component<IAppProps> {
+	constructor(props : IAppProps){
+		super(props)
+		document.title = "Truss - ферма для каждого"
+	}
 	render() {
 		return (
 			<main>

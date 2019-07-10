@@ -1,10 +1,10 @@
 import { combineReducers, createStore } from 'redux';
 import { IFarmStore, farmReducer } from 'src/pages/Farm/farmReducer';
-import { IHomeState, homeReducer } from 'src/pages/Home/homeReducer';
+import { IHomeStore, homeReducer } from 'src/pages/Home/homeReducer';
 
 export interface AppState {
     farm: IFarmStore,
-    home: IHomeState
+    home: IHomeStore
 }
 
 export const mainReducer = combineReducers({

@@ -19,7 +19,7 @@ export class ClassNode extends ClassFarmEntity implements INode {
         this.forcesID = nodeProps ? nodeProps.forcesID : []
     }
 
-    addBeam(beamID: number) {
+    connectBeam(beamID: number) {
         if (!this.beamsID.find(id => id === beamID))
             this.beamsID.push(beamID)
     }

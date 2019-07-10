@@ -1,10 +1,10 @@
 import * as React from 'react'
 import logo from './logo.svg'
-import { IHomeState, defaultHomeState } from './homeReducer';
+import { IHomeStore, defaultHomeState } from './homeReducer';
 import { navPath } from '../../navigation';
 import { Link } from 'react-router-dom';
 
-export interface IHomeProps extends IHomeState {
+export interface IHomeProps extends IHomeStore {
     setTitle: (title: string) => void,
 }
 

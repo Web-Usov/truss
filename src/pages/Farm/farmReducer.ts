@@ -1,20 +1,23 @@
-import { FarmActions, INC_COUNTER } from "./farmTypes";
+import { FarmActions, FARM_UPDATE } from "./farmTypes";
+import { ClassFarm } from "src/models/Farm";
 
 export interface IFarmStore {
-    counter: number,
+    workSpace: ClassFarm
+
 }
 
-export const defaultFarmState : IFarmStore = {
-    counter: 0
+export const defaultFarmState: IFarmStore = {
+    workSpace: new ClassFarm(),
 }
 
 export const farmReducer = (state: IFarmStore = defaultFarmState, action: FarmActions): IFarmStore => {
     switch (action.type) {
-        case INC_COUNTER:
-            return {
-                ...state,
-                counter: state.counter + 1
-            }
+        case FARM_UPDATE:{
+            const newState : IFarmStore = {workSpace:new ClassFarm(action.workSpace)}
+            
+            return newState
+
+        }
         default:
             return state;
     }

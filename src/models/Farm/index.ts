@@ -44,11 +44,14 @@ export class ClassFarm implements IFarm {
     forces: IForce[];
     nodes: ClassNode[];
     beams: IBeam[];
-    constructor() {
-        this.nodes = []
-        this.fixedNodes = []
-        this.forces = []
-        this.beams = []
+    time:number
+    constructor(_farm? : ClassFarm) {
+        this.nodes = _farm ? _farm.nodes : []
+        this.fixedNodes =  _farm ? _farm.fixedNodes : []
+        this.forces =  _farm ? _farm.forces : []
+        this.beams =  _farm ? _farm.beams : []
+        this.time = Date.now()
+
     }
     addNode(x: number, y: number, angle: number, name: string = "") {
         const node = new ClassNode({
