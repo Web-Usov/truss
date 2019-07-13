@@ -1,19 +1,18 @@
 {
   "files": {
-    "main.css": "https://web-usov.github.io/truss/static/css/main.a9da069b.chunk.css",
-    "main.js": "https://web-usov.github.io/truss/static/js/main.18bc2c5e.chunk.js",
-    "main.js.map": "https://web-usov.github.io/truss/static/js/main.18bc2c5e.chunk.js.map",
+    "main.css": "https://web-usov.github.io/truss/static/css/main.c2690f1a.chunk.css",
+    "main.js": "https://web-usov.github.io/truss/static/js/main.41d7c226.chunk.js",
+    "main.js.map": "https://web-usov.github.io/truss/static/js/main.41d7c226.chunk.js.map",
     "runtime~main.js": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js",
     "runtime~main.js.map": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js.map",
-    "static/js/2.c80aba13.chunk.js": "https://web-usov.github.io/truss/static/js/2.c80aba13.chunk.js",
-    "static/js/2.c80aba13.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.c80aba13.chunk.js.map",
+    "static/js/2.0d87798a.chunk.js": "https://web-usov.github.io/truss/static/js/2.0d87798a.chunk.js",
+    "static/js/2.0d87798a.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.0d87798a.chunk.js.map",
     "index.html": "https://web-usov.github.io/truss/index.html",
-    "precache-manifest.6421eb87477174dd71f5fe5540a39a90.js": "https://web-usov.github.io/truss/precache-manifest.6421eb87477174dd71f5fe5540a39a90.js",
+    "precache-manifest.18f8d62b2b8f83d7a9af9607a16e8e72.js": "https://web-usov.github.io/truss/precache-manifest.18f8d62b2b8f83d7a9af9607a16e8e72.js",
     "service-worker.js": "https://web-usov.github.io/truss/service-worker.js",
-    "static/css/main.a9da069b.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.a9da069b.chunk.css.map",
+    "static/css/main.c2690f1a.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.c2690f1a.chunk.css.map",
     "static/media/bridge.png": "https://web-usov.github.io/truss/static/media/bridge.e53bced3.png",
     "static/media/icon.png": "https://web-usov.github.io/truss/static/media/icon.68e274b2.png",
-    "static/media/logo.svg": "https://web-usov.github.io/truss/static/media/logo.5d5d9eef.svg",
     "static/media/ogImage.png": "https://web-usov.github.io/truss/static/media/ogImage.0619e300.png"
   }
 }
