@@ -1,36 +1,31 @@
-import { IFarmEntity, ClassFarmEntity } from './ModelEntity';
+import { IEntity, Entity } from './ModelEntity';
 
-export interface INode extends IFarmEntity {
-    beamsID: number[]
-    forcesID: number[],
+export interface INode extends IEntity {
+    beamsID?: number[]
+    forcesID?: number[],
 }
 
-export interface IFixedNode extends INode {
-    // connectedBeam:IBeam[]
-    // angle: 0 | 90 | 180 | 260
-}
-
-export class ClassNode extends ClassFarmEntity implements INode {
+export class Node extends Entity {
     beamsID: number[];
     forcesID: number[];
-    constructor(props: IFarmEntity, nodeProps?: INode) {
+    constructor(props:INode) {
         super(props)
-        this.beamsID = nodeProps ? nodeProps.beamsID : []
-        this.forcesID = nodeProps ? nodeProps.forcesID : []
+        this.beamsID = props.beamsID || []
+        this.forcesID = props.forcesID  || []
     }
 
     connectBeam(beamID: number) {
         if (!this.beamsID.find(id => id === beamID))
             this.beamsID.push(beamID)
     }
-    deleteBeam(beamID: number) {
+    removeBeam(beamID: number) {
         this.beamsID.filter(id => id !== beamID)
     }
-    addForce(forceID: number) {
+    connectForce(forceID: number) {
         if (!this.forcesID.find(id => id === forceID))
             this.forcesID.push(forceID)
     }
-    deleteForce(forceID: number) {
+    removeForce(forceID: number) {
         this.forcesID.filter(id => id !== forceID)
     }
 }

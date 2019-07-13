@@ -1,5 +1,7 @@
 import history from './history'
+import MyMath from './math'
 
 export {
-    history
+    history,
+    MyMath
 }
