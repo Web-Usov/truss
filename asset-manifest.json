@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/truss/static/css/main.c86cc0db.chunk.css",
-    "main.js": "/truss/static/js/main.08bfeff8.chunk.js",
-    "main.js.map": "/truss/static/js/main.08bfeff8.chunk.js.map",
+    "main.js": "/truss/static/js/main.793fab51.chunk.js",
+    "main.js.map": "/truss/static/js/main.793fab51.chunk.js.map",
     "runtime~main.js": "/truss/static/js/runtime~main.6c9d2935.js",
     "runtime~main.js.map": "/truss/static/js/runtime~main.6c9d2935.js.map",
-    "static/js/2.f3830404.chunk.js": "/truss/static/js/2.f3830404.chunk.js",
-    "static/js/2.f3830404.chunk.js.map": "/truss/static/js/2.f3830404.chunk.js.map",
+    "static/js/2.2d0e38d1.chunk.js": "/truss/static/js/2.2d0e38d1.chunk.js",
+    "static/js/2.2d0e38d1.chunk.js.map": "/truss/static/js/2.2d0e38d1.chunk.js.map",
     "index.html": "/truss/index.html",
-    "precache-manifest.1588ba89cb87dfbe137d861cf0f7bdf4.js": "/truss/precache-manifest.1588ba89cb87dfbe137d861cf0f7bdf4.js",
+    "precache-manifest.db165696935e12a7711b517cc5492a47.js": "/truss/precache-manifest.db165696935e12a7711b517cc5492a47.js",
     "service-worker.js": "/truss/service-worker.js",
     "static/css/main.c86cc0db.chunk.css.map": "/truss/static/css/main.c86cc0db.chunk.css.map",
     "static/media/logo.svg": "/truss/static/media/logo.5d5d9eef.svg"
