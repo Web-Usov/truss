@@ -1,16 +1,17 @@
 {
   "files": {
     "main.css": "https://web-usov.github.io/truss/static/css/main.c2690f1a.chunk.css",
-    "main.js": "https://web-usov.github.io/truss/static/js/main.41d7c226.chunk.js",
-    "main.js.map": "https://web-usov.github.io/truss/static/js/main.41d7c226.chunk.js.map",
+    "main.js": "https://web-usov.github.io/truss/static/js/main.949e5368.chunk.js",
+    "main.js.map": "https://web-usov.github.io/truss/static/js/main.949e5368.chunk.js.map",
     "runtime~main.js": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js",
     "runtime~main.js.map": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js.map",
-    "static/js/2.0d87798a.chunk.js": "https://web-usov.github.io/truss/static/js/2.0d87798a.chunk.js",
-    "static/js/2.0d87798a.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.0d87798a.chunk.js.map",
+    "static/js/2.8fbb99de.chunk.js": "https://web-usov.github.io/truss/static/js/2.8fbb99de.chunk.js",
+    "static/js/2.8fbb99de.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.8fbb99de.chunk.js.map",
     "index.html": "https://web-usov.github.io/truss/index.html",
-    "precache-manifest.18f8d62b2b8f83d7a9af9607a16e8e72.js": "https://web-usov.github.io/truss/precache-manifest.18f8d62b2b8f83d7a9af9607a16e8e72.js",
+    "precache-manifest.0279f6a004d4649eb3ac5e905765678c.js": "https://web-usov.github.io/truss/precache-manifest.0279f6a004d4649eb3ac5e905765678c.js",
     "service-worker.js": "https://web-usov.github.io/truss/service-worker.js",
     "static/css/main.c2690f1a.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.c2690f1a.chunk.css.map",
+    "static/media/airBridge.png": "https://web-usov.github.io/truss/static/media/airBridge.7d581a65.png",
     "static/media/bridge.png": "https://web-usov.github.io/truss/static/media/bridge.e53bced3.png",
     "static/media/icon.png": "https://web-usov.github.io/truss/static/media/icon.68e274b2.png",
     "static/media/ogImage.png": "https://web-usov.github.io/truss/static/media/ogImage.0619e300.png"
