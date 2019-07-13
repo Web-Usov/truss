@@ -13,19 +13,22 @@ export class Node extends Entity {
         this.beamsID = props.beamsID || []
         this.forcesID = props.forcesID  || []
     }
-
-    connectBeam(beamID: number) {
-        if (!this.beamsID.find(id => id === beamID))
+    connectBeam(beamID: number):boolean {
+        if (!this.beamsID.find(id => id === beamID)){
             this.beamsID.push(beamID)
+            return true            
+        }
+        return false
     }
     removeBeam(beamID: number) {
-        this.beamsID.filter(id => id !== beamID)
+        
+        this.beamsID  = this.beamsID.filter(id => id !== beamID)
     }
     connectForce(forceID: number) {
         if (!this.forcesID.find(id => id === forceID))
             this.forcesID.push(forceID)
     }
     removeForce(forceID: number) {
-        this.forcesID.filter(id => id !== forceID)
+        this.beamsID   = this.forcesID.filter(id => id !== forceID)
     }
 }

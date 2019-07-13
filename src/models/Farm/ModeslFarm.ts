@@ -36,15 +36,12 @@ export class Farm implements IFarm {
             angle,
             name
         })
-        // this.nodes.push(node)
         this.nodes.set(node.id, node)
     }
-    addBeam(x:number, y:number, angle:number, length:number ):Beam{
+    addBeam(x:number, y:number):Beam{
         const beam = new Beam({
             x,
-            y,
-            angle,
-            length
+            y
         })
         this.beams.set(beam.id, beam)
         return beam
@@ -103,5 +100,19 @@ export class Farm implements IFarm {
         const nodeEnd = this.getNode(endConnectedNodeID)
 
         return [nodeStart, nodeEnd]
+    }
+
+    moveNodeTo(nodeID:number, x:number, y:number):void{
+        const node = this.getNode(nodeID)
+        node.x = x
+        node.y = y
+        node.beamsID.forEach(beamID => {
+            const beam = this.getBeam(beamID)
+            if(beam.startConnectedNodeID === nodeID){
+                beam.moveStartPoint(x,y)
+            }else if(beam.endConnectedNodeID === nodeID){
+                beam.moveEndPoint(x,y)
+            }
+        })
     }
 }

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import logo from './logo.svg'
 import { IHomeStore, defaultHomeState } from './homeReducer';
 import { navPath } from '../../navigation';
 import { Link } from 'react-router-dom';
+import { consts } from 'src/static';
 
 export interface IHomeProps extends IHomeStore {
     setTitle: (title: string) => void,
@@ -16,18 +16,17 @@ export default class Home extends React.Component<IHomeProps> {
     render() {
         return <div className="App">
             <header className="App-header">
-                <img src={logo} className="App-logo" alt="logo" />
-                <p>TypeScript - pain first, then nice</p>
+                <img src={consts.bridgeIcon_2} className="App-logo" alt="logo" />
+                <h3>{consts.title}</h3>
+                <p style={{
+                    width:"800px",
+                    fontSize:18
+                }}>{consts.description}</p>
                 <Link
                     to={navPath.FARM_PAGE}
                     className="App-link">
-                    {this.props.title || "To Farm )"}
+                    Поехали!
                 </Link>
-
-                <button
-                    className="btn"
-                    onClick={this._setTitle.bind(this)}
-                >Change title</button>
             </header>
         </div>
     }

@@ -8,7 +8,8 @@ export enum UIModes {
     addBeam,
     addBeamStart,
     addBeamEnd,
-    dragBeam
+    dragBeam,
+    delete
 }
 
 const mods = [
@@ -28,6 +29,10 @@ const mods = [
         name: "Add Beam",
         mod: UIModes.addBeam
     },
+    {
+        name:"Delete",
+        mod:UIModes.delete
+    }
 ]
 
 export interface UIPanelProps {
