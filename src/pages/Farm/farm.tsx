@@ -10,9 +10,25 @@ import UIPanel, { UIModes } from './components/UIPanel';
 import { Beam } from 'src/models/Farm/ModelBeam';
 import { Entity } from 'src/models/Farm/ModelEntity';
 import KeyHandler from 'react-key-handler'
+import { createStyles, Theme, WithStyles, withStyles } from '@material-ui/core';
 
 
-export interface UIFarmProps extends IFarmStore {
+const styles = (theme: Theme) => createStyles({
+	root: {
+		minWidth: window.innerWidth,
+		minHeight: window.innerHeight,
+		background: theme.palette.background.default,
+        padding: theme.spacing(4),
+        display:"flex",
+    },
+    stage:{
+        backgroundColor:"#fff",
+        // width:"100%",
+        flexGrow:1
+    }
+})
+
+export interface UIFarmProps extends IFarmStore, WithStyles<typeof styles>  {
     update: (workSpace: Farm) => void
 }
 
@@ -27,8 +43,7 @@ export interface UIFarmState {
 
 
 
-
-export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
+class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     private stage: React.RefObject<Stage>
     constructor(props: UIFarmProps) {
         super(props)
@@ -73,15 +88,12 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                     farm.addNode(layerX, layerY, 0)
                 }
                 break;
-
             }
             case UIModes.addBeam: {
                 if (!isEmptyPlace && entity instanceof Node) {
 
                     const beam = farm.addBeam(entity.x, entity.y)
-                    beam.connectNode(entity.id, 'start')
-                    entity.connectBeam(beam.id)
-
+                    farm.connectBeamToNode(beam,entity)
                     this.setState({
                         paintEntity: beam,
                         uiMode: UIModes.addBeamStart
@@ -92,43 +104,17 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             case UIModes.addBeamStart: {
                 if (!isEmptyPlace && entity instanceof Node && this.state.paintEntity instanceof Beam) {
                     const beam = this.state.paintEntity
-                    const beams = farm.getBeamsOnNode(beam.startConnectedNodeID)
-                    const oldBeam = beams.find(_beam =>
-                        _beam.startConnectedNodeID === beam.startConnectedNodeID &&
-                        _beam.endConnectedNodeID === entity.id ||
-                        _beam.startConnectedNodeID === entity.id &&
-                        _beam.endConnectedNodeID === beam.startConnectedNodeID)
-
-                    console.log(beams, oldBeam, beam);
-
-
-                    if (!oldBeam && entity.connectBeam(beam.id) ) {
-                        beam.moveEndPoint(entity.x, entity.y)
-                        beam.connectNode(entity.id, "end")
+                    if(farm.connectBeamToNode(beam,entity,'end'))
                         this.setState({
                             uiMode: UIModes.addBeam,
                             paintEntity: undefined
                         })
-                    }
                 }
                 break;
             }
             case  UIModes.delete:{
-                if(!isEmptyPlace){
-                    if(entity instanceof Node){
-                       const beams = farm.getBeamsOnNode(entity.id)
-                       beams.forEach(beam => {
-                           if(beam.startConnectedNodeID === entity.id) farm.getNode(beam.endConnectedNodeID).removeBeam(beam.id)
-                           else farm.getNode(beam.startConnectedNodeID).removeBeam(beam.id)
-                           farm.deleteBeam(beam.id)
-                       }) 
-                       farm.deleteNode(entity.id)
-                    }else if(entity instanceof Beam){
-                        farm.getNodesOnBeam(entity.id).forEach(node => {
-                            node.removeBeam(entity.id)
-                        })                        
-                        farm.deleteBeam(entity.id)
-                    }
+                if(!isEmptyPlace && entity){
+                    farm.deleteEntity(entity)
                 }
                 break;
             }
@@ -142,28 +128,21 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     }
     onMouseMove(e: Konva.KonvaEventObject<MouseEvent>) {
         const { uiMode, farm, paintEntity } = this.state
-
         switch (uiMode) {
             case UIModes.addBeamStart: {
-
                 if (paintEntity && paintEntity instanceof Beam) {
-
                     const beam = paintEntity
                     const { layerX, layerY } = e.evt
                     beam.moveEndPoint(layerX, layerY)
-
                 } else this.setState({ uiMode: UIModes.addBeam })
-
                 this.updateFarm(farm)
                 break;
             }
             default:
                 break;
         }
-
     }
     onDrag(e: Konva.KonvaEventObject<DragEvent>, entity: Entity) {
-
         const { farm, uiMode } = this.state
         if (entity instanceof Node) {
             if (uiMode === UIModes.dragNode || uiMode === UIModes.drag) {
@@ -175,28 +154,25 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     onKeyHandle(e: KeyboardEvent) {
         switch (e.key) {
             case "Escape": {
-                this._deletePaintEntity()
+                this.deletePaintEntity()
                 break;
             }
-
             default:
                 break;
         }
 
     }
     setSelectMode(mode: UIModes) {
-        this._deletePaintEntity()
+        this.deletePaintEntity()
         this.setState({
             uiMode: mode,
         })
     }
-    _deletePaintEntity() {
+    deletePaintEntity() {
         
         const { uiMode, paintEntity, farm } = this.state
-        if (uiMode === UIModes.addBeamStart && paintEntity instanceof Beam) {
-            const node = farm.getNode(paintEntity.startConnectedNodeID)
-            node.removeBeam(paintEntity.id)
-            farm.deleteBeam(paintEntity.id)
+        if (uiMode === UIModes.addBeamStart && paintEntity) {
+            farm.deleteEntity(paintEntity)
             this.setState({
                 paintEntity: undefined,
             })
@@ -205,20 +181,16 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     }
     render() {
         const { stageHeight, stageWidth, farm, uiMode, selectedID } = this.state
-
+        const {classes} = this.props
         return (
-            <div>
+            <div className={classes.root}>
                 <UIPanel
                     selected={uiMode}
                     onSelect={this.setSelectMode.bind(this)} />
                 <Stage
                     height={stageHeight}
                     width={stageWidth}
-                    className="stage"
-                    style={{
-                        height: stageHeight + 'px',
-                        width: stageWidth + 'px',
-                    }}
+                    className={classes.stage}
                     onClick={this.onClick}
                     onMouseMove={this.onMouseMove}
                     ref={this.stage}
@@ -256,3 +228,5 @@ export default class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         )
     }
 }
+
+export default withStyles(styles)(UIFarm)

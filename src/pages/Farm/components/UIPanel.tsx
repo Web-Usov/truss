@@ -1,4 +1,29 @@
 import * as React from 'react'
+import { Theme, createStyles, withStyles } from '@material-ui/core';
+import { WithStyles } from '@material-ui/styles';
+
+const styles = (theme: Theme) => createStyles({
+    root: {
+        backgroundColor: theme.palette.primary.dark,
+        padding: theme.spacing(2),
+        display: "flex",
+        flexDirection: "column",
+
+    },
+    ul: {
+        padding: 0,
+        '& li': {
+            listStyle: 'none',
+            '& label': {
+                cursor: 'pointer',
+                '& input':{
+                    
+            cursor:'pointer'
+                }
+            }
+        }
+    }
+})
 
 export enum UIModes {
     none,
@@ -30,21 +55,20 @@ const mods = [
         mod: UIModes.addBeam
     },
     {
-        name:"Delete",
-        mod:UIModes.delete
+        name: "Delete",
+        mod: UIModes.delete
     }
 ]
 
-export interface UIPanelProps {
+export interface UIPanelProps extends WithStyles<typeof styles> {
     selected: UIModes
     onSelect(mod: UIModes): void
 }
 
-const UIPanel: React.FC<UIPanelProps> = ({ onSelect, selected }) => {
+const UIPanel: React.FC<UIPanelProps> = ({ onSelect, selected, classes }) => {
     return (
-            <ul style={{
-                position:'absolute'
-            }}>
+        <div className={classes.root}>
+            <ul className={classes.ul}>
                 {mods.map((item, i) => (
                     <li key={i}>
                         <label>
@@ -59,8 +83,10 @@ const UIPanel: React.FC<UIPanelProps> = ({ onSelect, selected }) => {
                     </li>
                 ))}
             </ul>
+        </div>
+
 
     )
 }
 
-export default UIPanel
+export default withStyles(styles)(UIPanel)

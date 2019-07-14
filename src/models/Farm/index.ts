@@ -1,4 +1,4 @@
-import { Farm } from "./ModeslFarm";
+import { Farm } from "./ModelFarm";
 import { Node } from './ModelNode'
 
 

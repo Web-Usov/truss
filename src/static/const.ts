@@ -2,6 +2,7 @@
 import ogImage from './ogImage.png'
 import bridgeIcon_1 from './icon.png'
 import bridgeIcon_2 from './bridge.png'
+import airBridge from './airBridge.png'
 import path from 'path'
 
 // Strings
@@ -15,5 +16,6 @@ export const favicon = path.resolve(__dirname,"favicon.ico")
 export {
     ogImage,
     bridgeIcon_1,
-    bridgeIcon_2
+    bridgeIcon_2,
+    airBridge
 }
