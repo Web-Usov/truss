@@ -1,8 +1,12 @@
 import UINode from './UINode'
-import UIPanel from './UIPanel'
+import UIBeam from './UIBeam'
+import UIToolBar from './UIToolBar'
+import UITreePanel from './UITreePanel'
 
 
 export {
     UINode,
-    UIPanel
+    UIToolBar,
+    UITreePanel,
+    UIBeam
 }

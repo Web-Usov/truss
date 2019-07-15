@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Line } from 'react-konva'
 import Konva from 'konva'
-import { UIModes } from './UIPanel';
+import { UIModes } from './UIToolBar';
 import { Beam } from 'src/models/Farm/ModelBeam';
 
 export interface UIBeamProps {

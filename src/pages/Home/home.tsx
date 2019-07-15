@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { IHomeStore } from './homeReducer';
-import {  colors } from 'src/static';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core'
 import { HomeHeader } from './components';
 

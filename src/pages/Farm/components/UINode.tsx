@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Circle, Text } from 'react-konva'
 import Konva from 'konva'
 import { Node } from 'src/models/Farm';
-import { UIModes } from './UIPanel';
+import { UIModes } from './UIToolBar';
 
 export interface UINodeProps {
     drag(e: Konva.KonvaEventObject<DragEvent>,node: Node): void
@@ -31,7 +31,7 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick,selected }) =
                 fill="#ddd"
                 stroke="#888"
                 strokeWidth={selected ? 2 : 0}
-                draggable={mode === UIModes.drag || mode === UIModes.dragNode}
+                draggable={mode === UIModes.move}
                 _useStrictMode 
                 shadowBlur={5}
                 onDragMove={(e) => drag(e,node)} 
