@@ -30,7 +30,9 @@ export class Farm implements IFarm {
         this.time = Date.now()
 
     }
-    addNode(x: number, y: number, angle: number, name: string = ""): void {
+    addNode(x: number, y: number, angle: number, name: string = ""): boolean {
+        const oldNode = this.getNodes().find(item => item.x === x && item.y === y)
+        if(oldNode) return false
         const node = new Node({
             x,
             y,
@@ -38,6 +40,7 @@ export class Farm implements IFarm {
             name
         })
         this.nodes.set(node.id, node)
+        return true
     }
     addBeam(x: number, y: number): Beam {
         const beam = new Beam({
