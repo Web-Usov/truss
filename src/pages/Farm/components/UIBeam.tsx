@@ -3,6 +3,7 @@ import { Line } from 'react-konva'
 import Konva from 'konva'
 import { UIModes } from './UIToolBar';
 import { Beam } from 'src/models/Farm/ModelBeam';
+import theme from 'src/theme';
 
 export interface UIBeamProps {
     drag(e: Konva.KonvaEventObject<DragEvent>, beam: Beam): void
@@ -24,8 +25,10 @@ const UIBeam: React.FC<UIBeamProps> = ({ beam, drag, mode, onClick, selected }) 
                     beam.getEndX(),
                     beam.getEndY()
                 ]}
-                stroke='#bbb'
-                strokeWidth={4}
+                // stroke='#bbb'
+                stroke={theme.palette.secondary.light}
+                strokeWidth={6}
+                shadowBlur={selected ? 8 : 2}
                 onClick={(e) => onClick(e,beam)}
             />
         </React.Fragment>

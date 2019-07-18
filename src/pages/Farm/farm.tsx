@@ -12,7 +12,7 @@ import { Entity } from 'src/models/Farm/ModelEntity';
 import KeyHandler from 'react-key-handler'
 import { createStyles, Theme, WithStyles, withStyles, Box } from '@material-ui/core';
 import UIStage from './components/UIStage';
-import { UITreePanel } from './components';
+import { UITreePanel, UIEntityInfo } from './components';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -84,18 +84,29 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     }
     updateFarm(farm: Farm): void {
         this.setState({ farm })
+
     }
 
     onClick(e: Konva.KonvaEventObject<MouseEvent>, entity?: Entity) {
-        const { uiMode, farm } = this.state
+        const { uiMode, farm, selectedEntity } = this.state
         const isEmptyPlace = e.target.getStage() === e.target
         e.evt.preventDefault()
+
         if (e.evt.button === 0) {
             switch (uiMode) {
+                case UIModes.none: {
+                    if (!isEmptyPlace) {
+                        if (entity) this.setState({ selectedEntity: entity })
+                    } else this.setState({ selectedEntity: undefined })
+
+                    break;
+                }
                 case UIModes.addNode: {
                     if (isEmptyPlace) {
                         const { layerX, layerY } = e.evt
                         farm.addNode(layerX, layerY, 0)
+
+                        this.updateFarm(farm)
                     }
                     break;
                 }
@@ -108,6 +119,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                             paintEntity: beam,
                             uiMode: UIModes.addBeamStart
                         })
+
+                        this.updateFarm(farm)
                     }
                     break;
                 }
@@ -119,12 +132,16 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                                 uiMode: UIModes.addBeam,
                                 paintEntity: undefined
                             })
+
+                        this.updateFarm(farm)
                     }
                     break;
                 }
                 case UIModes.delete: {
                     if (!isEmptyPlace && entity) {
+                        if (selectedEntity === entity) this.setState({ selectedEntity: undefined })
                         farm.deleteEntity(entity)
+                        this.updateFarm(farm)
                     }
                     break;
                 }
@@ -134,9 +151,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         }
 
 
-        if (isEmptyPlace) this.setState({ selectedEntity: undefined })
+        // if (isEmptyPlace) this.setState({ selectedEntity: undefined })
 
-        this.updateFarm(farm)
     }
     onMouseMove(e: Konva.KonvaEventObject<MouseEvent>) {
         const { uiMode, farm, paintEntity } = this.state
@@ -159,9 +175,9 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         if (entity instanceof Node) {
             if (uiMode === UIModes.move) {
                 farm.moveNodeTo(entity.id, e.evt.layerX, e.evt.layerY)
+                this.updateFarm(farm)
             }
         }
-        this.updateFarm(farm)
     }
     onKeyHandle(e: KeyboardEvent) {
         switch (e.key) {
@@ -177,7 +193,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     setSelectMode(mode: UIModes) {
         this.deletePaintEntity()
         this.setState({
-            uiMode: mode,
+            uiMode: mode || 0,
         })
     }
     deletePaintEntity() {
@@ -232,6 +248,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         selectedEntity={selectedEntity}
                         uiMode={uiMode}
                     />
+                    <UIEntityInfo
+                        entity={selectedEntity} />
                 </Box>
 
 

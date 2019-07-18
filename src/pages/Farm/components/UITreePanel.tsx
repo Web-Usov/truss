@@ -13,13 +13,10 @@ const styles = (theme: Theme) => createStyles({
         width:250,
         borderRightColor:theme.palette.grey[600],
         borderRight:"solid 2px",
-        overflow: 'auto',
+        overflowY: 'auto',
     },
     list: {
 
-        // width: '100%',
-        // maxWidth: 360,
-        // backgroundColor: theme.palette.background.paper,
     },
     nested: {
         paddingLeft: theme.spacing(4),
@@ -85,7 +82,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                         <Collapse in={openedNodes} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {nodes.map(item => (
-                                    <ListItem button className={classes.nested}>
+                                    <ListItem button className={classes.nested} key={item.id}>
                                         <ListItemText primary={item.id} />
                                     </ListItem>
                                 ))}
@@ -99,7 +96,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                         <Collapse in={openedBeams} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {beams.map(item => (
-                                    <ListItem button className={classes.nested}>
+                                    <ListItem button className={classes.nested} key={item.id}>
                                         <ListItemText primary={item.id} />
                                     </ListItem>
                                 ))}

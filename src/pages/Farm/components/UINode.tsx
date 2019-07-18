@@ -3,6 +3,7 @@ import { Circle, Text } from 'react-konva'
 import Konva from 'konva'
 import { Node } from 'src/models/Farm';
 import { UIModes } from './UIToolBar';
+import theme from 'src/theme';
 
 export interface UINodeProps {
     drag(e: Konva.KonvaEventObject<DragEvent>,node: Node): void
@@ -25,15 +26,16 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick,selected }) =
             <Circle
 
                 key={node.id}
-                radius={selected ? 8 : 6}
+                radius={8}
                 x={node.x}
                 y={node.y}
-                fill="#ddd"
-                stroke="#888"
-                strokeWidth={selected ? 2 : 0}
+                // fill="#ddd"
+                fill={theme.palette.secondary.main}                
+                // stroke="#888"
+                // strokeWidth={0}
                 draggable={mode === UIModes.move}
                 _useStrictMode 
-                shadowBlur={5}
+                shadowBlur={selected ? 8 : 2}
                 onDragMove={(e) => drag(e,node)} 
                 onClick={(e) => onClick(e,node)}
             />
