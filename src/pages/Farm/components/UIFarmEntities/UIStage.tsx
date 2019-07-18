@@ -1,19 +1,15 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { Stage, Layer, StageProps } from 'react-konva';
-import { UINode, UIBeam } from '.';
+import { Stage, Layer, } from 'react-konva';
+import { UINode, UIBeam } from '..';
 import { Farm, Entity } from 'src/models/Farm';
-import { UIModes } from './UIToolBar';
+import { UIModes } from '../UIToolBar';
 import Konva from 'konva';
+import UIGrid from './UIGrid';
+import { consts } from 'src/static';
 
 const styles = (theme: Theme) => createStyles({
-    // root: {
-    //     backgroundColor: theme.palette.primary.dark,
-    //     padding: theme.spacing(1),
-    //     display: "flex",
-    // },
-    
     stage: {
         backgroundColor: "#fff",
         // width:"100%",
@@ -46,12 +42,17 @@ const UIStage: React.FC<UIStageProps> = ({classes, stage, stageHeight,stageWidth
         >
 
             <Layer className="layer" >
+                <UIGrid 
+                    heightCell={consts.UI_cellSize}
+                    widthCell={consts.UI_cellSize}
+                    heightBox={stageHeight}
+                    widthBox={stageWidth}
+                />
                 {farm.getBeams().map(beam => (
                     <UIBeam
                         key={beam.id}
                         beam={beam}
                         mode={uiMode}
-                        drag={onDrag}
                         onClick={onClick}
                         selected={selectedEntity === beam}
                     />

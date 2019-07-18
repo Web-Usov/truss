@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Tooltip, List, ListSubheader, ListItem, ListItemIcon, ListItemText, Collapse, Paper, Card, CardContent, Typography, CardActions, Button, IconButton } from '@material-ui/core';
+import { Theme, createStyles, withStyles,  Card, CardContent, Typography, CardActions,  IconButton } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
 import { Delete as DeleteIcon } from '@material-ui/icons';
@@ -30,7 +30,8 @@ const styles = (theme: Theme) => createStyles({
 
 
 interface EntityInfoProps extends WithStyles<typeof styles> {
-    entity?: Entity | undefined
+    entity?: Entity | undefined,
+    onDelete(entity:Entity):void
 }
 
 interface EntityInfoState {
@@ -50,7 +51,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         else return "Элемент"
     }
     viewCard(entity: Entity | undefined) {
-        const { classes } = this.props
+        const { classes,onDelete } = this.props
         if(entity) return (
             <Card className={classes.card}>
                 <CardContent>
@@ -59,18 +60,10 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                     </Typography>
                     <Typography variant="h5" component="h2">
                         {entity.name}
-                    </Typography>
-                    {/* <Typography className={classes.pos} color="textSecondary">
-                        adjective
-                    </Typography> */}
-                    {/* <Typography variant="body2" component="p">
-                        well meaning and kindly.
-                            <br />
-                        {'"a benevolent smile"'}
-                    </Typography> */}
+                    </Typography>                    
                 </CardContent>
                 <CardActions disableSpacing>
-                    <IconButton aria-label="Share">
+                    <IconButton aria-label="Delete" onClick={() => onDelete(entity)}>
                         <DeleteIcon />
                     </IconButton>
                 </CardActions>

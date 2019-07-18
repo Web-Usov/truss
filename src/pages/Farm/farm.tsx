@@ -1,25 +1,20 @@
 import * as React from 'react'
-import { IFarmStore } from './farmReducer';
-import { Stage, Layer } from "react-konva"
-import Konva from "konva"
-import './style.css'
-import { Farm, Node } from 'src/models/Farm';
-import UINode from './components/UINode';
-import UIBeam from './components/UIBeam';
-import UIToolBar, { UIModes } from './components/UIToolBar';
-import { Beam } from 'src/models/Farm/ModelBeam';
-import { Entity } from 'src/models/Farm/ModelEntity';
 import KeyHandler from 'react-key-handler'
+import Konva from "konva"
+import { Stage } from "react-konva"
 import { createStyles, Theme, WithStyles, withStyles, Box } from '@material-ui/core';
-import UIStage from './components/UIStage';
-import { UITreePanel, UIEntityInfo } from './components';
+import { IFarmStore } from './farmReducer';
+import { Farm, Node, Beam, Entity } from 'src/models/Farm';
+import { UITreePanel, UIEntityInfo, UIStage } from './components';
+import UIToolBar, { UIModes } from './components/UIToolBar';
+import { MyMath } from 'src/utils';
 
 
 const styles = (theme: Theme) => createStyles({
     root: {
-        width: window.innerWidth,
-        height: window.innerHeight,
-        maxHeight: window.innerHeight,
+        width: "100%",
+        height: "100%",
+        // maxHeight: window.innerHeight,
         overflow: "hidden",
         background: theme.palette.background.default,
         // padding: theme.spacing(4),
@@ -69,11 +64,18 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         this.setFarm = this.setFarm.bind(this)
         this.updateFarm = this.updateFarm.bind(this)
         this.onKeyHandle = this.onKeyHandle.bind(this)
+        this._setStageSize = this._setStageSize.bind(this)
+        this._deleteEntity = this._deleteEntity.bind(this)
+        this._selectEntity = this._selectEntity.bind(this)
 
         this.stage = React.createRef();
     }
     componentDidMount() {
-        this.setStageSize()
+        this._setStageSize()
+        window.addEventListener('resize', this._setStageSize)
+    }
+    componentWillUnmount() {
+        window.removeEventListener('resize', this._setStageSize)
     }
     componentWillReceiveProps(nextProps: UIFarmProps) {
         if (nextProps.workSpace !== this.state.farm)
@@ -88,7 +90,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     }
 
     onClick(e: Konva.KonvaEventObject<MouseEvent>, entity?: Entity) {
-        const { uiMode, farm, selectedEntity } = this.state
+        const { uiMode, farm } = this.state
         const isEmptyPlace = e.target.getStage() === e.target
         e.evt.preventDefault()
 
@@ -96,7 +98,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             switch (uiMode) {
                 case UIModes.none: {
                     if (!isEmptyPlace) {
-                        if (entity) this.setState({ selectedEntity: entity })
+                        this._selectEntity(entity);
                     } else this.setState({ selectedEntity: undefined })
 
                     break;
@@ -104,7 +106,9 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 case UIModes.addNode: {
                     if (isEmptyPlace) {
                         const { layerX, layerY } = e.evt
-                        farm.addNode(layerX, layerY, 0)
+                        const cellX = MyMath.cellX(layerX)
+                        const cellY = MyMath.cellX(layerY)
+                        farm.addNode(cellX, cellY, 0)
 
                         this.updateFarm(farm)
                     }
@@ -139,9 +143,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 }
                 case UIModes.delete: {
                     if (!isEmptyPlace && entity) {
-                        if (selectedEntity === entity) this.setState({ selectedEntity: undefined })
-                        farm.deleteEntity(entity)
-                        this.updateFarm(farm)
+                        this._deleteEntity(entity)
                     }
                     break;
                 }
@@ -161,7 +163,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             case UIModes.addBeamStart: {
                 if (paintEntity && paintEntity instanceof Beam) {
                     const beam = paintEntity
-                    beam.moveEndPoint(layerX, layerY)
+                    beam.moveEndPoint(MyMath.cellX(layerX), MyMath.cellY(layerY))
                 } else this.setState({ uiMode: UIModes.addBeam })
                 this.updateFarm(farm)
                 break;
@@ -174,7 +176,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         const { farm, uiMode } = this.state
         if (entity instanceof Node) {
             if (uiMode === UIModes.move) {
-                farm.moveNodeTo(entity.id, e.evt.layerX, e.evt.layerY)
+                const { layerX, layerY } = e.evt
+                farm.moveNodeTo(entity.id, MyMath.cellX(layerX), MyMath.cellY(layerY))
                 this.updateFarm(farm)
             }
         }
@@ -182,7 +185,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     onKeyHandle(e: KeyboardEvent) {
         switch (e.key) {
             case "Escape": {
-                this.deletePaintEntity()
+                this._deletePaintEntity()
                 break;
             }
             default:
@@ -190,13 +193,13 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         }
 
     }
-    setSelectMode(mode: UIModes) {
-        this.deletePaintEntity()
+    setSelectedMode(mode: UIModes) {
+        this._deletePaintEntity()
         this.setState({
             uiMode: mode || 0,
         })
     }
-    deletePaintEntity() {
+    _deletePaintEntity() {
 
         const { uiMode, paintEntity, farm } = this.state
         if (uiMode === UIModes.addBeamStart && paintEntity) {
@@ -207,7 +210,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             this.updateFarm(farm)
         }
     }
-    setStageSize(e?: UIEvent) {
+    _setStageSize(e?: UIEvent) {
         const { current: stage } = this.stage
         if (stage) {
             const container: HTMLDivElement = stage.attrs.container
@@ -217,6 +220,15 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 stageWidth: clientWidth
             })
         }
+    }
+    _selectEntity(entity:Entity | undefined){
+        if (entity) this.setState({ selectedEntity: entity })
+    }
+    _deleteEntity(entity: Entity) {
+
+        this.setState({ selectedEntity: undefined })
+        this.state.farm.deleteEntity(entity)
+        this.updateFarm(this.state.farm)
     }
     render() {
         const { stageHeight, stageWidth, farm, uiMode, selectedEntity } = this.state
@@ -230,12 +242,14 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 />
                 <UIToolBar
                     selected={uiMode}
-                    onSelect={this.setSelectMode.bind(this)} />
+                    onSelect={this.setSelectedMode.bind(this)} />
 
                 <Box className={classes.stageBox}>
                     <UITreePanel
                         nodes={farm.getNodes()}
                         beams={farm.getBeams()}
+                        selectedEntity={selectedEntity}
+                        onSelect={this._selectEntity}
                     />
                     <UIStage
                         onClick={this.onClick}
@@ -249,7 +263,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         uiMode={uiMode}
                     />
                     <UIEntityInfo
-                        entity={selectedEntity} />
+                        entity={selectedEntity}
+                        onDelete={this._deleteEntity} />
                 </Box>
 
 

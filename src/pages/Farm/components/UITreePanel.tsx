@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Tooltip, List, ListSubheader, ListItem, ListItemIcon, ListItemText, Collapse, Paper } from '@material-ui/core';
+import { Theme, createStyles, withStyles,  List,  ListItem,  ListItemText, Collapse, Paper } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
@@ -29,7 +29,8 @@ const styles = (theme: Theme) => createStyles({
 interface TreePanelProps extends WithStyles<typeof styles> {
     nodes: Node[],
     beams: Beam[]
-    // onSelect(entity: Entity | number): void
+    selectedEntity:Entity | undefined
+    onSelect(entity: Entity): void
 }
 
 interface TreeState {
@@ -45,10 +46,10 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
             openedNodes:true,
             openedBeams:true
         }
-        this.clickTab = this.clickTab.bind(this)
+        this.switchTab = this.switchTab.bind(this)
     }
 
-    clickTab(tab: string): void {
+    switchTab(tab: string): void {
         switch (tab) {
             case 'nodes':
                 return this.setState((state) => ({
@@ -63,9 +64,9 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         }
     }
     render() {
-        const { classes, nodes, beams } = this.props
+        const { classes, nodes, beams,selectedEntity, onSelect } = this.props
         const { openedBeams, openedNodes } = this.state
-        const { clickTab: openTab } = this
+        const { switchTab: openTab } = this
         return (
             <div className={classes.root}> 
                 <Paper>
@@ -82,7 +83,13 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                         <Collapse in={openedNodes} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {nodes.map(item => (
-                                    <ListItem button className={classes.nested} key={item.id}>
+                                    <ListItem 
+                                        button
+                                        className={classes.nested} 
+                                        key={item.id} 
+                                        selected={selectedEntity === item}
+                                        onClick={(e) => onSelect(item)}
+                                    >
                                         <ListItemText primary={item.id} />
                                     </ListItem>
                                 ))}
@@ -96,7 +103,13 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                         <Collapse in={openedBeams} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {beams.map(item => (
-                                    <ListItem button className={classes.nested} key={item.id}>
+                                    <ListItem 
+                                        button
+                                        className={classes.nested} 
+                                        key={item.id} 
+                                        selected={selectedEntity === item}
+                                        onClick={(e) => onSelect(item)}
+                                    >
                                         <ListItemText primary={item.id} />
                                     </ListItem>
                                 ))}
