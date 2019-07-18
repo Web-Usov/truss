@@ -1,19 +1,19 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "f6035a3c8d5f4343d8526d10358d77f8",
+    "revision": "db11f620fd7a1e5c73c9a8ae33c417f6",
     "url": "https://web-usov.github.io/truss/index.html"
   },
   {
-    "revision": "859a2b145ca743389675",
+    "revision": "63e71ad72f4b3270428d",
     "url": "https://web-usov.github.io/truss/static/css/main.40247bee.chunk.css"
   },
   {
-    "revision": "c00b8e6f4d852006d217",
-    "url": "https://web-usov.github.io/truss/static/js/2.7570c236.chunk.js"
+    "revision": "947930e1a4df549e5760",
+    "url": "https://web-usov.github.io/truss/static/js/2.976cf23d.chunk.js"
   },
   {
-    "revision": "859a2b145ca743389675",
-    "url": "https://web-usov.github.io/truss/static/js/main.453fe3f1.chunk.js"
+    "revision": "63e71ad72f4b3270428d",
+    "url": "https://web-usov.github.io/truss/static/js/main.7c3798ff.chunk.js"
   },
   {
     "revision": "131354e23b25948e922b",
