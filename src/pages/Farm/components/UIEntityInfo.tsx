@@ -2,22 +2,10 @@ import * as React from 'react'
 import { Theme, createStyles, withStyles,  Card, CardContent, Typography, CardActions,  IconButton } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import { Delete as DeleteIcon, Info as InfoEntityIcon } from '@material-ui/icons';
+import { UIDrawer } from '.';
 
 const styles = (theme: Theme) => createStyles({
-    root: {
-        backgroundColor: theme.palette.primary.main,
-        padding: theme.spacing(1),
-        display: "flex",
-        flexDirection: "column",
-        width: 250,
-        borderLeftColor: theme.palette.grey[600],
-        borderLeft: "solid 2px",
-        overflowY: 'auto',
-    },
-    card: {
-        //   minWidth: 275,
-    },
     title: {
         fontSize: 14,
     },
@@ -53,7 +41,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
     viewCard(entity: Entity | undefined) {
         const { classes,onDelete } = this.props
         if(entity) return (
-            <Card className={classes.card}>
+            <Card>
                 <CardContent>
                     <Typography className={classes.title} color="textSecondary" gutterBottom>
                         {this.getTypeStr(entity)}
@@ -71,12 +59,16 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         )
     }
     render() {
-        const { classes,entity } = this.props
+        const { entity } = this.props
 
         return (
-            <div className={classes.root}>
+            <UIDrawer
+                anchor="right"
+                btnTitle="Информация об выбранном объекте"
+                btnIcon={(<InfoEntityIcon/>)}
+            >                
                 {this.viewCard(entity)}
-            </div>
+            </UIDrawer>
         )
     }
 

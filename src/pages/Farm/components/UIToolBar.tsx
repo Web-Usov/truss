@@ -1,16 +1,16 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Tooltip, Paper } from '@material-ui/core';
+import { Theme, createStyles, withStyles, Tooltip, Paper, AppBar, Toolbar, IconButton, Typography } from '@material-ui/core';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
 import { WithStyles } from '@material-ui/styles';
 import { ZoomOutMap as MoveIcon, MyLocation as AddNodeIcon, Delete as DeleteIcon, Power as ConnectIcon } from '@material-ui/icons';
 
 const styles = (theme: Theme) => createStyles({
-    root: {
-        backgroundColor: theme.palette.primary.dark,
-        padding: theme.spacing(1),
-        display: "flex",
-        borderBottomColor: theme.palette.grey[800],
-        borderBottom: 'solid 2px'
+    appBar: {
+        zIndex: theme.zIndex.drawer + 1,
+    },
+    modsBtnGroup:{
+        marginLeft:theme.spacing(2),
+        marginRight:theme.spacing(2),
     }
 })
 
@@ -59,24 +59,34 @@ const UIToolBar: React.FC<UIToolBarProps> = ({ onSelect, selected, classes }) =>
         }
     ]
     return (
-        <div className={classes.root}>
-            <Paper>
-                <ToggleButtonGroup
+        <AppBar 
+            position="fixed" 
+            className={classes.appBar}
+            color="primary">
+            <Toolbar >
+                <ToggleButtonGroup 
+                    color="primary"
                     value={selected}
                     exclusive
                     onChange={(e, value) => onSelect(value)}
                     size="small"
+                    className={classes.modsBtnGroup}
                 >
                     {mods.map(item => (
-                        <ToggleButton value={item.mod} key={item.name}>
+                        <ToggleButton 
+                            value={item.mod} 
+                            key={item.name}
+                            color="secondory"
+                            
+                        >
                             <Tooltip title={item.name}>
                                 {item.icon}
                             </Tooltip>
                         </ToggleButton>
                     ))}
                 </ToggleButtonGroup>
-            </Paper>
-        </div>
+            </Toolbar>
+        </AppBar>
     )
 }
 

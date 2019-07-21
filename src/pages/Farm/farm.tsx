@@ -25,8 +25,12 @@ const styles = (theme: Theme) => createStyles({
     stageBox: {
         display: 'flex',
         flexGrow: 1,
-        overflow: 'hidden'
-    }
+        overflow: 'hidden',
+        // width: "100%",
+        // height: "100%",
+
+    },
+    toolbar: theme.mixins.toolbar,
 })
 
 export interface UIFarmProps extends IFarmStore, WithStyles<typeof styles> {
@@ -163,7 +167,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             case UIModes.addBeamStart: {
                 if (paintEntity && paintEntity instanceof Beam) {
                     const beam = paintEntity
-                    beam.moveEndPoint(MyMath.cellX(layerX), MyMath.cellY(layerY))
+                    beam.moveEndPoint(layerX, layerY)
                 } else this.setState({ uiMode: UIModes.addBeam })
                 this.updateFarm(farm)
                 break;
@@ -244,7 +248,10 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                     selected={uiMode}
                     onSelect={this.setSelectedMode.bind(this)} />
 
+                <div className={classes.toolbar} />
                 <Box className={classes.stageBox}>
+                    <div className={classes.toolbar} />
+                    
                     <UITreePanel
                         nodes={farm.getNodes()}
                         beams={farm.getBeams()}

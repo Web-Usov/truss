@@ -5,6 +5,7 @@ import UIGrid from './UIFarmEntities/UIGrid'
 import UIToolBar from './UIToolBar'
 import UITreePanel from './UITreePanel'
 import UIEntityInfo from './UIEntityInfo'
+import UIDrawer from './UIDrawer'
 
 
 export {
@@ -14,5 +15,6 @@ export {
     UIBeam,
     UIEntityInfo,
     UIStage,
-    UIGrid
+    UIGrid,
+    UIDrawer
 }
