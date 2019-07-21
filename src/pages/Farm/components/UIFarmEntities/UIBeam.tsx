@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Line, Stage } from 'react-konva'
 import Konva from 'konva'
-import { UIModes } from '../UIToolBar';
+import { UIModes } from '../UIToolPanel';
 import { Beam } from 'src/models/Farm/ModelBeam';
 import theme from 'src/theme';
 import { consts } from 'src/static';

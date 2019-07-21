@@ -120,9 +120,9 @@ export class Farm implements IFarm {
             case 'end': {
                 const beams = this.getBeamsOnNode(_beam.startConnectedNodeID)
                 const oldBeam = beams.find(item =>
-                    item.startConnectedNodeID === _beam.startConnectedNodeID && item.endConnectedNodeID === _node.id ||
-                    item.startConnectedNodeID === _node.id && item.endConnectedNodeID === _beam.startConnectedNodeID ||
-                    item.id === _beam.id && item.endConnectedNodeID === _beam.id
+                    (item.startConnectedNodeID === _beam.startConnectedNodeID && item.endConnectedNodeID === _node.id) ||
+                    (item.startConnectedNodeID === _node.id && item.endConnectedNodeID === _beam.startConnectedNodeID) ||
+                    (item.id === _beam.id && item.endConnectedNodeID === _beam.id)
                 )
 
 

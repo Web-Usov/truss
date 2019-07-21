@@ -6,7 +6,8 @@ import { createStyles, Theme, WithStyles, withStyles, Box } from '@material-ui/c
 import { IFarmStore } from './farmReducer';
 import { Farm, Node, Beam, Entity } from 'src/models/Farm';
 import { UITreePanel, UIEntityInfo, UIStage } from './components';
-import UIToolBar, { UIModes } from './components/UIToolBar';
+import UIToolBar from './components/UIToolBar';
+import UIToolPanel, { UIModes } from './components/UIToolPanel';
 import { MyMath } from 'src/utils';
 
 
@@ -165,11 +166,13 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         const { layerX, layerY } = e.evt
         switch (uiMode) {
             case UIModes.addBeamStart: {
-                if (paintEntity && paintEntity instanceof Beam) {
-                    const beam = paintEntity
-                    beam.moveEndPoint(layerX, layerY)
-                } else this.setState({ uiMode: UIModes.addBeam })
-                this.updateFarm(farm)
+                if(e.target.getStage()){
+                    if (paintEntity && paintEntity instanceof Beam) {
+                        const beam = paintEntity
+                        beam.moveEndPoint(layerX, layerY)
+                    } else this.setState({ uiMode: UIModes.addBeam })
+                    this.updateFarm(farm)
+                }
                 break;
             }
             default:
@@ -179,7 +182,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     onDrag(e: Konva.KonvaEventObject<DragEvent>, entity: Entity) {
         const { farm, uiMode } = this.state
         if (entity instanceof Node) {
-            if (uiMode === UIModes.move) {
+            if (uiMode === UIModes.move ) {
                 const { layerX, layerY } = e.evt
                 farm.moveNodeTo(entity.id, MyMath.cellX(layerX), MyMath.cellY(layerY))
                 this.updateFarm(farm)
@@ -244,9 +247,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                     keyValue={"Escape"}
                     onKeyHandle={this.onKeyHandle}
                 />
-                <UIToolBar
-                    selected={uiMode}
-                    onSelect={this.setSelectedMode.bind(this)} />
+                <UIToolBar/>
 
                 <div className={classes.toolbar} />
                 <Box className={classes.stageBox}>
@@ -274,7 +275,9 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         onDelete={this._deleteEntity} />
                 </Box>
 
-
+                <UIToolPanel
+                    selected={uiMode}
+                    onSelect={this.setSelectedMode.bind(this)} />
             </Box>
         )
     }

@@ -1,19 +1,15 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, Fab, Drawer, ListItemIcon, Divider, IconButton, Tooltip } from '@material-ui/core';
+import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider,  Badge } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
-import { Close as CloseIcon, List as TreePanelIcon, ExpandLess, ExpandMore } from '@material-ui/icons';
+import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore } from '@material-ui/icons';
 import { UIDrawer } from '.';
-
-const drawerWidth = 240;
 
 const styles = (theme: Theme) => createStyles({
     nested: {
+        paddingLeft: theme.spacing(6)
     },
 })
-
-
-
 
 interface TreePanelProps extends WithStyles<typeof styles> {
     nodes: Node[],
@@ -23,8 +19,7 @@ interface TreePanelProps extends WithStyles<typeof styles> {
 }
 
 interface TreeState {
-    openedNodes: boolean,
-    openedBeams: boolean,
+    tabs: Map<string, boolean>,
     open: boolean,
 
 }
@@ -34,77 +29,66 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         super(props)
         this.state = {
             open: false,
-            openedNodes: true,
-            openedBeams: true,
+            tabs: new Map()
         }
-        this.switchTab = this.switchTab.bind(this)
+        this.openTab = this.openTab.bind(this)
+        this.viewListItem = this.viewListItem.bind(this)
     }
-    switchTab(tab: string): void {
-        switch (tab) {
-            case 'nodes':
-                return this.setState((state) => ({
-                    openedNodes: !state.openedNodes
-                }))
-            case 'beams':
-                return this.setState((state) => ({
-                    openedBeams: !state.openedBeams
-                }))
-            default:
-                return;
-        }
+    componentWillMount() {
+        const { tabs } = this.state
+        tabs.set('Узлы', false)
+        tabs.set('Лучи', false)
+        this.setState({ tabs: new Map(tabs) })
+    }
+    openTab(tab: string): void {
+        const { tabs } = this.state
+        tabs.set(tab, !tabs.get(tab))
+        this.setState({ tabs: new Map(tabs) })
+    }
+    viewListItem(entityArray: Entity[], title: string, icon?: JSX.Element) {
+        const { selectedEntity, classes, onSelect } = this.props
+        const { tabs } = this.state
+        return (<React.Fragment>
+            <ListItem button onClick={() => this.openTab(title)}>
+                {icon && (
+                    <ListItemIcon>
+                        <Badge badgeContent={entityArray.length} color="secondary">
+                            {icon}
+                        </Badge>
+                    </ListItemIcon>
+                )}
+                <ListItemText primary={title} />
+                {tabs.get(title) ? <ExpandLess /> : <ExpandMore />}
+            </ListItem>
+            <Collapse in={tabs.get(title)} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                    {entityArray.map(item => (
+                        <ListItem
+                            button
+                            className={classes.nested}
+                            key={item.id}
+                            selected={selectedEntity === item}
+                            onClick={(e) => onSelect(item)}
+                        >
+                            <ListItemText primary={item.id} />
+                        </ListItem>
+                    ))}
+                </List>
+            </Collapse>
+            <Divider />
+        </React.Fragment>
+        )
     }
     render() {
-        const { classes, nodes, beams, selectedEntity, onSelect } = this.props
-        const { openedBeams, openedNodes, } = this.state
-        const { switchTab: openTab } = this
+        const { nodes, beams } = this.props
         return (
             <UIDrawer
                 anchor="left"
-                btnTitle="Структура проекат"
-                btnIcon={(<TreePanelIcon/>)}
+                btnTitle="Структура проекта"
+                btnIcon={(<TreePanelIcon />)}
             >
-                <List>
-                    <ListItem button onClick={() => openTab('nodes')}>
-                        <ListItemText primary="Узлы" />
-                        {openedNodes ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={openedNodes} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            {nodes.map(item => (
-                                <ListItem
-                                    button
-                                    className={classes.nested}
-                                    key={item.id}
-                                    selected={selectedEntity === item}
-                                    onClick={(e) => onSelect(item)}
-                                >
-                                    <ListItemText primary={item.id} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Collapse>
-                    <Divider />
-
-                    <ListItem button onClick={() => openTab('beams')}>
-                        <ListItemText primary="Лучи" />
-                        {openedBeams ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={openedBeams} timeout="auto" unmountOnExit>
-                        <List component="div" disablePadding>
-                            {beams.map(item => (
-                                <ListItem
-                                    button
-                                    className={classes.nested}
-                                    key={item.id}
-                                    selected={selectedEntity === item}
-                                    onClick={(e) => onSelect(item)}
-                                >
-                                    <ListItemText primary={item.id} />
-                                </ListItem>
-                            ))}
-                        </List>
-                    </Collapse>
-                </List>
+                {this.viewListItem(nodes, 'Узлы', (<NodeIcon />))}
+                {this.viewListItem(beams, 'Лучи', (<BeamIcon />))}
 
             </UIDrawer>
         )

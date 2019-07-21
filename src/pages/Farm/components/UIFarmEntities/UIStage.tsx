@@ -4,7 +4,7 @@ import { WithStyles } from '@material-ui/styles';
 import { Stage, Layer, } from 'react-konva';
 import { UINode, UIBeam } from '..';
 import { Farm, Entity } from 'src/models/Farm';
-import { UIModes } from '../UIToolBar';
+import { UIModes } from '../UIToolPanel';
 import Konva from 'konva';
 import UIGrid from './UIGrid';
 import { consts } from 'src/static';

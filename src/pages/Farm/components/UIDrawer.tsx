@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles, Fab, Drawer, Tooltip } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { Close as CloseIcon, List as TreePanelIcon, ExpandLess, ExpandMore, SvgIconComponent } from '@material-ui/icons';
-import { SvgIconProps } from '@material-ui/core/SvgIcon';
+import { Close as CloseIcon } from '@material-ui/icons';
 
 const drawerWidth = 240;
 
@@ -15,7 +14,7 @@ const styles = (theme: Theme) => createStyles({
     },
     toogleIcon: {
         position: 'absolute',
-        top: theme.spacing(9),
+        top: theme.spacing(10),
         zIndex: theme.zIndex.drawer + 1
     },
     toolbar: theme.mixins.toolbar,
@@ -81,12 +80,12 @@ class UIDrawer extends React.PureComponent<TreePanelProps, TreeState>{
                     onClose={() => this.changeViewtooltip(false)}>
                     <Fab
                         style={{
-                            left: anchor === 'left' ? !open ? 10 : drawerWidth + 10 : "auto",
+                            left: anchor === 'left' ? !open ? 15 : drawerWidth + 15 : "auto",
                             
-                            right: anchor === 'right' ? !open ? 10 : drawerWidth + 10 : "auto"
+                            right: anchor === 'right' ? !open ? 15 : drawerWidth + 15 : "auto"
                         }}
                         color="secondary"
-                        size="small"
+                        size="medium"
                         className={classes.toogleIcon}
                         onClick={this.switchDrawer}
                     >

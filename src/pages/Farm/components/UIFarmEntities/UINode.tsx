@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Circle, Stage } from 'react-konva'
 import Konva from 'konva'
 import { Node } from 'src/models/Farm';
-import { UIModes } from '../UIToolBar';
+import { UIModes } from '../UIToolPanel';
 import theme from 'src/theme';
 import { consts } from 'src/static';
 
