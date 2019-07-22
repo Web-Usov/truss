@@ -13,7 +13,8 @@ const styles = (theme: Theme) => createStyles({
     stage: {
         backgroundColor: "#fff",
         // width:"100%",
-        flexGrow: 1
+        flexGrow: 1,
+        overflow:'auto',
     }
 })
 
@@ -25,7 +26,7 @@ export interface UIStageProps extends WithStyles<typeof styles> {
     stageHeight:number,
     stageWidth:number,
     onClick(e: Konva.KonvaEventObject<MouseEvent>, entity?: Entity):void,
-    onMouseMove(e: Konva.KonvaEventObject<MouseEvent>):void,
+    onMouseMove(e: Konva.KonvaEventObject<MouseEvent | TouchEvent>):void,
     onDrag(e:Konva.KonvaEventObject<DragEvent>, entity:Entity):void,
     stage:React.RefObject<Stage & Konva.Stage>
 }

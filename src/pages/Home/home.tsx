@@ -5,8 +5,9 @@ import { HomeHeader } from './components';
 
 const styles = (theme: Theme) => createStyles({
 	root: {
-		minWidth: window.innerWidth,
-		minHeight: window.innerHeight,
+		width:'100%',
+		minHeight:'100%',
+		display:'block',
 		background: theme.palette.background.default,
 		padding: theme.spacing(4)
 	}

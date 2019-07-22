@@ -15,8 +15,8 @@ const styles = (theme: Theme) => createStyles({
 
 	},
 	logo: {
-		width: "auto",
-		height: 400
+		width: "20%",
+		height:'20%'
 	},
 	title: {
 		padding: 40
@@ -33,7 +33,11 @@ const styles = (theme: Theme) => createStyles({
 const HomeHeader = ({classes} : WithStyles<typeof styles>) => {
 	return (
 		<header className={classes.root}>
-			<img src={consts.bridgeIcon_2} alt="logo" className={classes.logo} />
+			<img 
+				src={consts.bridgeIcon_2} 
+				alt="logo" 
+				className={classes.logo} 
+			/>
 			<Typography variant="h3" className={classes.title}>
 				{consts.title}
 			</Typography>

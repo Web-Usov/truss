@@ -47,16 +47,8 @@ const UIBeam: React.FC<UIBeamProps> = ({ beam,  mode, onClick, selected }) => {
                 stroke={theme.palette.secondary.light}
                 strokeWidth={size}
                 shadowBlur={selected ? 8 : 2}
-            />
-            <Line
-                points={[
-                    beam.x,
-                    beam.y,
-                    beam.getEndX(),
-                    beam.getEndY()
-                ]}
-                strokeWidth={size*4} 
-                stroke="transparent"
+
+                hitStrokeWidth={size*4} 
                 onClick={(e) => onClick(e,beam)}
                 onMouseEnter={(e) => hundleMouseEnter(e, mode)}
                 onMouseLeave={(e) => hundleMouseLeave(e)}

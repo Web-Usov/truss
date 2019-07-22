@@ -15,7 +15,6 @@ export interface UINodeProps {
 }
 
 const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) => {
-
     const size = consts.UI_nodeSize
 
     const hundleMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) => {
@@ -44,7 +43,7 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
         }
 
     }
-    const hundleMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) => {
+    const hundleMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>) => {
         const stage: Stage & Konva.Stage = e.target.getStage()
         stage.container().style.cursor = 'default'
     }
@@ -90,18 +89,14 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
                 shadowBlur={selected ? 8 : 2}
                 stroke={getStorkeColor(mode)}
                 strokeWidth={getStorkeWidth(mode)}
-            />
-            <Circle
-
-                radius={size * 2}
-                x={node.x}
-                y={node.y}
+                
+                hitStrokeWidth={size * 2}
                 draggable={mode === UIModes.move}
                 _useStrictMode
                 onDragMove={(e) => drag(e, node)}
                 onClick={(e) => onClick(e, node)}
                 onMouseEnter={(e) => hundleMouseEnter(e, mode)}
-                onMouseLeave={(e) => hundleMouseLeave(e, mode)}
+                onMouseLeave={(e) => hundleMouseLeave(e)}
             />
         </React.Fragment>
     )

@@ -1,16 +1,19 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles,  Card, CardContent, Typography, CardActions,  IconButton } from '@material-ui/core';
+import { Theme, createStyles, withStyles, Typography, IconButton, Box, Divider } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
 import { Delete as DeleteIcon, Info as InfoEntityIcon } from '@material-ui/icons';
-import { UIDrawer } from '.';
+import { Sidebar } from 'src/components';
 
 const styles = (theme: Theme) => createStyles({
-    title: {
+    root: {
+        padding: theme.spacing(2)
+    },
+    subTitle: {
         fontSize: 14,
     },
-    pos: {
-        marginBottom: 12,
+    title: {
+        marginBottom:theme.spacing(2)
     },
 })
 
@@ -19,7 +22,7 @@ const styles = (theme: Theme) => createStyles({
 
 interface EntityInfoProps extends WithStyles<typeof styles> {
     entity?: Entity | undefined,
-    onDelete(entity:Entity):void
+    onDelete(entity: Entity): void
 }
 
 interface EntityInfoState {
@@ -33,42 +36,38 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
 
         }
     }
-    getTypeStr(entity: Entity):string{
-        if(entity instanceof Node) return "Узел"
-        else if(entity instanceof Beam) return "Луч"
+    getTypeStr(entity: Entity): string {
+        if (entity instanceof Node) return "Узел"
+        else if (entity instanceof Beam) return "Луч"
         else return "Элемент"
     }
-    viewCard(entity: Entity | undefined) {
-        const { classes,onDelete } = this.props
-        if(entity) return (
-            <Card>
-                <CardContent>
-                    <Typography className={classes.title} color="textSecondary" gutterBottom>
-                        {this.getTypeStr(entity)}
-                    </Typography>
-                    <Typography variant="h5" component="h2">
-                        {entity.name}
-                    </Typography>                    
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="Delete" onClick={() => onDelete(entity)}>
-                        <DeleteIcon />
-                    </IconButton>
-                </CardActions>
-            </Card>
+    viewInfo(entity: Entity | undefined) {
+        const { classes, onDelete } = this.props
+        if (entity) return (
+            <Box className={classes.root}>
+                <Typography className={classes.subTitle} color="textSecondary" gutterBottom>
+                    {this.getTypeStr(entity)}
+                </Typography>
+                <Typography variant="h5" className={classes.title}>
+                    {entity.name}
+                </Typography>
+                <IconButton aria-label="Delete" onClick={() => onDelete(entity)}>
+                    <DeleteIcon />
+                </IconButton>
+            </Box>
         )
     }
     render() {
         const { entity } = this.props
-
         return (
-            <UIDrawer
+            <Sidebar
                 anchor="right"
                 btnTitle="Информация об выбранном объекте"
-                btnIcon={(<InfoEntityIcon/>)}
-            >                
-                {this.viewCard(entity)}
-            </UIDrawer>
+                btnIcon={(<InfoEntityIcon />)}
+            >
+                {this.viewInfo(entity)}
+                <Divider />
+            </Sidebar>
         )
     }
 

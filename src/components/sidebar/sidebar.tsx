@@ -23,20 +23,20 @@ const styles = (theme: Theme) => createStyles({
 
 
 
-interface TreePanelProps extends WithStyles<typeof styles> {
+interface SidebarProps extends WithStyles<typeof styles> {
     anchor: 'left' | 'right',
     btnTitle? : string,
     btnIcon : JSX.Element
 }
 
-interface TreeState {
+interface SidebarState {
     open: boolean,
     viewTooltip: boolean
 
 }
 
-class UIDrawer extends React.PureComponent<TreePanelProps, TreeState>{
-    constructor(props: TreePanelProps) {
+class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
+    constructor(props: SidebarProps) {
         super(props)
         this.state = {
             open: false,
@@ -98,4 +98,4 @@ class UIDrawer extends React.PureComponent<TreePanelProps, TreeState>{
 
 }
 
-export default withStyles(styles)(UIDrawer)
+export default withStyles(styles)(Sidebar)

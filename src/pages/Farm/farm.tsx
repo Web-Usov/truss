@@ -15,20 +15,15 @@ const styles = (theme: Theme) => createStyles({
     root: {
         width: "100%",
         height: "100%",
-        // maxHeight: window.innerHeight,
         overflow: "hidden",
         background: theme.palette.background.default,
-        // padding: theme.spacing(4),
         display: "flex",
         flexDirection: "column",
-        // borderRadius:18,
     },
     stageBox: {
         display: 'flex',
         flexGrow: 1,
         overflow: 'hidden',
-        // width: "100%",
-        // height: "100%",
 
     },
     toolbar: theme.mixins.toolbar,
@@ -75,9 +70,22 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
 
         this.stage = React.createRef();
     }
-    componentDidMount() {
+    componentWillMount(){
         this._setStageSize()
+
+    }
+    componentDidMount() {
         window.addEventListener('resize', this._setStageSize)
+        const { current: stage } = this.stage
+        if (stage) {
+            const container : HTMLDivElement = stage.attrs.container
+            
+            if(container){ 
+                console.log(container);              
+                container.scrollTop = (container.scrollHeight - container.offsetHeight) / 2
+                container.scrollLeft = (container.scrollWidth - container.offsetWidth) / 2
+            }
+        }
     }
     componentWillUnmount() {
         window.removeEventListener('resize', this._setStageSize)
@@ -175,19 +183,36 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 }
                 break;
             }
+            case UIModes.delete:{                
+                const stage: Stage & Konva.Stage = e.target.getStage()
+                if(stage === e.target){                    
+                    stage.container().style.cursor = 'default'
+                }
+                break;
+            }
             default:
                 break;
         }
     }
     onDrag(e: Konva.KonvaEventObject<DragEvent>, entity: Entity) {
         const { farm, uiMode } = this.state
-        if (entity instanceof Node) {
-            if (uiMode === UIModes.move ) {
-                const { layerX, layerY } = e.evt
-                farm.moveNodeTo(entity.id, MyMath.cellX(layerX), MyMath.cellY(layerY))
-                this.updateFarm(farm)
-            }
+        switch (uiMode) {
+            case UIModes.move:{
+                if (entity instanceof Node) {
+                    if (e.evt.defaultPrevented) {
+                        console.log(e.evt);
+                        
+                        const { layerX, layerY } = e.evt
+                        farm.moveNodeTo(entity.id, MyMath.cellX(layerX), MyMath.cellY(layerY))
+                        this.updateFarm(farm)
+                    }
+                }
+                break
+            }        
+            default:
+                break;
         }
+       
     }
     onKeyHandle(e: KeyboardEvent) {
         switch (e.key) {
@@ -218,15 +243,10 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         }
     }
     _setStageSize(e?: UIEvent) {
-        const { current: stage } = this.stage
-        if (stage) {
-            const container: HTMLDivElement = stage.attrs.container
-            const { clientWidth, clientHeight } = container
-            this.setState({
-                stageHeight: clientHeight,
-                stageWidth: clientWidth
-            })
-        }
+        this.setState({
+            stageHeight: window.innerHeight * 1.5,
+            stageWidth: window.innerWidth * 1.5
+        })
     }
     _selectEntity(entity:Entity | undefined){
         if (entity) this.setState({ selectedEntity: entity })

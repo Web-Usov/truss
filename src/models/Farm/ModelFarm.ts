@@ -165,15 +165,19 @@ export class Farm implements IFarm {
     }
     moveNodeTo(nodeID: number, x: number, y: number): void {
         const node = this.getNode(nodeID)
-        node.x = x
-        node.y = y
-        node.beamsID.forEach(beamID => {
-            const beam = this.getBeam(beamID)
-            if (beam.startConnectedNodeID === nodeID) {
-                beam.moveStartPoint(x, y)
-            } else if (beam.endConnectedNodeID === nodeID) {
-                beam.moveEndPoint(x, y)
-            }
-        })
+        const _node = this.getNodes().find(item => item.x === x && item.y === y)
+        if(!_node){
+
+            node.x = x
+            node.y = y
+            node.beamsID.forEach(beamID => {
+                const beam = this.getBeam(beamID)
+                if (beam.startConnectedNodeID === nodeID) {
+                    beam.moveStartPoint(x, y)
+                } else if (beam.endConnectedNodeID === nodeID) {
+                    beam.moveEndPoint(x, y)
+                }
+            })
+        }
     }
 }

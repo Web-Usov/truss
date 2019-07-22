@@ -44,12 +44,10 @@ class App extends React.Component<IAppProps> {
 				/>
 				<CssBaseline/>
 				<ThemeProvider theme={theme}>
-					<main style={{height:"100%"}}>
-						<Switch>
-							<Route path={navPath.HOME_PAGE} component={Home} exact />
-							<Route path={navPath.FARM_PAGE} component={UIFarm} />
-						</Switch>
-					</main>
+					<Switch>
+						<Route path={navPath.HOME_PAGE} component={Home} exact />
+						<Route path={navPath.FARM_PAGE} component={UIFarm} />
+					</Switch>
 
 				</ThemeProvider>
 

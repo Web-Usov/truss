@@ -1,9 +1,9 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider,  Badge } from '@material-ui/core';
+import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Node, Beam, Entity } from 'src/models/Farm';
 import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore } from '@material-ui/icons';
-import { UIDrawer } from '.';
+import { Sidebar } from 'src/components';
 
 const styles = (theme: Theme) => createStyles({
     nested: {
@@ -48,41 +48,42 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
     viewListItem(entityArray: Entity[], title: string, icon?: JSX.Element) {
         const { selectedEntity, classes, onSelect } = this.props
         const { tabs } = this.state
-        return (<React.Fragment>
-            <ListItem button onClick={() => this.openTab(title)}>
-                {icon && (
-                    <ListItemIcon>
-                        <Badge badgeContent={entityArray.length} color="secondary">
-                            {icon}
-                        </Badge>
-                    </ListItemIcon>
-                )}
-                <ListItemText primary={title} />
-                {tabs.get(title) ? <ExpandLess /> : <ExpandMore />}
-            </ListItem>
-            <Collapse in={tabs.get(title)} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    {entityArray.map(item => (
-                        <ListItem
-                            button
-                            className={classes.nested}
-                            key={item.id}
-                            selected={selectedEntity === item}
-                            onClick={(e) => onSelect(item)}
-                        >
-                            <ListItemText primary={item.id} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Collapse>
-            <Divider />
-        </React.Fragment>
+        return (
+            <React.Fragment>
+                <ListItem button onClick={() => this.openTab(title)}>
+                    {icon && (
+                        <ListItemIcon>
+                            <Badge badgeContent={entityArray.length} color="secondary">
+                                {icon}
+                            </Badge>
+                        </ListItemIcon>
+                    )}
+                    <ListItemText primary={title} />
+                    {tabs.get(title) ? <ExpandLess /> : <ExpandMore />}
+                </ListItem>
+                <Collapse in={tabs.get(title)} timeout="auto" unmountOnExit>
+                    <List component="div" disablePadding>
+                        {entityArray.map(item => (
+                            <ListItem
+                                button
+                                className={classes.nested}
+                                key={item.id}
+                                selected={selectedEntity === item}
+                                onClick={(e) => onSelect(item)}
+                            >
+                                <ListItemText primary={item.id} />
+                            </ListItem>
+                        ))}
+                    </List>
+                </Collapse>
+                <Divider />
+            </React.Fragment>
         )
     }
     render() {
         const { nodes, beams } = this.props
         return (
-            <UIDrawer
+            <Sidebar
                 anchor="left"
                 btnTitle="Структура проекта"
                 btnIcon={(<TreePanelIcon />)}
@@ -90,7 +91,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                 {this.viewListItem(nodes, 'Узлы', (<NodeIcon />))}
                 {this.viewListItem(beams, 'Лучи', (<BeamIcon />))}
 
-            </UIDrawer>
+            </Sidebar>
         )
     }
 

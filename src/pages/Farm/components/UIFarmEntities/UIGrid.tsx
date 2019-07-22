@@ -25,6 +25,7 @@ const UIGrid: React.FC<UIGridProps> = ({ widthCell, heightCell, heightBox, width
                 ]}
                 stroke="#ddd"
                 strokeWidth={1}
+                key={index}
             />)
         }
         return rows
@@ -44,6 +45,7 @@ const UIGrid: React.FC<UIGridProps> = ({ widthCell, heightCell, heightBox, width
                 ]}
                 stroke="#ddd"
                 strokeWidth={1}
+                key={index}
             />)
 
         }
