@@ -30,17 +30,19 @@ export class Farm implements IFarm {
         this.time = Date.now()
 
     }
-    addNode(x: number, y: number, angle: number, name: string = ""): boolean {
+    addNode(x: number, y: number, angle: number, name: string = "", isStatic: boolean  = false): Node | false {
         const oldNode = this.getNodes().find(item => item.x === x && item.y === y)
         if(oldNode) return false
         const node = new Node({
             x,
             y,
             angle,
-            name
+            name,
+            isStatic
         })
         this.nodes.set(node.id, node)
-        return true
+        
+        return node
     }
     addBeam(x: number, y: number): Beam {
         const beam = new Beam({
@@ -55,6 +57,9 @@ export class Farm implements IFarm {
     }
     private deleteBeam(beamID: number): void {
         this.beams.delete(beamID)
+    }
+    private deleteForce(forceID: number): void {
+        this.forces.delete(forceID)
     }
 
     getNode(nodeID: number): Node {
@@ -78,6 +83,7 @@ export class Farm implements IFarm {
         for (let node of this.nodes.values()) {
             nodes.push(node)
         }
+        
         return nodes
     }
     getBeams(): Beam[] {
@@ -88,9 +94,9 @@ export class Farm implements IFarm {
         return beams
     }
 
-    getForcesOnNode(nodeID: number): Force[] {
-        const forces: Force[] = this.getNode(nodeID).forcesID.map(forceID => this.getForce(forceID))
-        return forces
+    getForcesOnNode(nodeID: number): [ Force| undefined, Force| undefined] {
+        const node: Node = this.getNode(nodeID)
+        return [node.forceX, node.forceY]
     }
     getBeamsOnNode(nodeID: number): Beam[] {
         const beams: Beam[] = this.getNode(nodeID).beamsID.map(beamID => this.getBeam(beamID))
@@ -138,15 +144,27 @@ export class Farm implements IFarm {
 
         return true
     }
-    deleteEntity(entity: Entity | number) {
-        if (entity instanceof Node) {
-            // const beams = this.getBeamsOnNode(entity.id)
+    connectForceToNode(node:Node, angle: 0 | 90, value:number ){
+        const force = new Force({
+            angle, 
+            value,
+            nodeID:node.id,
+        })
+        if(angle === 0) node.forceX = force
+        else node.forceY = force
+        this.forces.set(force.id, force)
+    }
+    deleteEntity(entity: Entity | number): void  {
+        if (entity instanceof Node) {           
+            if(entity.isStatic) return
             const beams = entity.beamsID.map(beamID => this.getBeam(beamID))
             beams.forEach(beam => {
                 if (beam.startConnectedNodeID === entity.id) this.getNode(beam.endConnectedNodeID).removeBeam(beam.id)
                 else this.getNode(beam.startConnectedNodeID).removeBeam(beam.id)
                 this.deleteBeam(beam.id)
             })
+            if(entity.forceX) this.deleteForce(entity.forceX.id)
+            if(entity.forceY) this.deleteForce(entity.forceY.id)
             this.deleteNode(entity.id)
         } else if (entity instanceof Beam) {
             [entity.startConnectedNodeID,entity.endConnectedNodeID].forEach(nodeID => {
@@ -165,6 +183,7 @@ export class Farm implements IFarm {
     }
     moveNodeTo(nodeID: number, x: number, y: number): void {
         const node = this.getNode(nodeID)
+        if(node.isStatic) return
         const _node = this.getNodes().find(item => item.x === x && item.y === y)
         if(!_node){
 

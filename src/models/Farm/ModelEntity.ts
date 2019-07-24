@@ -17,7 +17,7 @@ export class Entity implements IEntity {
     newX: number;
     newY: number;
     constructor(props: IEntity) {
-        this.id = Date.now()
+        this.id = Date.now()+Math.random()
         this.x = props.x || 0
         this.y = props.y || 0
         this.angle = props.angle || 0

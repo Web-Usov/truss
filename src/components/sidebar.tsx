@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Fab, Drawer, Tooltip } from '@material-ui/core';
+import { Theme, createStyles, withStyles, Fab, Drawer, Tooltip, Typography, Divider } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Close as CloseIcon } from '@material-ui/icons';
 
@@ -17,6 +17,9 @@ const styles = (theme: Theme) => createStyles({
         top: theme.spacing(10),
         zIndex: theme.zIndex.drawer + 1
     },
+    title:{
+        padding:theme.spacing(1)
+    },
     toolbar: theme.mixins.toolbar,
 })
 
@@ -25,7 +28,7 @@ const styles = (theme: Theme) => createStyles({
 
 interface SidebarProps extends WithStyles<typeof styles> {
     anchor: 'left' | 'right',
-    btnTitle? : string,
+    title? : string,
     btnIcon : JSX.Element
 }
 
@@ -57,7 +60,7 @@ class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
         this.setState({ viewTooltip: flag })
     }
     render() {
-        const { classes,children, btnTitle: btnTitile, btnIcon, anchor } = this.props
+        const { classes,children, title, btnIcon, anchor } = this.props
         const { open, viewTooltip } = this.state
         return (
             <React.Fragment>
@@ -71,11 +74,19 @@ class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
                     }}
                 >
                     <div className={classes.toolbar} />
+                    
+                    <Typography 
+                        variant='body2'
+                        align="center"
+                        className={classes.title}>
+                        {title}
+                    </Typography>
+                    <Divider/>
                     {children}
                 </Drawer>
                 <Tooltip
-                    title={btnTitile}
-                    open={btnTitile !== undefined && viewTooltip && !open}
+                    title={title}
+                    open={title !== undefined && viewTooltip && !open}
                     onOpen={() => this.changeViewtooltip(true)}
                     onClose={() => this.changeViewtooltip(false)}>
                     <Fab

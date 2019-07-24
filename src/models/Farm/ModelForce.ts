@@ -12,8 +12,9 @@ export class Force extends Entity {
     nodeID: number
     constructor(props: IForce) {
         super(props)
-        this.value = props.value || 0
-        this.angle = props.angle || 0
-        this.nodeID = props.nodeID || 0
+        const { value = 0 , angle = 0, nodeID = 0} = props
+        this.value = value
+        this.angle = angle
+        this.nodeID = nodeID
     }
 }

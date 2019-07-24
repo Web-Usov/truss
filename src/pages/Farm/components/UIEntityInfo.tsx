@@ -38,7 +38,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
     }
     getTypeStr(entity: Entity): string {
         if (entity instanceof Node) return "Узел"
-        else if (entity instanceof Beam) return "Луч"
+        else if (entity instanceof Beam) return "Стержень"
         else return "Элемент"
     }
     viewInfo(entity: Entity | undefined) {
@@ -62,7 +62,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         return (
             <Sidebar
                 anchor="right"
-                btnTitle="Информация об выбранном объекте"
+                title="Информация о выбранном объекте"
                 btnIcon={(<InfoEntityIcon />)}
             >
                 {this.viewInfo(entity)}

@@ -1,20 +1,30 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Tooltip, Paper } from '@material-ui/core';
-import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab'
+import { Theme, createStyles, withStyles,  Paper } from '@material-ui/core';
+import { ToggleButtonGroup } from '@material-ui/lab'
 import { WithStyles } from '@material-ui/styles';
 import { ZoomOutMap as MoveIcon, MyLocation as AddNodeIcon, Delete as DeleteIcon, Power as ConnectIcon } from '@material-ui/icons';
+
+import { fade } from '@material-ui/core/styles';
+import { MyToggleButton } from 'src/components';
 
 const styles = (theme: Theme) => createStyles({
     root: {
         position: 'absolute',
         padding: theme.spacing(1),
-        bottom:theme.spacing(4),
+        bottom: theme.spacing(2),
         left: "50%",
         transform: 'translateX(-50%)',
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: fade(theme.palette.primary.light, 0.4),
+        transition: theme.transitions.create(['background-color', 'box-shadow', 'border'], {
+            duration: theme.transitions.duration.short,
+        }),
+        '&:hover':{
+            backgroundColor: theme.palette.primary.light,
+        }
     },
     modsBtnGroup: {
-
+        borderRadius: 0,
+        backgroundColor: 'transparent'
     }
 })
 
@@ -65,7 +75,6 @@ const UIToolPanel: React.FC<UIToolPanelProps> = ({ onSelect, selected, classes }
     return (
         <Paper className={classes.root}>
             <ToggleButtonGroup
-                color="primary"
                 value={selected}
                 exclusive
                 onChange={(e, value) => onSelect(value)}
@@ -73,16 +82,14 @@ const UIToolPanel: React.FC<UIToolPanelProps> = ({ onSelect, selected, classes }
                 className={classes.modsBtnGroup}
             >
                 {mods.map(item => (
-                    <ToggleButton
+                    <MyToggleButton
+                        key={item.mod}
                         value={item.mod}
-                        key={item.name}
-                        color="secondory"
-
-                    >
-                        <Tooltip title={item.name}>
-                            {item.icon}
-                        </Tooltip>
-                    </ToggleButton>
+                        selected={item.mod === selected}
+                        icon={item.icon}
+                        name={item.name}
+                        
+                    />
                 ))}
             </ToggleButtonGroup>
         </Paper>

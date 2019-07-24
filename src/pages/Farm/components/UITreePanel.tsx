@@ -37,7 +37,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
     componentWillMount() {
         const { tabs } = this.state
         tabs.set('Узлы', false)
-        tabs.set('Лучи', false)
+        tabs.set('Стержни', false)
         this.setState({ tabs: new Map(tabs) })
     }
     openTab(tab: string): void {
@@ -85,11 +85,12 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         return (
             <Sidebar
                 anchor="left"
-                btnTitle="Структура проекта"
+                title="Структура проекта"
                 btnIcon={(<TreePanelIcon />)}
             >
+
                 {this.viewListItem(nodes, 'Узлы', (<NodeIcon />))}
-                {this.viewListItem(beams, 'Лучи', (<BeamIcon />))}
+                {this.viewListItem(beams, 'Стержни', (<BeamIcon />))}
 
             </Sidebar>
         )

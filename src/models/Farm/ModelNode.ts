@@ -1,17 +1,25 @@
 import { IEntity, Entity } from './ModelEntity';
+import { Force } from './ModelForce';
 
 export interface INode extends IEntity {
     beamsID?: number[]
-    forcesID?: number[],
+    forceX?:Force,
+    forceY?:Force,
+    isStatic?: boolean
 }
 
 export class Node extends Entity {
     beamsID: number[];
-    forcesID: number[];
+    forceX:Force | undefined
+    forceY:Force | undefined
+    isStatic:boolean
+    
     constructor(props:INode) {
         super(props)
         this.beamsID = props.beamsID || []
-        this.forcesID = props.forcesID  || []
+        this.forceX = props.forceX
+        this.forceY = props.forceY
+        this.isStatic = props.isStatic || false
     }
     connectBeam(beamID: number):boolean {
         if (!this.beamsID.find(id => id === beamID)){
@@ -23,12 +31,5 @@ export class Node extends Entity {
     removeBeam(beamID: number) {
         
         this.beamsID  = this.beamsID.filter(id => id !== beamID)
-    }
-    connectForce(forceID: number) {
-        if (!this.forcesID.find(id => id === forceID))
-            this.forcesID.push(forceID)
-    }
-    removeForce(forceID: number) {
-        this.beamsID   = this.forcesID.filter(id => id !== forceID)
     }
 }

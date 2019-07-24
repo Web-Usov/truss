@@ -33,7 +33,7 @@ const UIBeam: React.FC<UIBeamProps> = ({ beam,  mode, onClick, selected }) => {
     }
     const hundleMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>) => {
         const stage: Stage & Konva.Stage = e.target.getStage()
-        stage.container().style.cursor = 'default'
+        if(stage) stage.container().style.cursor = 'default'
     }
     return (
         <React.Fragment>

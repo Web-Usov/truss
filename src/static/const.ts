@@ -13,7 +13,7 @@ export const favicon = path.resolve(__dirname,"favicon.ico")
 
 // UI
 export const UI_cellSize = 40
-export const UI_nodeSize = 10
+export const UI_nodeSize = 15
 export const UI_beamSize = 6
 
 
