@@ -9,6 +9,8 @@ import { UITreePanel, UIEntityInfo, UIStage, UIHeader } from './components';
 import UIToolPanel, { UIModes } from './components/UIToolPanel';
 import { MyMath } from 'src/utils';
 import CreateDefaultFarm from './_testFarm'
+import Stats from 'react-stats'
+
 
 
 const styles = (theme: Theme) => createStyles({
@@ -58,7 +60,6 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
             paintEntity: undefined,
 
         }
-        console.log("PAP", this.state.farm);
         
         this.onClick = this.onClick.bind(this)
         this.onDrag = this.onDrag.bind(this)
@@ -266,6 +267,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         const { classes } = this.props
         return (
             <Box className={classes.root}>
+                <Stats.FPSStats isActive={true}/>
                 <KeyHandler
                     keyEventName={"keyup"}
                     keyValue={"Escape"}
