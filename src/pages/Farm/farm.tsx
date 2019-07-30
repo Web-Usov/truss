@@ -5,13 +5,13 @@ import { Stage } from "react-konva"
 import { createStyles, Theme, WithStyles, withStyles, Box } from '@material-ui/core';
 import { IFarmStore } from './store/farmReducer';
 import { UITreePanel, UIEntityInfo, UIStage, UIHeader, UIToolPanel } from './components';
-import { UIModes } from './components/UIToolPanel';
 import { MyMath } from 'src/utils';
 import Stats from 'react-stats'
 import { instanceOfBeam } from 'src/models/Farm/ModelBeam';
 import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode } from 'src/models/Farm/ModelNode';
 import { FarmContainerClass } from './index'
+import { UIModes } from 'src/utils/UI';
 
 
 
@@ -237,7 +237,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         if (entity) this.setState({ selectedEntity: entity })
     }
     clearFarm(): void {
-        if (window.confirm('Выуверены, что хотите очистить холст?')) {
+        if (window.confirm('Вы уверены, что хотите очистить холст?')) {
             this.props.defautlFarm()
         }
     }

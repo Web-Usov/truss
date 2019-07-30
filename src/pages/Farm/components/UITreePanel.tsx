@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore } from '@material-ui/icons';
+import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore, Brightness1 as CircleIcon } from '@material-ui/icons';
 import { Sidebar } from 'src/components';
 import { Entity } from 'src/models/Farm/ModelEntity';
 import { Beam } from 'src/models/Farm/ModelBeam';
-import { FarmNode } from 'src/models/Farm/ModelNode';
+import { FarmNode, instanceOfNode } from 'src/models/Farm/ModelNode';
+import { UI } from 'src/utils';
 
 const styles = (theme: Theme) => createStyles({
     nested: {
@@ -73,7 +74,12 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                                 selected={selectedEntity === item}
                                 onClick={(e) => onSelect(item)}
                             >
-                                <ListItemText primary={item.id} />
+                                {instanceOfNode(item) && (
+                                    <ListItemIcon>
+                                        <CircleIcon style={{color:UI.getNodeColor(item)}}/>
+                                    </ListItemIcon>
+                                )}
+                                <ListItemText primary={item.name} />
                             </ListItem>
                         ))}
                     </List>

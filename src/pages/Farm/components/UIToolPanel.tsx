@@ -6,6 +6,7 @@ import { ZoomOutMap as MoveIcon, MyLocation as AddNodeIcon, Delete as DeleteIcon
 
 import { fade } from '@material-ui/core/styles';
 import { MyToggleButton } from 'src/components';
+import { UIModes } from 'src/utils/UI';
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -28,14 +29,7 @@ const styles = (theme: Theme) => createStyles({
     }
 })
 
-export enum UIModes {
-    none,
-    move,
-    addNode,
-    addBeam,
-    addBeamStart,
-    delete
-}
+
 export interface IMode {
     name: string,
     mod: UIModes

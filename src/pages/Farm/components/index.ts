@@ -10,8 +10,8 @@ import UIToolPanel from './UIToolPanel'
 
 export {
     UIStage,
-    UINode as UINode,
-    UIBeam as UIBeam,
+    UINode,
+    UIBeam,
     UIHeader,
     UITreePanel,
     UIEntityInfo,

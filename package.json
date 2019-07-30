@@ -34,6 +34,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "typescript": "3.5.2",
+    "use-image": "^1.0.4",
     "uuid": "^3.3.2"
   },
   "scripts": {

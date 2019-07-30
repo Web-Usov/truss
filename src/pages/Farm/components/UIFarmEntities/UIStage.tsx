@@ -3,7 +3,6 @@ import { Theme, createStyles, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Stage, Layer, } from 'react-konva';
 import {  Entity } from 'src/models/Farm/ModelEntity';
-import { UIModes } from '../UIToolPanel';
 import Konva from 'konva';
 import UIGrid from './UIGrid';
 import { consts } from 'src/static';
@@ -12,6 +11,7 @@ import { FarmNode } from 'src/models/Farm/ModelNode';
 import { Beam } from 'src/models/Farm/ModelBeam';
 import { Force } from 'src/models/Farm/ModelForce';
 import { UIBeam, UINode } from '..';
+import { UIModes } from 'src/utils/UI';
 
 const styles = (theme: Theme) => createStyles({
     root:{

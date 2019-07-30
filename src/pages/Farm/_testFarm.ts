@@ -11,13 +11,15 @@ export default () => {
         x:1000,
         y:560,
         isStatic:true,
-        isFixed:'xy'
+        isFixed:'xy',
+        name:'1'
     })    
     n.push(node)
     node = createNode({
         x:1200,
         y:640,
         isStatic:true,
+        name:'2'
     })
     force = createForce({
         nodeID:node.id,

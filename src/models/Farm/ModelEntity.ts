@@ -53,6 +53,7 @@ export const createEntity = (props:IEntity = {}) :Entity => {
         newY: newY || y || 0,
         type:type || 'entity'
     }
+    entity.name = name || entity.id
     return entity
 
 }
