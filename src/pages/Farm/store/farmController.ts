@@ -1,11 +1,11 @@
-import { Node, INode } from "src/models/Farm/ModelNode";
 import { Dispatch } from "redux";
 import { AppState } from "src/store";
 import * as actions from './farmActions'
 import uuid from 'uuid'
-import { IBeam, Beam } from "src/models/Farm/ModelBeam";
-import { Force } from "src/models/Farm";
+import { Force, createForce } from "src/models/Farm/ModelForce";
 import { IForce } from "src/models/Farm/ModelForce";
+import { IBeam, Beam, createBeam, instanceOfBeam } from "src/models/Farm/ModelBeam";
+import { INode, createNode, instanceOfNode, FarmNode } from "src/models/Farm/ModelNode";
 
 
 /**
@@ -23,7 +23,7 @@ export const addNode = (x: number, y: number, options?: INode) => (
         if (oldNode) return false
         const id = uuid()
         if (!id) return false
-        const node = new Node({
+        const node = createNode({
             ...options,
             id,
             x,
@@ -43,7 +43,7 @@ export const addBeam = (options?: IBeam) => (
     (dispatch: Dispatch, getState: () => AppState) => {
         const id = uuid()
         if (!id) return false
-        const beam = new Beam({
+        const beam = createBeam({
             ...options,
             id,
         })
@@ -63,17 +63,14 @@ export const connectBeamToNode = (nodeID: string, beamID: string, place: 'start'
         let node = getState().farm.nodes.find(i => i.id === nodeID)
         let beam = getState().farm.beams.find(i => i.id === beamID)
         if (node && beam) {
-            node = new Node(node)
-            beam = new Beam(beam)
+            node = createNode(node)
+            beam = createBeam(beam)
 
             switch (place) {
                 case 'start': {
 
-                    // beam.connectNode(node.id, 'start')
                     beam.startConnectedNodeID = node.id
-                    // node.connectBeam(beam.id)
                     node.beamsID.push(beam.id)
-                    // beam.moveStartPoint(node.x, node.y)
                     
                     beam.x = node.x
                     beam.y = node.y
@@ -113,10 +110,10 @@ export const connectBeamToNode = (nodeID: string, beamID: string, place: 'start'
     }
 )
 export const addForceToNode = (nodeID: string, forceID: string, options?: IForce) => (dispatch: Dispatch, getState: () => AppState) => {
-    let node: Node | undefined | null = getState().farm.nodes.find(item => item.id === nodeID)
+    let node: FarmNode | undefined | null = getState().farm.nodes.find(item => item.id === nodeID)
     if (!node) return false
-    node = new Node(node)
-    let force: Force | null = new Force({
+    node = createNode(node)
+    let force: Force | null = createForce({
         ...options,
         nodeID: node.id,
     })
@@ -129,24 +126,30 @@ export const addForceToNode = (nodeID: string, forceID: string, options?: IForce
     force = null
 
 }
-export const moveNode = (id: string, x: number, y: number, ) => (
+export const moveNode = (nodeOrId: string | FarmNode, x: number, y: number, ) => (
     (dispatch: Dispatch, getState: () => AppState) => {
-
-        let node: Node | undefined | null = getState().farm.nodes.find(item => item.id === id)
+        let node: FarmNode | undefined 
+        if(typeof nodeOrId === 'string') 
+            node = getState().farm.nodes.find(item => item.id === nodeOrId)
+        else node = nodeOrId
+        
         if (!node) return false
         if (node.isStatic) return false
         const _node = getState().farm.nodes.find(item => item.x === x && item.y === y)
         if (!_node) {
-            node = new Node({
-                ...node,
-                x,
-                y
-            })
-            let beam: Beam | null
+            // node = createNode({
+            //     ...node,
+            //     x,
+            //     y
+            // })
+            node.x = x
+            node.y = y
+            let beam: Beam
             const beamsOfNode = getState().farm.beams.filter(item => (node && node.beamsID.includes(item.id)))
             beamsOfNode.forEach(item => {
                 if (node) {
-                    beam = new Beam(item)
+                    // beam = createBeam(item)
+                    beam = item
                     if (beam.startConnectedNodeID === node.id) {
                         // beam.moveStartPoint(x, y)
                         beam.x = x
@@ -162,10 +165,10 @@ export const moveNode = (id: string, x: number, y: number, ) => (
             })
             dispatch(actions._editNode(node))
 
-            beam = null
+            // beam = null
             return true
         }
-        node = null
+        // node = null
         return false
     }
 )
@@ -174,9 +177,7 @@ export const moveBeam = (beamID: string, x: number, y: number, place: 'start' | 
     (dispatch: Dispatch, getState: () => AppState) => {
         let beam: Beam | undefined | null = getState().farm.beams.find(item => item.id === beamID)
         if (!beam) return false
-        beam = new Beam({
-            ...beam,
-        })
+        beam = createBeam(beam)
         if (place === 'start') {
             // beam.moveStartPoint(x,y)
             beam.x = x
@@ -195,17 +196,17 @@ export const moveBeam = (beamID: string, x: number, y: number, place: 'start' | 
 )
 
 export const deleteEntity = (id: string) => (dispatch: Dispatch, getState: () => AppState) => {
-    let entity: Beam | Node | Force | undefined | null =
+    let entity: Beam | FarmNode | Force | undefined | null =
         getState().farm.beams.find(item => item.id === id) ||
         getState().farm.nodes.find(item => item.id === id) ||
         getState().farm.forces.find(item => item.id === id)
 
-    if (entity instanceof Node) {
+    if (entity && instanceOfNode(entity)) {
         if (entity.isStatic) return false
-        const beamsOfNode = getState().farm.beams.filter(item => (entity instanceof Node && entity.beamsID.includes(item.id)))
+        const beamsOfNode = getState().farm.beams.filter(item => (entity && instanceOfNode(entity) && entity.beamsID.includes(item.id)))
         beamsOfNode.forEach(beam => {
             if (entity instanceof Node) {
-                let _node: Node | undefined | null
+                let _node: FarmNode | undefined | null
                 if (beam.startConnectedNodeID === entity.id) {
                     _node = getState().farm.nodes.find(item => item.id === beam.endConnectedNodeID)
                 }
@@ -213,7 +214,7 @@ export const deleteEntity = (id: string) => (dispatch: Dispatch, getState: () =>
                     _node = getState().farm.nodes.find(item => item.id === beam.startConnectedNodeID)
                 }
                 if (_node) {
-                    _node = new Node(_node)
+                    _node = createNode(_node)
                     // _node.removeBeam(beam.id)
                     _node.beamsID = _node.beamsID.filter(id => id !== beam.id)
                     dispatch(actions._editNode(_node))
@@ -226,12 +227,12 @@ export const deleteEntity = (id: string) => (dispatch: Dispatch, getState: () =>
         if (entity.forceY) dispatch(actions._deleteEntity(entity.forceY.id))
         dispatch(actions._deleteEntity(entity.id))
         return true
-    } else if (entity instanceof Beam) {
+    } else if (entity && instanceOfBeam(entity)) {
         [entity.startConnectedNodeID, entity.endConnectedNodeID].forEach(nodeID => {
             if (nodeID && nodeID.length > 0) {
                 let _node = getState().farm.nodes.find(item => item.id === nodeID)
-                if (_node && entity instanceof Beam) {
-                    _node = new Node(_node)
+                if (_node && instanceOfBeam(entity)) {
+                    _node = createNode(_node)
                     // _node.removeBeam(entity.id)
                     _node.beamsID = _node.beamsID.filter(id => {
                         if (entity) return id !== entity.id

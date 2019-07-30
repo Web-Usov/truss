@@ -1,15 +1,16 @@
-import { combineReducers, createStore } from 'redux';
-import { IFarmStore, farmReducer } from 'src/pages/Farm/farmReducer';
-import { IHomeStore, homeReducer } from 'src/pages/Home/homeReducer';
+import { combineReducers, createStore, applyMiddleware } from 'redux';
+import { FarmReducer, FarmTypes } from 'src/pages/Farm/store';
+import { homeReducer } from 'src/pages/Home/homeReducer';
+import thunk, { ThunkMiddleware } from 'redux-thunk'
 
-export interface AppState {
-    farm: IFarmStore,
-    home: IHomeStore
-}
+
 
 export const mainReducer = combineReducers({
-    farm : farmReducer,
+    farm : FarmReducer.reducer,
     home : homeReducer  
 })
 
-export default createStore(mainReducer);
+export type AppState = ReturnType<typeof mainReducer> 
+export type AppActions = FarmTypes.FarmActions 
+
+export default createStore(mainReducer, applyMiddleware(thunk as ThunkMiddleware<AppState,AppActions>));

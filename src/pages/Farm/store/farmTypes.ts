@@ -1,7 +1,7 @@
 import { Action } from "redux";
-import { Beam, Node, Force, Entity } from "src/models/Farm";
-import { IBeam } from "src/models/Farm/ModelBeam";
-import { INode } from "src/models/Farm/ModelNode";
+import {  Beam } from "src/models/Farm/ModelBeam";
+import {  FarmNode } from "src/models/Farm/ModelNode";
+import { Force } from "src/models/Farm/ModelForce";
 
 export const DELETE_EN = "DELETE_EN"
 export const ADD_NODE = "ADD_NODE"
@@ -14,7 +14,7 @@ export const EDIT_BEAM = "EDIT_BEAM"
 // Add
 export interface ActionAddNode extends Action {    
     type: typeof ADD_NODE,
-    node:Node
+    node:FarmNode
 }
 export interface ActionAddBeam extends Action {    
     type: typeof ADD_BEAM,
@@ -32,7 +32,7 @@ export interface ActionDeleteEntity extends Action {
 // Edit
 export interface ActionEditNode extends Action {    
     type: typeof EDIT_NODE,
-    node:Node
+    node:FarmNode
 }
 export interface ActionEditBeam extends Action {    
     type: typeof EDIT_BEAM,

@@ -1,32 +1,43 @@
 import * as React from 'react'
-import { Circle, Stage, Text, Group, Arrow } from 'react-konva'
+import { Circle, Stage, Text, Group, Arrow, Line } from 'react-konva'
 import Konva from 'konva'
-import { Node } from 'src/models/Farm';
+import { FarmNode } from 'src/models/Farm/ModelNode';
 import { UIModes } from '../UIToolPanel';
 import theme from 'src/theme';
 import { consts } from 'src/static';
 import { Force } from 'src/models/Farm/ModelForce';
+import { KonvaEventObject } from 'konva/types/Node';
 
-export interface UINodeProps {
-    drag(e: Konva.KonvaEventObject<DragEvent>, node: Node): void
-    onClick(e: Konva.KonvaEventObject<MouseEvent>, node: Node): void
-    node: Node,
+const size = consts.UI_nodeSize
+interface UINodeProps {
+    node: FarmNode,
+    drag(e: Konva.KonvaEventObject<DragEvent>, node: FarmNode): void
+    onClick(e: Konva.KonvaEventObject<MouseEvent>, node: FarmNode): void
     mode: UIModes,
     selected: boolean
 }
-
-const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) => {
-    const size = consts.UI_nodeSize
-
-    const hundleMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) => {
-        const stage: Stage & Konva.Stage = e.target.getStage()
+class UINode extends React.Component<UINodeProps>{
+    constructor(props: UINodeProps) {
+        super(props)
+        this.hundleMouseEnter = this.hundleMouseEnter.bind(this)
+        this.hundleMouseLeave = this.hundleMouseLeave.bind(this)
+        this.getStorkeColor = this.getStorkeColor.bind(this)
+        this.getStorkeWidth = this.getStorkeWidth.bind(this)
+        this.getFillColor = this.getFillColor.bind(this)
+        this.viewForce = this.viewForce.bind(this)
+    }
+    hundleMouseEnter(e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) {
+        const stage: typeof Stage & Konva.Stage = e.target.getStage()
+        const { node } = this.props
 
         switch (mode) {
             case UIModes.delete:
                 if (node.isStatic) {
                     stage.container().style.cursor = 'default'
                     break
-                } 
+                }
+                stage.container().style.cursor = 'pointer'
+                break
             case UIModes.none: {
                 stage.container().style.cursor = 'pointer'
                 break;
@@ -52,14 +63,17 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
         }
 
     }
-    const hundleMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        const stage: Stage & Konva.Stage = e.target.getStage()
-        if(stage) stage.container().style.cursor = 'default'
+    hundleMouseLeave(e: Konva.KonvaEventObject<MouseEvent>) {
+        const stage: typeof Stage & Konva.Stage = e.target.getStage()
+        if (stage) stage.container().style.cursor = 'default'
     }
-    const getStorkeColor = (): string => {
+    getStorkeColor(): string {
+        const { mode, node } = this.props
         switch (mode) {
-            case UIModes.move:
+            case UIModes.move: {
                 if (node.isStatic) return theme.palette.secondary.dark
+                return theme.palette.primary.light
+            }
             case UIModes.addBeam:
             case UIModes.addBeamStart: {
                 return theme.palette.primary.light
@@ -68,10 +82,14 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
                 return theme.palette.secondary.main
         }
     }
-    const getStorkeWidth = (): number => {
+    getStorkeWidth(): number {
+        const { mode } = this.props
+        const { node } = this.props
         switch (mode) {
-            case UIModes.move:
+            case UIModes.move: {
                 if (node.isStatic) return 0
+                return 2
+            }
             case UIModes.addBeam:
             case UIModes.addBeamStart: {
                 return 2
@@ -81,12 +99,16 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
         }
 
     }
-    const getFillColor = (): string => {
-        if (node.isStatic) return theme.palette.secondary.dark
+    getFillColor(): string {
+        const { node } = this.props
+        if (node.isStatic) {
+            if (node.isFixed) return theme.palette.secondary.dark
+            return theme.palette.secondary.light
+        }
         return theme.palette.secondary.main
 
     }
-    const viewForce = (force: Force) => {
+    viewForce(force: Force) {
         return (
             <React.Fragment>
 
@@ -103,58 +125,97 @@ const UINode: React.FC<UINodeProps> = ({ node, drag, mode, onClick, selected }) 
                     pointerLength={consts.UI_cellSize / 10}
                     pointerWidth={consts.UI_cellSize / 10}
                     hitStrokeWidth={size * 2}
-
-                    // lineCap='round'
-                    // lineJoin='round'
                     rotation={force.value > 0 ? force.angle : 180 + force.angle}
                 />
                 <Text
-                    x={force.angle === 0 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize) : consts.UI_cellSize / 3 }
-                    y={force.angle === 90 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize / 2) : -consts.UI_cellSize / 1.5 }
+                    x={force.angle === 0 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize) : consts.UI_cellSize / 3}
+                    y={force.angle === 90 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize / 2) : -consts.UI_cellSize / 1.5}
                     text={force.value + "H"}
                 />
             </React.Fragment>
 
         )
     }
-    return (
-        <React.Fragment>
+    viewFixation(angle: 0 | 90) {
+
+        const {node} = this.props
+        return (<Group
+                x={0}
+                y={0}
+                rotation={angle}
+            >
+            <Line
+                points={[
+                    0, 0,
+                    0, consts.UI_cellSize,
+                    -consts.UI_cellSize / 2,  consts.UI_cellSize,
+                    consts.UI_cellSize / 2,  consts.UI_cellSize,
+                ]}
+                stroke={theme.palette.grey[300]}
+                strokeWidth={size / 4}
+                shadowBlur={2}
+            />
+            <Circle
+                radius={size / 2}
+                fill={theme.palette.grey[500]}
+                x={0}
+                y={consts.UI_cellSize - (size/1.7)}
+            />
+        </Group>)
+    }
+    shouldComponentUpdate(nextProps: UINodeProps) {
+        return (
+            nextProps.node !== this.props.node ||
+            nextProps.mode !== this.props.mode ||
+            nextProps.selected !== this.props.selected
+        )
+    }
+    render() {
+        const { onClick, mode, selected, node } = this.props
+
+        return (
             <Group
                 x={node.x}
                 y={node.y}
+                _useStrictMode
+                onClick={(e: any) => onClick(e, node)}
             >
-                {node.forceX && viewForce(node.forceX)}
-                {node.forceY && viewForce(node.forceY)}
+                {node.forceX && this.viewForce(node.forceX)}
+                {node.forceY && this.viewForce(node.forceY)}
+                {node.isFixed === 'x' && this.viewFixation(90)}
+                {node.isFixed === 'y' && this.viewFixation(0)}
+                {node.isFixed === 'xy' && this.viewFixation(90)}
+                {node.isFixed === 'xy' && this.viewFixation(0)}
                 <Circle
-                    className="MyCircle"
                     radius={size}
                     x={0}
                     y={0}
-                    fill={getFillColor()}
+                    fill={this.getFillColor()}
                     shadowBlur={selected ? 8 : 2}
-                    stroke={getStorkeColor()}
-                    strokeWidth={getStorkeWidth()}
+                    stroke={this.getStorkeColor()}
+                    strokeWidth={this.getStorkeWidth()}
 
                     hitStrokeWidth={size * 2}
-                    draggable={mode === UIModes.move && !node.isStatic}
-                    _useStrictMode
-                    onDragMove={(e) => drag(e, node)}
-                    onClick={(e) => onClick(e, node)}
-                    onMouseEnter={(e) => hundleMouseEnter(e, mode)}
-                    onMouseLeave={(e) => hundleMouseLeave(e)}
                 />
-
-                {/* <Text
-                x={node.x - node.name.length*4}
-                y={node.y-30}
-                text={node.name}
-                _useStrictMode 
-            /> */}
+                <Circle
+                    radius={size}
+                    x={node.x - node.x}
+                    y={node.y - node.y}
+                    onDragEnd={(e: KonvaEventObject<DragEvent>) => {
+                        e.target.to({
+                            x: 0,
+                            y: 0,
+                        })
+                    }}
+                    hitStrokeWidth={size * 2}
+                    draggable={mode === UIModes.move && !node.isStatic}
+                    onMouseEnter={(e: any) => this.hundleMouseEnter(e, mode)}
+                    onMouseLeave={(e: any) => this.hundleMouseLeave(e)}
+                    onDragMove={(e: KonvaEventObject<DragEvent>) => this.props.drag(e, node)}
+                />
             </Group>
-
-
-        </React.Fragment>
-    )
+        )
+    }
 }
 
 export default UINode

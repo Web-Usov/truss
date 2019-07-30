@@ -2,13 +2,16 @@ import * as React from 'react'
 import { Theme, createStyles, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Stage, Layer, } from 'react-konva';
-import { UINode, UIBeam } from '..';
-import { Farm, Entity } from 'src/models/Farm';
+import {  Entity } from 'src/models/Farm/ModelEntity';
 import { UIModes } from '../UIToolPanel';
 import Konva from 'konva';
 import UIGrid from './UIGrid';
 import { consts } from 'src/static';
 import ScrollBar from 'react-custom-scrollbars';
+import { FarmNode } from 'src/models/Farm/ModelNode';
+import { Beam } from 'src/models/Farm/ModelBeam';
+import { Force } from 'src/models/Farm/ModelForce';
+import { UIBeam, UINode } from '..';
 
 const styles = (theme: Theme) => createStyles({
     root:{
@@ -17,13 +20,14 @@ const styles = (theme: Theme) => createStyles({
     },
     stage: {
         backgroundColor: "#fff",
-        // width:"100%",
     }
 })
 
 
 export interface UIStageProps extends WithStyles<typeof styles> {
-    farm: Farm,
+    nodes: FarmNode[],
+    beams: Beam[],
+    forces: Force[],
     uiMode: UIModes,
     selectedEntity: Entity | undefined,
     stageHeight: number,
@@ -34,7 +38,7 @@ export interface UIStageProps extends WithStyles<typeof styles> {
     stage: React.RefObject<Stage & Konva.Stage>
 }
 
-const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, farm, uiMode, selectedEntity }) => {
+const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, forces,beams,nodes, uiMode, selectedEntity }) => {
     return (
         <ScrollBar 
             className={classes.root}
@@ -42,6 +46,7 @@ const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWid
             <Stage
                 height={stageHeight}
                 width={stageWidth}
+                style={{height:stageHeight, width:stageWidth}}
                 className={classes.stage}
                 onClick={onClick}
                 onMouseMove={onMouseMove}
@@ -55,7 +60,7 @@ const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWid
                         heightBox={stageHeight}
                         widthBox={stageWidth}
                     />
-                    {farm.getBeams().map(beam => (
+                    {beams.map(beam => (
                         <UIBeam
                             key={beam.id}
                             beam={beam}
@@ -65,7 +70,7 @@ const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWid
                         />
                     ))}
 
-                    {farm.getNodes().map(node => (
+                    {nodes.map(node => (
                         <UINode
                             key={node.id}
                             node={node}

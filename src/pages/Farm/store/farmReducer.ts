@@ -1,8 +1,11 @@
-import { Node, Beam, Force } from "src/models/Farm";
+
 import * as FarmTypes from './farmTypes'
+import { Beam } from 'src/models/Farm/ModelBeam';
+import { Force } from 'src/models/Farm/ModelForce';
+import { FarmNode } from 'src/models/Farm/ModelNode';
 
 export interface IFarmStore {
-    nodes:Node[],
+    nodes:FarmNode[],
     beams:Beam[],
     forces:Force[]
 }
@@ -57,7 +60,10 @@ export const reducer = (state: IFarmStore = defaultState, action: FarmTypes.Farm
                         //     ...item,
                         //     ...action.node
                         // }
-                        return action.node
+                        return {
+                                ...item,
+                                ...action.node
+                            }
                     }
                     return item
                 })
@@ -68,7 +74,10 @@ export const reducer = (state: IFarmStore = defaultState, action: FarmTypes.Farm
                 ...state,
                 beams : state.beams.map(item => {
                     if(item.id === action.beam.id){ 
-                        return action.beam    
+                        return {
+                            ...item,
+                            ...action.beam
+                        }   
                     }
                     return item
                 })

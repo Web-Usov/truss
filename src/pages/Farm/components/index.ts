@@ -9,12 +9,12 @@ import UIToolPanel from './UIToolPanel'
 
 
 export {
-    UINode,
+    UIStage,
+    UINode as UINode,
+    UIBeam as UIBeam,
     UIHeader,
     UITreePanel,
-    UIBeam,
     UIEntityInfo,
-    UIStage,
     UIGrid,
     UIToolPanel
 }

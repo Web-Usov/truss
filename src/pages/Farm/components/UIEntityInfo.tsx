@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles, Typography, IconButton, Box, Divider } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { Node, Beam, Entity } from 'src/models/Farm';
 import { Delete as DeleteIcon, Info as InfoEntityIcon } from '@material-ui/icons';
 import { Sidebar } from 'src/components';
+import { Entity } from 'src/models/Farm/ModelEntity';
+import { instanceOfNode } from 'src/models/Farm/ModelNode';
+import { instanceOfBeam } from 'src/models/Farm/ModelBeam';
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -37,8 +39,8 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         }
     }
     getTypeStr(entity: Entity): string {
-        if (entity instanceof Node) return "Узел"
-        else if (entity instanceof Beam) return "Стержень"
+        if (instanceOfNode(entity)) return "Узел"
+        else if (instanceOfBeam(entity)) return "Стержень"
         else return "Элемент"
     }
     viewInfo(entity: Entity | undefined) {

@@ -1,60 +1,75 @@
 import * as React from 'react'
-import { Line, Stage } from 'react-konva'
+import { Line, Stage } from 'react-konva/lib/ReactKonvaCore'
 import Konva from 'konva'
 import { UIModes } from '../UIToolPanel';
 import { Beam } from 'src/models/Farm/ModelBeam';
 import theme from 'src/theme';
 import { consts } from 'src/static';
 
-export interface UIBeamProps {
+interface UIBeamProps {
     onClick(e: Konva.KonvaEventObject<MouseEvent>, beam: Beam): void
-    beam: Beam,
     mode: UIModes,
-    selected: boolean
+    selected: boolean,
+    beam: Beam
 }
 
-const UIBeam: React.FC<UIBeamProps> = ({ beam,  mode, onClick, selected }) => {
-    const size = consts.UI_beamSize
-    const hundleMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) => {
-        const stage: Stage & Konva.Stage = e.target.getStage()
-    
+class UIBeam extends React.Component<UIBeamProps>{
+
+    constructor(props: UIBeamProps) {
+        super(props)
+        this.hundleMouseEnter = this.hundleMouseEnter.bind(this)
+        this.hundleMouseLeave = this.hundleMouseLeave.bind(this)
+    }
+    hundleMouseEnter(e: Konva.KonvaEventObject<MouseEvent>, mode: UIModes) {
+        const stage: typeof Stage & Konva.Stage = e.target.getStage()
+
         switch (mode) {
             case UIModes.delete:
-            case UIModes.none:{            
+            case UIModes.none: {
                 stage.container().style.cursor = 'pointer'
                 break
             }
 
-            default:{
+            default: {
                 break
             }
         }
-    
+
     }
-    const hundleMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>) => {
-        const stage: Stage & Konva.Stage = e.target.getStage()
-        if(stage) stage.container().style.cursor = 'default'
+    hundleMouseLeave(e: Konva.KonvaEventObject<MouseEvent>) {
+        const stage: typeof Stage & Konva.Stage = e.target.getStage()
+        if (stage) stage.container().style.cursor = 'default'
     }
-    return (
-        <React.Fragment>
+    shouldComponentUpdate(nextProps: UIBeamProps) {
+        const { beam, mode, selected } = this.props
+        return (
+            nextProps.beam !== beam ||
+            nextProps.mode !== mode ||
+            nextProps.selected !== selected
+        )
+    }
+    render() {
+        const { onClick, mode, selected, beam } = this.props
+        const size = consts.UI_beamSize
+        return (
             <Line
                 points={[
                     beam.x,
                     beam.y,
-                    beam.getEndX(),
-                    beam.getEndY()
+                    beam.endX,
+                    beam.endY
                 ]}
                 stroke={theme.palette.secondary.light}
                 strokeWidth={size}
                 shadowBlur={selected ? 8 : 2}
 
-                hitStrokeWidth={size*4} 
-                onClick={(e) => onClick(e,beam)}
-                onMouseEnter={(e) => hundleMouseEnter(e, mode)}
-                onMouseLeave={(e) => hundleMouseLeave(e)}
+                hitStrokeWidth={size * 4}
+                onClick={(e: any) => onClick(e, beam)}
+                onMouseEnter={(e: any) => this.hundleMouseEnter(e, mode)}
+                onMouseLeave={(e: any) => this.hundleMouseLeave(e)}
             />
-        </React.Fragment>
-    )
-}
+        )
 
+    }
+}
 export default UIBeam

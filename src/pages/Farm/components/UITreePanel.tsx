@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { Node, Beam, Entity } from 'src/models/Farm';
 import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore } from '@material-ui/icons';
 import { Sidebar } from 'src/components';
+import { Entity } from 'src/models/Farm/ModelEntity';
+import { Beam } from 'src/models/Farm/ModelBeam';
+import { FarmNode } from 'src/models/Farm/ModelNode';
 
 const styles = (theme: Theme) => createStyles({
     nested: {
@@ -12,7 +14,7 @@ const styles = (theme: Theme) => createStyles({
 })
 
 interface TreePanelProps extends WithStyles<typeof styles> {
-    nodes: Node[],
+    nodes: FarmNode[],
     beams: Beam[]
     selectedEntity: Entity | undefined
     onSelect(entity: Entity): void
