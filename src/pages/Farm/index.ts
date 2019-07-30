@@ -2,11 +2,17 @@ import {connect} from 'react-redux'
 import UIFarm from './farm'
 import { AppState } from 'src/store';
 import { Dispatch, bindActionCreators } from 'redux';
-import * as farmActions from './farmActions';
+import { FarmController} from './store/';
 
 const mapStateToProps =  (state: AppState) => ({
-    workSpace:state.farm.workSpace,
+    nodes:state.farm.nodes,
+    beams:state.farm.beams,
+    forces:state.farm.forces
 })
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({...farmActions}, dispatch)
+// const mapDispatchToProps = (dispatch: Dispatch) => ({
+//     addNode: bindActionCreators(FarmController.addNode,dispatch),
+//     moveNode:bindActionCreators(FarmController.moveNode,dispatch)
+// })
+const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({...FarmController}, dispatch)
 
 export default connect(mapStateToProps,mapDispatchToProps)(UIFarm);

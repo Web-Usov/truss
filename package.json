@@ -16,6 +16,8 @@
     "@types/react-helmet": "^5.0.8",
     "@types/react-redux": "^7.1.1",
     "@types/react-router-dom": "^4.3.4",
+    "@types/redux-thunk": "^2.1.0",
+    "@types/uuid": "^3.4.5",
     "clsx": "^1.0.4",
     "konva": "^3.3.3",
     "prop-types": "^15.7.2",
@@ -30,14 +32,16 @@
     "react-scripts": "3.0.1",
     "react-stats": "0.0.5",
     "redux": "^4.0.1",
-    "typescript": "3.5.2"
+    "redux-thunk": "^2.3.0",
+    "typescript": "3.5.2",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "craco  start",
-    "build": "craco  build",
+    "build": "set PUBLIC_URL=./&& craco  build",
     "test": "craco  test",
     "eject": "craco  eject",
-    "predeploy": "npm run build",
+    "predeploy": "set PUBLIC_URL=https://web-usov.github.io/truss&& npm run build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
