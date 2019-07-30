@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "https://web-usov.github.io/truss/static/css/main.84bbde08.chunk.css",
-    "main.js": "https://web-usov.github.io/truss/static/js/main.a1afb16c.chunk.js",
-    "main.js.map": "https://web-usov.github.io/truss/static/js/main.a1afb16c.chunk.js.map",
-    "runtime~main.js": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js",
-    "runtime~main.js.map": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js.map",
-    "static/js/2.ba02defc.chunk.js": "https://web-usov.github.io/truss/static/js/2.ba02defc.chunk.js",
-    "static/js/2.ba02defc.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.ba02defc.chunk.js.map",
-    "index.html": "https://web-usov.github.io/truss/index.html",
-    "precache-manifest.2652a5b16fe3f87f8d8f76b0feb9d1a5.js": "https://web-usov.github.io/truss/precache-manifest.2652a5b16fe3f87f8d8f76b0feb9d1a5.js",
-    "service-worker.js": "https://web-usov.github.io/truss/service-worker.js",
-    "static/css/main.84bbde08.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.84bbde08.chunk.css.map",
-    "static/media/airBridge.png": "https://web-usov.github.io/truss/static/media/airBridge.7d581a65.png",
-    "static/media/bridge.png": "https://web-usov.github.io/truss/static/media/bridge.e53bced3.png",
-    "static/media/icon.png": "https://web-usov.github.io/truss/static/media/icon.68e274b2.png",
-    "static/media/ogImage.png": "https://web-usov.github.io/truss/static/media/ogImage.0619e300.png"
+    "main.css": "./static/css/main.84bbde08.chunk.css",
+    "main.js": "./static/js/main.695e5032.chunk.js",
+    "main.js.map": "./static/js/main.695e5032.chunk.js.map",
+    "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
+    "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
+    "static/js/2.b9157cd1.chunk.js": "./static/js/2.b9157cd1.chunk.js",
+    "static/js/2.b9157cd1.chunk.js.map": "./static/js/2.b9157cd1.chunk.js.map",
+    "index.html": "./index.html",
+    "precache-manifest.03749e5aa6cfaafa7bbdb8a3faecce8d.js": "./precache-manifest.03749e5aa6cfaafa7bbdb8a3faecce8d.js",
+    "service-worker.js": "./service-worker.js",
+    "static/css/main.84bbde08.chunk.css.map": "./static/css/main.84bbde08.chunk.css.map",
+    "static/media/airBridge.png": "./static/media/airBridge.7d581a65.png",
+    "static/media/bridge.png": "./static/media/bridge.e53bced3.png",
+    "static/media/icon.png": "./static/media/icon.68e274b2.png",
+    "static/media/ogImage.png": "./static/media/ogImage.0619e300.png"
   }
 }
