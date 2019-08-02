@@ -1,42 +1,45 @@
-import { FarmNode, createNode } from "src/models/Farm/ModelNode";
+import { FarmNode, NodeFixation } from "src/models/Farm/ModelNode";
 import { Beam } from "src/models/Farm/ModelBeam";
-import { Force, createForce } from "src/models/Farm/ModelForce";
+import { Farm } from "src/models/Farm/ModelFarm";
 
 export default () => {
-    const n : FarmNode[] = []
-    const b : Beam[] = []
-    const f : Force[] = []
-    let force : Force
-    let node  = createNode({
-        x:1000,
-        y:560,
-        isStatic:true,
-        isFixed:'xy',
-        name:'1'
-    })    
-    n.push(node)
-    node = createNode({
-        x:1200,
-        y:640,
-        isStatic:true,
-        name:'2'
-    })
-    force = createForce({
-        nodeID:node.id,
-        value:100,        
-    })
-    node.forceX = force
-    n.push(node)
-    f.push(force)
-    // if(node) {
-    //     farm.connectForceToNode(node, 0 , 100)
-    //     farm.connectForceToNode(node, 90 , 100)
-    // }
-    // node = farm.addNode(1200,760,0,"",true)
-    // if(node) {
-    //     farm.connectForceToNode(node, 0 , -100)
-    //     farm.connectForceToNode(node, 90 , -100)
-    // }
-    
-    return {n,b,f}
+    let nodes: FarmNode[] = []
+    let beams: Beam[] = []
+
+    nodes = Farm.createNodes(
+        [
+            {
+                x: 400,
+                y: 1000,
+                fixation: NodeFixation.XY,
+            },
+            {
+                x: 1300,
+                y: 1000,
+                fixation: NodeFixation.Y,
+            }
+        ],
+        [
+            {
+                x: 700,
+                y: 1000,
+                angle: 90,
+                value: 9000
+            }
+        ],
+        [
+            // {
+            //     x: 1000,
+            //     y: 1000
+            // }, {
+            //     x: 700,
+            //     y: 700
+            // }, {
+            //     x: 1000,
+            //     y: 700
+            // }
+        ]
+    )
+
+    return { nodes, beams }
 }

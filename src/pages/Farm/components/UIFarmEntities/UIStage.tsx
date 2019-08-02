@@ -7,11 +7,9 @@ import Konva from 'konva';
 import UIGrid from './UIGrid';
 import { consts } from 'src/static';
 import ScrollBar from 'react-custom-scrollbars';
-import { FarmNode } from 'src/models/Farm/ModelNode';
-import { Beam } from 'src/models/Farm/ModelBeam';
-import { Force } from 'src/models/Farm/ModelForce';
 import { UIBeam, UINode } from '..';
 import { UIModes } from 'src/utils/UI';
+import { IFarm } from 'src/models/Farm/ModelFarm';
 
 const styles = (theme: Theme) => createStyles({
     root:{
@@ -24,10 +22,7 @@ const styles = (theme: Theme) => createStyles({
 })
 
 
-export interface UIStageProps extends WithStyles<typeof styles> {
-    nodes: FarmNode[],
-    beams: Beam[],
-    forces: Force[],
+export interface UIStageProps extends IFarm ,WithStyles<typeof styles> {
     uiMode: UIModes,
     selectedEntity: Entity | undefined,
     stageHeight: number,
@@ -38,7 +33,7 @@ export interface UIStageProps extends WithStyles<typeof styles> {
     stage: React.RefObject<Stage & Konva.Stage>
 }
 
-const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, forces,beams,nodes, uiMode, selectedEntity }) => {
+const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag,beams,nodes, uiMode, selectedEntity }) => {
     return (
         <ScrollBar 
             className={classes.root}

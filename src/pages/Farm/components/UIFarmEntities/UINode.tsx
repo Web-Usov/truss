@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Circle,  Text, Group, Arrow, Line } from 'react-konva'
 import Konva from 'konva'
-import { FarmNode } from 'src/models/Farm/ModelNode';
-import theme from 'src/theme';
+import { FarmNode, NodeFixation } from 'src/models/Farm/ModelNode';
 import { consts } from 'src/static';
 import { Force } from 'src/models/Farm/ModelForce';
 import { KonvaEventObject } from 'konva/types/Node';
@@ -41,7 +40,7 @@ class UINode extends React.Component<UINodeProps>{
                         consts.UI_cellSize,
                         0,
                     ]}
-                    stroke={theme.palette.grey[300]}
+                    stroke={UI.theme.palette.grey[300]}
                     strokeWidth={size / 3}
                     shadowBlur={2}
                     pointerLength={consts.UI_cellSize / 10}
@@ -72,13 +71,13 @@ class UINode extends React.Component<UINodeProps>{
                     -consts.UI_cellSize / 2, consts.UI_cellSize,
                     consts.UI_cellSize / 2, consts.UI_cellSize,
                 ]}
-                stroke={theme.palette.grey[300]}
+                stroke={UI.theme.palette.grey[300]}
                 strokeWidth={size / 4}
                 shadowBlur={2}
             />
             <Circle
                 radius={size / 2}
-                fill={theme.palette.grey[500]}
+                fill={UI.theme.palette.grey[500]}
                 x={0}
                 y={consts.UI_cellSize - (size / 1.7)}
             />
@@ -96,10 +95,10 @@ class UINode extends React.Component<UINodeProps>{
             >
                 {node.forceX && this.viewForce(node.forceX)}
                 {node.forceY && this.viewForce(node.forceY)}
-                {node.isFixed === 'x' && this.viewFixation(90)}
-                {node.isFixed === 'y' && this.viewFixation(0)}
-                {node.isFixed === 'xy' && this.viewFixation(90)}
-                {node.isFixed === 'xy' && this.viewFixation(0)}
+                {node.fixation === NodeFixation.X && this.viewFixation(90)}
+                {node.fixation === NodeFixation.Y && this.viewFixation(0)}
+                {node.fixation === NodeFixation.XY && this.viewFixation(90)}
+                {node.fixation === NodeFixation.YX && this.viewFixation(0)}
                 <Circle
                     radius={size}
                     x={0}

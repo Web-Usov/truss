@@ -8,7 +8,7 @@ export const defaultHomeState : IHomeStore = {
     title: 'Hello, world!',
 }
 
-export const homeReducer = (state: IHomeStore = defaultHomeState, action: HomeActions): IHomeStore => {
+export const reducer = (state: IHomeStore = defaultHomeState, action: HomeActions): IHomeStore => {
     switch (action.type) {
         case SET_TITLE:
             return {

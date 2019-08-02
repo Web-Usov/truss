@@ -18,7 +18,8 @@ const styles = (theme: Theme) => createStyles({
 
 export interface UIHeaderProps extends WithStyles<typeof styles> {
     hundleSave?:(e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleClear?:(e: React.FormEvent<HTMLButtonElement>) => void
+    hundleClear?:(e: React.FormEvent<HTMLButtonElement>) => void,
+    hundleCalculate?:(e: React.FormEvent<HTMLButtonElement>) => void
 }
 
 const UIHeader: React.FC<UIHeaderProps> = (
@@ -26,6 +27,7 @@ const UIHeader: React.FC<UIHeaderProps> = (
         classes, 
         hundleSave = (e) => {alert("Буедет реализовано в будущем")},
         hundleClear = (e) => {alert("Буедет реализовано в будущем")},
+        hundleCalculate = (e) => {alert("Буедет реализовано в будущем")}
     }) => {
 
     return (
@@ -33,6 +35,14 @@ const UIHeader: React.FC<UIHeaderProps> = (
             className={classes.root}
         >
             <div className={classes.grow}/>
+            <Button
+                color="secondary"
+                variant="contained"
+                className={classes.btn}
+                onClick={hundleCalculate}
+            >
+                Расчет
+            </Button>
             <Button
                 color="secondary"
                 variant="contained"

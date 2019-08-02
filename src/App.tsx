@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { UIFarm, Home } from './pages'
-import { navPath } from './navigation'
 import { Switch, Route } from 'react-router-dom';
 import Helment from 'react-helmet'
-import * as consts from './static/const';
 import {CssBaseline} from '@material-ui/core';
-import theme from './theme'
 import { ThemeProvider } from '@material-ui/styles';
+import { UIFarm, Home } from './pages'
+import { navPath } from './navigation'
+import {consts} from './static/';
+import { theme } from './utils/UI';
 
-
-interface IAppProps {
-
-}
-
+interface IAppProps {}
 
 class App extends React.Component<IAppProps> {
 	render() {

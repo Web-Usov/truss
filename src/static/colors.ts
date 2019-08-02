@@ -1,4 +1,4 @@
-import theme from "src/theme";
+import { theme } from "src/utils/UI";
 
 export const mainBackGround = "#09B4D3"
 

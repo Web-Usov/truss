@@ -2,42 +2,45 @@ import * as React from 'react'
 import UIFarm from './farm'
 import { FarmNode, INode, createNode, instanceOfNode } from 'src/models/Farm/ModelNode';
 import { Beam, IBeam, createBeam, instanceOfBeam } from 'src/models/Farm/ModelBeam';
-import { Force, createForce, IForce, instanceOfForce } from 'src/models/Farm/ModelForce';
+import { Force, createForce, IForce } from 'src/models/Farm/ModelForce';
+import { IFarm, Farm } from 'src/models/Farm/ModelFarm';
 import uuid from 'uuid'
 import testFarm from './_testFarm'
 
-interface State {
-    nodes: FarmNode[],
-    beams: Beam[],
-    forces: Force[]
-}
+
 interface Props {
 
 }
-export class FarmContainerClass extends React.Component<Props, State> {
+export class FarmContainerClass extends React.Component<Props, IFarm> {
     constructor(props: Props) {
         super(props)
         this.state = {
-            nodes:[],
-            beams:[],
-            forces:[]
+            nodes: [],
+            beams: [],
         }
         this.defautlFarm = this.defautlFarm.bind(this)
+        this.saveFarm = this.saveFarm.bind(this)
     }
-    componentDidMount(){
+    componentDidMount() {
         
-        this.defautlFarm()
+        const nodesJSON = localStorage.getItem("nodes")
+        const beamsJSON = localStorage.getItem("beams")
+        if (nodesJSON && beamsJSON) {
+            const nodes: FarmNode[] = JSON.parse(nodesJSON)
+            const beams: Beam[] =  JSON.parse(beamsJSON)
+            this.setState({nodes,beams})
+        }else this.defautlFarm()
     }
     addNode = (x: number, y: number, options?: INode) => {
-        if(this.state.nodes.length > 12) return false
+        if (this.state.nodes.length > 12) return false
         const oldNode = this.state.nodes.find(item => item.x === x && item.y === y)
         if (oldNode) return false
         const id = uuid()
         if (!id) return false
-        const name = (this.state.nodes.length + 1)+""
+        const name = (this.state.nodes.length + 1) + ""
         const node = createNode({
             ...options,
-            name:options ? options.name || name : name, 
+            name: options ? options.name || name : name,
             id,
             x,
             y
@@ -48,7 +51,7 @@ export class FarmContainerClass extends React.Component<Props, State> {
         return node
     }
     addBeam = (options?: IBeam) => {
-        if(this.state.beams.length > 36) return false
+        if (this.state.beams.length > 36) return false
 
         const id = uuid()
         if (!id) return false
@@ -61,62 +64,36 @@ export class FarmContainerClass extends React.Component<Props, State> {
         })
         return beam
     }
-    addForce = (options?: IForce) => {
-        const id = uuid()
-        if (!id) return false
-        const force = createForce({
-            ...options,
-            id,
-        })
-        this.setState({
-            forces: [...this.state.forces, force]
-        })
-        return force
-    }
-
     connectBeamToNode = (_node: FarmNode, _beam: Beam, place: 'start' | 'end') => {
 
-        const node = createNode(_node)
-        const beam = createBeam(_beam)
+        const node: FarmNode = { ..._node }
+        const beam: Beam = { ..._beam }
 
         switch (place) {
             case 'start': {
-
                 beam.startConnectedNodeID = node.id
                 node.beamsID.push(beam.id)
-                
-                beam.x = node.x
-                beam.y = node.y
+                Farm.moveEntity(beam, node.x, node.y)
                 this.setState(state => ({
                     nodes: state.nodes.map(item => {
                         if (item.id === node.id) return node
                         return item
                     }),
-                    beams: state.beams.map(item => {                        
+                    beams: state.beams.map(item => {
                         if (item.id === beam.id) return beam
                         return item
                     })
                 }))
-                console.log(...this.state.beams);
-                
                 return beam;
             }
             case 'end': {
                 const beamsOfNode = this.state.beams.filter(item => (node && node.beamsID.includes(item.id)))
-                const oldBeam = beamsOfNode.find(item =>
-                    (node && beam && (
-                        (item.startConnectedNodeID === beam.startConnectedNodeID && item.endConnectedNodeID === node.id) ||
-                        (item.startConnectedNodeID === node.id && item.endConnectedNodeID === beam.startConnectedNodeID) ||
-                        (item.id === beam.id && item.startConnectedNodeID === node.id))
-                    )
-                )
-
+                const oldBeam = beamsOfNode.find(item => Farm.findOldBeam(node, beam, item))
                 if (!oldBeam) {
 
                     node.beamsID.push(beam.id)
                     beam.endConnectedNodeID = node.id
-                    beam.endX = node.x
-                    beam.endY = node.y
+                    Farm.moveBeamEnd(beam, node.x, node.y)
                     this.setState(state => ({
                         nodes: state.nodes.map(item => {
                             if (item.id === node.id) return node
@@ -147,7 +124,6 @@ export class FarmContainerClass extends React.Component<Props, State> {
                 if (node && item.id === node.id) return node
                 return item
             }),
-            forces: [...state.forces, force]
         }))
         return force
 
@@ -157,23 +133,13 @@ export class FarmContainerClass extends React.Component<Props, State> {
         if (_node.isStatic) return false
         const oldNode = this.state.nodes.find(item => item.x === x && item.y === y)
         if (!oldNode) {
-            const node = createNode({
-                ..._node,
-                x,
-                y
-            })
+            const node: FarmNode = { ..._node, x, y }
             const beamsOfNode = this.state.beams.filter(item => (node && node.beamsID.includes(item.id)))
             beamsOfNode.forEach(item => {
                 if (node) {
-                    const beam = createBeam(item)
-                    if (beam.startConnectedNodeID === node.id) {
-                        beam.x = x
-                        beam.y = y
-
-                    } else if (item.endConnectedNodeID === node.id) {
-                        beam.endX = x
-                        beam.endY = y
-                    }
+                    const beam: Beam = { ...item }
+                    if (beam.startConnectedNodeID === node.id) Farm.moveEntity(beam, x, y)
+                    else if (item.endConnectedNodeID === node.id) Farm.moveBeamEnd(beam, x, y)
                     this.setState(state => ({
                         beams: state.beams.map(item => {
                             if (item.id === beam.id) return beam
@@ -196,16 +162,9 @@ export class FarmContainerClass extends React.Component<Props, State> {
 
     moveBeam = (beam: Beam, x: number, y: number, place: 'start' | 'end' = 'end') => {
 
-        beam = createBeam(beam)
-        if (place === 'start') {
-            beam.x = x
-            beam.y = y
-        }
-        else {
-            beam.endX = x
-            beam.endY = y
-        }
-        
+        beam = { ...beam }
+        if (place === 'start') Farm.moveEntity(beam, x, y)
+        else Farm.moveBeamEnd(beam, x, y)
         this.setState(state => ({
             beams: state.beams.map(item => {
                 if (beam && item.id === beam.id) return beam
@@ -216,24 +175,19 @@ export class FarmContainerClass extends React.Component<Props, State> {
     }
 
     deleteEntity = (id: string) => {
-        let entity: Beam | FarmNode | Force | undefined =
+        let entity: Beam | FarmNode | undefined =
             this.state.beams.find(item => item.id === id) ||
-            this.state.nodes.find(item => item.id === id) ||
-            this.state.forces.find(item => item.id === id)
+            this.state.nodes.find(item => item.id === id)
         if (instanceOfNode(entity)) {
             if (entity.isStatic) return false
-            const beamsOfNode = this.state.beams.filter(item => (instanceOfNode(entity) && entity.beamsID.includes(item.id)))            
+            const beamsOfNode = this.state.beams.filter(item => (instanceOfNode(entity) && entity.beamsID.includes(item.id)))
             beamsOfNode.forEach(beam => {
                 if (instanceOfNode(entity)) {
                     let _node: FarmNode | undefined
-                    if (beam.startConnectedNodeID === entity.id) {
-                        _node = this.state.nodes.find(item => item.id === beam.endConnectedNodeID)
-                    }
-                    else {
-                        _node = this.state.nodes.find(item => item.id === beam.startConnectedNodeID)
-                    }
+                    if (beam.startConnectedNodeID === entity.id) _node = this.state.nodes.find(item => item.id === beam.endConnectedNodeID)
+                    else _node = this.state.nodes.find(item => item.id === beam.startConnectedNodeID)
                     if (_node) {
-                        _node = createNode(_node)
+                        _node = {..._node}
                         _node.beamsID = _node.beamsID.filter(id => id !== beam.id)
                         this.setState(state => ({
                             nodes: state.nodes.map(item => {
@@ -247,14 +201,8 @@ export class FarmContainerClass extends React.Component<Props, State> {
                     }))
                 }
             })
-            if (entity.forceX) this.setState(state => ({
-                forces: state.forces.filter(i => (instanceOfNode(entity) && instanceOfForce(entity.forceX) && i.id !== entity.forceX.id))
-            }))
-            if (entity.forceY) this.setState(state => ({
-                forces: state.forces.filter(i => (instanceOfNode(entity) && instanceOfForce(entity.forceY) && i.id !== entity.forceY.id))
-            }))
             this.setState(state => ({
-                nodes: state.nodes.filter(i => (instanceOfNode(entity) && i.id !== entity.id)).map((node,index) => ({...node, name:(index + 1)+""}))
+                nodes: state.nodes.filter(i => (instanceOfNode(entity) && i.id !== entity.id)).map((node, index) => ({ ...node, name: (index + 1) + "" }))
             }))
             return true
 
@@ -263,7 +211,7 @@ export class FarmContainerClass extends React.Component<Props, State> {
                 if (nodeID && nodeID.length > 0) {
                     let _node = this.state.nodes.find(item => item.id === nodeID)
                     if (_node && instanceOfBeam(entity)) {
-                        _node = createNode(_node)
+                        _node = {..._node}
                         _node.beamsID = _node.beamsID.filter(id => {
                             if (entity) return id !== entity.id
                             return false
@@ -285,13 +233,19 @@ export class FarmContainerClass extends React.Component<Props, State> {
 
         return false
     }
-    defautlFarm(){
-        const {n:nodes, b:beams,f:forces} = testFarm()
+    defautlFarm() {
+        const { nodes, beams } = testFarm()
+        localStorage.removeItem('nodes')
+        localStorage.removeItem('beams')
         this.setState({
             nodes,
             beams,
-            forces
         })
+    }
+    saveFarm(){
+        const { nodes, beams} = this.state
+        localStorage.setItem('nodes', JSON.stringify(nodes)) 
+        localStorage.setItem('beams', JSON.stringify(beams))   
     }
     render() {
         return (

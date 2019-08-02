@@ -1,9 +1,9 @@
 import { FarmNode } from "src/models/Farm/ModelNode";
 import { colors } from "src/static";
-import theme from "src/theme";
 import { Beam } from "src/models/Farm/ModelBeam";
 import Konva from "konva";
 import { Stage } from "konva/types/Stage";
+import { createMuiTheme } from "@material-ui/core";
 
 export enum UIModes {
     none,
@@ -13,11 +13,28 @@ export enum UIModes {
     addBeamStart,
     delete
 }
-
+export const theme = createMuiTheme({
+    palette: {
+        primary: {
+            dark:"#0A4467",
+            main: "#1e779e",
+            light:'#51A8D6'
+        },
+        secondary: {
+            dark: "#a83e19",
+            main: "#f15a24",
+            light: "#F39B7C"
+        },
+        background:{
+            default:'linear-gradient(35deg, #6863bf 0%, #067d93 50%, #e68a68 100%)'
+        }  
+        
+    },
+});
 export const getNodeColor = (node: FarmNode):string => {
     
     if (node.isStatic) {
-        if (node.isFixed) return colors.fixedNode
+        if (node.fixation) return colors.fixedNode
         return colors.staticNode
     }
     return colors.node
