@@ -9,7 +9,7 @@ export default () => {
     nodes = Farm.createNodes(
         [
             {
-                x: 400,
+                x: 1000,
                 y: 1000,
                 fixation: NodeFixation.XY,
             },
@@ -21,7 +21,7 @@ export default () => {
         ],
         [
             {
-                x: 700,
+                x: 1100,
                 y: 1000,
                 angle: 90,
                 value: 9000

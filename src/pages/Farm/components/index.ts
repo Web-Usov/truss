@@ -6,9 +6,11 @@ import UIHeader from './UIHeader'
 import UITreePanel from './UITreePanel'
 import UIEntityInfo from './UIEntityInfo'
 import UIToolPanel from './UIToolPanel'
+import UIFarm from './UIFarm'
 
 
 export {
+    UIFarm,
     UIStage,
     UINode,
     UIBeam,

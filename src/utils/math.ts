@@ -15,6 +15,11 @@ class MyMath {
     static cellY(y:number):number{        
         return  Math.round(y / consts.UI_cellSize) * consts.UI_cellSize
     }
+    static signum(x:number){
+        if(x > 0) return 1
+        else if(x < 0 ) return -1
+        else return 0
+    }
 }
 
 

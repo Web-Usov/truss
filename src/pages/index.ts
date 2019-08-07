@@ -1,7 +1,7 @@
-import UIFarm from './Farm'
+import FarmPage from './Farm/'
 import Home from './Home'
 
 export {
-    UIFarm,
+    FarmPage,
     Home 
 }

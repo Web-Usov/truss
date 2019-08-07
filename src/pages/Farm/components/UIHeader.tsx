@@ -19,7 +19,8 @@ const styles = (theme: Theme) => createStyles({
 export interface UIHeaderProps extends WithStyles<typeof styles> {
     hundleSave?:(e: React.FormEvent<HTMLButtonElement>) => void,
     hundleClear?:(e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleCalculate?:(e: React.FormEvent<HTMLButtonElement>) => void
+    hundleCalculate?:(e: React.FormEvent<HTMLButtonElement>) => void,
+    disabled?:boolean
 }
 
 const UIHeader: React.FC<UIHeaderProps> = (
@@ -27,7 +28,8 @@ const UIHeader: React.FC<UIHeaderProps> = (
         classes, 
         hundleSave = (e) => {alert("Буедет реализовано в будущем")},
         hundleClear = (e) => {alert("Буедет реализовано в будущем")},
-        hundleCalculate = (e) => {alert("Буедет реализовано в будущем")}
+        hundleCalculate = (e) => {alert("Буедет реализовано в будущем")},
+        disabled = false
     }) => {
 
     return (
@@ -40,6 +42,7 @@ const UIHeader: React.FC<UIHeaderProps> = (
                 variant="contained"
                 className={classes.btn}
                 onClick={hundleCalculate}
+                disabled={disabled}
             >
                 Расчет
             </Button>
@@ -48,6 +51,7 @@ const UIHeader: React.FC<UIHeaderProps> = (
                 variant="contained"
                 className={classes.btn}
                 onClick={hundleSave}
+                disabled={disabled}
             >
                 Сохранить
             </Button>
@@ -56,6 +60,7 @@ const UIHeader: React.FC<UIHeaderProps> = (
                 variant="contained"
                 className={classes.btn}
                 onClick={hundleClear}
+                disabled={disabled}
             >
                 Очистить
             </Button>

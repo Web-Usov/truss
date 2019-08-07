@@ -3,7 +3,7 @@ import { Switch, Route } from 'react-router-dom';
 import Helment from 'react-helmet'
 import {CssBaseline} from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import { UIFarm, Home } from './pages'
+import { FarmPage, Home } from './pages'
 import { navPath } from './navigation'
 import {consts} from './static/';
 import { theme } from './utils/UI';
@@ -42,7 +42,7 @@ class App extends React.Component<IAppProps> {
 				<ThemeProvider theme={theme}>
 					<Switch>
 						<Route path={navPath.HOME_PAGE} component={Home} exact />
-						<Route path={navPath.FARM_PAGE} component={UIFarm} />
+						<Route path={navPath.FARM_PAGE} component={FarmPage} />
 					</Switch>
 
 				</ThemeProvider>
