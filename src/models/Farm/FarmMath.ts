@@ -2,6 +2,10 @@ import { ICoord } from "./ModelFarm";
 import { MyMath } from "src/utils";
 
 export class FarmMath {
+    static init() {
+
+    }
+
     static Kmest_i(area: number, modUpr: number, length_i: number) {
         const mnoz = (area * modUpr) / length_i
         const result = []
@@ -9,7 +13,7 @@ export class FarmMath {
         result.push([-mnoz, mnoz])
         return result
     }
-    static Lambda_i(nodeCoordOfX: ICoord, nodeCoordOfY: ICoord, length_i: number): ICoord {        
+    static Lambda_i(nodeCoordOfX: ICoord, nodeCoordOfY: ICoord, length_i: number): ICoord {
         const l_x = (nodeCoordOfY.x - nodeCoordOfX.x) / length_i
         const l_y = (nodeCoordOfY.y - nodeCoordOfX.y) / -length_i
         return { x: l_x, y: l_y }
@@ -34,7 +38,7 @@ export class FarmMath {
         return result
 
     }
-    static IndexV_i(nodeV1:ICoord, nodeV2:ICoord):number[]{
+    static IndexV_i(nodeV1: ICoord, nodeV2: ICoord): number[] {
         return [
             nodeV1.x,
             nodeV1.y,
@@ -42,81 +46,77 @@ export class FarmMath {
             nodeV2.y
         ]
     }
-    static K(n_dof:number, n_link:number,indexV:number[][], k_obs:number[][][]){
-        const K : number[][] = []
+    static K(n_dof: number, indexV: number[][], k_obs: number[][][]) {
+        const K: number[][] = []
 
         for (let t = 0; t < n_dof; t++) {
-            const row : number[] = []
-            for (let r = 0; r < n_dof ; r++) {
-                row.push(0)         
-            }          
+            const row: number[] = []
+            for (let r = 0; r < n_dof; r++) {
+                row.push(0)
+            }
             K.push(row)
         }
-        
-        for (let e = 0; e < n_link; e++) {
+
+        for (let e = 0; e < indexV.length; e++) {
             for (let i = 0; i < 4; i++) {
                 const A = indexV[e][i]
-                if(A !== 0)
+                if (A !== 0)
                     for (let j = 0; j < 4; j++) {
-                        const B = indexV[e][j]                  
-                        if(B !== 0)
-                            K[B-1][A-1] = K[B-1][A-1] + k_obs[e][i][j]                                 
+                        const B = indexV[e][j]
+                        if (B !== 0)
+                            K[B - 1][A - 1] = K[B - 1][A - 1] + k_obs[e][i][j]
                     }
-                
-            }        
+
+            }
         }
         return K
     }
-    static SquareRoot(a : number[][],b : number[]){
-
-        if(a.length !== b.length) {
-            console.error("SquareRoot - Массивы должны быть одинаковой длины") 
-            return
+    static SquareRoot(_a: number[][], _b: number[]) {
+        if (_a.length !== _b.length) {
+            throw Error("SquareRoot - Массивы должны быть одинаковой длины")
         }
 
-        const n = b.length
+        const n = _b.length
+        const a : number[][] = []
+        const b : number[] = []
         const x: number[] = []
         const d: number[] = []
         const s: number[][] = []
         const y: number[] = []
-        a.forEach(i => {
+
+        for (let i = 0; i < n + 1; i++) {
+            const row: number[] = []
+            for (let r = 0; r < n; r++) {
+                row.push(0)
+            }
+            s.push(row)
+            a.push(row)
+            b.push(0)
             x.push(0)
             d.push(0)
-            y.push(0)
-            const buf : number [] = []
-            a.forEach(i => {
-                buf.push(0)
-            })
-            s.push(buf)
-        })
-        {
-            x.push(0)
-            d.push(0)
-            y.push(0)
-            const buf : number [] = []
-            a.forEach(i => {
-                buf.push(0)
-                buf.push(0)
-            })
-            s.push(buf)
+            y.push(0)            
         }
 
-        // for i = 1
-        d[1] = MyMath.signum(a[0][0]);
-        s[1][1] = Math.sqrt(Math.abs(a[0][0]));
+        for (let j = 1; j <= n; j++) {
+            for (let r = 0; r <= n; r++) {
+                a[j][r] = _a[j-1][r-1]               
+            }
+            b[j] = _b[j-1]                  
+        }
+
+        d[1] = MyMath.signum(a[1][1]);
+        s[1][1] = Math.sqrt(Math.abs(a[1][1]));
         for (let j = 2; j <= n; j++) {
             s[1][j] = a[1][j] / (s[1][1] * d[1]);
         }
 
-        // for i > 1
-        //searching S and D matrix
         for (let i = 2; i <= n; i++) {
             let sum = 0;
             for (let k = 1; k <= i - 1; k++) {
                 sum += s[k][i] * s[k][i] * d[k];
             }
-            d[i] = MyMath.signum(a[i-1][i-1] - sum);
-            s[i][i] = Math.sqrt(Math.abs(a[i-1][i-1] - sum));
+            d[i] = MyMath.signum(a[i][i] - sum);
+            s[i][i] = Math.sqrt(Math.abs(a[i][i] - sum));
 
             const l = 1 / (s[i][i] * d[i]);
             for (let j = i + 1; j <= n; j++) {
@@ -124,11 +124,10 @@ export class FarmMath {
                 for (let k = 1; k <= i - 1; k++) {
                     SDSsum += s[k][i] * d[k] * s[k][j];
                 }
-                s[i][j] = l * (a[i-1][j-1] - SDSsum);
+                s[i][j] = l * (a[i][j] - SDSsum);
             }
         }
 
-        //solve of the system (s^t * d)y = b
         y[1] = b[1] / (s[1][1] * d[1]);
 
         for (let i = 2; i <= n; i++) {
@@ -141,7 +140,6 @@ export class FarmMath {
             y[i] = (b[i] - sum) / (s[i][i] * d[i]);
         }
 
-        //solve of the system sx = y
         x[n] = y[n] / s[n][n];
 
         for (let i = n - 1; i >= 1; i--) {
@@ -154,7 +152,49 @@ export class FarmMath {
             x[i] = (y[i] - sum) / s[i][i];
         }
 
-        //output
-        x.forEach(item => console.log(item))
+        const result : number[] = []
+        x.forEach((item,i) => {
+            if(i !== 0) result.push(item)
+        })
+
+        return result
+    }
+
+    static Vi(nodeV : ICoord[], Va:number[]){        
+        const vi:ICoord[] = []
+        for (let e = 0; e < nodeV.length; e++) {            
+            const q : ICoord = {...nodeV[e]}
+            q.x = q.x === 0 ? 0 : Va[q.x-1]
+            q.y = q.y === 0 ? 0 : Va[q.y-1]
+            vi.push(q)
+        }
+        return vi
+    }
+    static Vij(linkNodes : ICoord[], vi:ICoord[]){
+        const vij:number[][][] = []
+        for (let e = 0; e < linkNodes.length; e++) {            
+            const n_start = linkNodes[e].x
+            const n_ends = linkNodes[e].y
+            
+            vij.push([
+                [vi[n_start].x],
+                [vi[n_start].y],
+                [vi[n_ends].x],
+                [vi[n_ends].y],
+            ])
+        }
+        return vij
+    }
+    static V_i(l:number[][], vij:number[][]){
+        let v: number[][] = MyMath.multMatrxi(l ,vij)
+        return v
+    }
+    static P(kMest: number[][][], v:number[][][]){
+        const p: number[][][] = []
+        for (let i = 0; i < kMest.length; i++) {
+            p.push(MyMath.multMatrxi(kMest[i], v[i]))            
+        }
+        return p
+        
     }
 }

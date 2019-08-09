@@ -255,7 +255,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         const { classes, nodes, beams, calculation } = this.props
         return (
             <Box className={classes.root}>
-                <Stats.FPSStats isActive={true} />
+                <Stats isActive={true} />
                 <KeyHandler
                     keyEventName={"keyup"}
                     keyValue={"Escape"}

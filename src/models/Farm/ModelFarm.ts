@@ -105,10 +105,15 @@ export class Farm {
         const LinkLength: number[] = []
         const Kmest: number[][][] = [] // Матрица жесткости
         const Lambda0: ICoord[] = []
-        const Lambda = []
+        const Lambda :number[][][] = []
         const Kobs: number[][][] = []
         const IndexV: number[][] = []
         let K: number[][] = []
+        let Va: number[] = []
+        let Vi: ICoord[] = []
+        let Vij: number[][][] = []
+        let V: number[][][] = []
+        let P: number[][][] = []
 
         if (farmNodes.find(node => node.beamsID.length === 0 && node.isStatic)) return cb("Не все узлы соединены")
         try {
@@ -163,8 +168,8 @@ export class Farm {
                 const l_i = FarmMath.Lambda_i(NodeCoord[LinkNodes[i].x], NodeCoord[LinkNodes[i].y], LinkLength[i])
                 Lambda0.push(l_i)
                 Lambda.push([
-                    { x1: l_i.x, y1: l_i.y, x2: 0, y2: 0 },
-                    { x1: 0, y1: 0, x2: l_i.x, y2: l_i.y }
+                    [ l_i.x, l_i.y, 0, 0 ],
+                    [0, 0, l_i.x, l_i.y]
                 ])
                 Kobs.push(FarmMath.Kobs_i(area, ModUpr, LinkLength[i], Lambda0[i]))
                 IndexV.push(FarmMath.IndexV_i(NodeV[LinkNodes[i].x], NodeV[LinkNodes[i].y]))
@@ -179,11 +184,22 @@ export class Farm {
             const N_DOF = Math.max(...NodeV.map(({ x, y }) => Math.max(x, y)))
             console.log("N_Link, N_Nodes, N_DOF", N_Link, N_Nodes, N_DOF);
 
-            K = FarmMath.K(N_DOF, N_Link, IndexV, Kobs)
-            console.log("K", K);
-            console.log("Force", Forces);
+            K = FarmMath.K(N_DOF, IndexV, Kobs)
+            console.log("K, Force", K, Forces);
+
+            Va = FarmMath.SquareRoot(K, Forces)
+            Vi = FarmMath.Vi(NodeV, Va)
+            Vij = FarmMath.Vij(LinkNodes, Vi)
+            console.log("Va, Vi, Vij", Va, Vi, Vij);
+
+            for (let i = 0; i < N_Link; i++) {
+                V.push(FarmMath.V_i(Lambda[i], Vij[i]))         
+            }
+            console.log("V", V);
             
-            // FarmMath.SquareRoot(K,Forces)
+            // P = FarmMath.P(Kmest, V)
+            // console.log("V, P", V, P);
+            
 
         } catch (e) {
             cb(e)
