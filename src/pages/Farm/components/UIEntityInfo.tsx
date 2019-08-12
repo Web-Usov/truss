@@ -76,9 +76,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         }
     }
     NodeInfo(node: FarmNode) {
-        const { classes, onDelete } = this.props
-        console.log(node);
-        
+        const { classes, onDelete } = this.props        
         return (
             <Box className={classes.root}>
                 <Typography variant="h6" className={classes.title}>

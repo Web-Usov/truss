@@ -79,9 +79,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     componentDidMount() {
         const { current: stage } = this.stage
         if (stage) {
-            const container: HTMLDivElement = stage.attrs.container.parentElement.parentElement
-            console.log(container);
-            
+            const container: HTMLDivElement = stage.attrs.container.parentElement.parentElement            
             if (container) {
                 container.scrollTop = (container.scrollHeight - container.offsetHeight) / 2
                 container.scrollLeft = (container.scrollWidth - container.offsetWidth) / 2

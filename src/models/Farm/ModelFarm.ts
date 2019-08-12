@@ -1,11 +1,10 @@
-import { canvasWidth } from './../../static/const';
+import { canvasWidth, MMinCell } from './../../static/const';
 import { FarmNode, NodeFixation, createNode, INode } from "./ModelNode";
 import { Beam, IBeam, createBeam, instanceOfBeam } from "./ModelBeam";
 import { createForce } from "./ModelForce";
 import { Entity } from "./ModelEntity";
 import uuid from 'uuid'
 import { MyMath } from "src/utils";
-import { SizeKoef, canvasHeight } from "src/static/const";
 import { consts } from 'src/static';
 
 
@@ -38,12 +37,7 @@ export interface CalcData {
 export class Farm {
     static addNode(nodes: FarmNode[], props: INode): FarmNode | null {
         if (nodes.length > 12) return null
-        let x = props.x
-        let y = props.y
-        if (props.x && props.y) {
-            x = props.x * SizeKoef
-            y = props.y * SizeKoef
-        }
+        const {x, y} = props
         const oldNode = nodes.find(item => item.x === x && item.y === y)
         if (oldNode) return null
         const id = uuid()
@@ -63,8 +57,8 @@ export class Farm {
         let x = props.x
         let y = props.y
         if (props.x && props.y) {
-            x = props.x * SizeKoef
-            y = props.y * SizeKoef
+            x = props.x
+            y = props.y
         }
         const id = uuid()
         if (!id) return null
@@ -77,15 +71,16 @@ export class Farm {
         return beam
     }
     static moveEntity(entity: Entity, x: number, y: number) {
-        entity.x = x * SizeKoef
-        entity.y = y * SizeKoef
+
+        entity.x = x
+        entity.y = y
         if (instanceOfBeam(entity)) {
             entity.length = this.getBeamLength(entity)
         }
     }
     static moveBeamEnd(beam: Beam, x: number, y: number) {
-        beam.endX = x * SizeKoef
-        beam.endY = y * SizeKoef
+        beam.endX = x
+        beam.endY = y
         beam.length = this.getBeamLength(beam)
     }
 
@@ -496,8 +491,17 @@ export class FarmFactory {
                 y
             }
         })
+        const beams = _beams.map(beam => {
+            const x = beam.x + Math.round((consts.canvasWidth / 3) / consts.UI_cellSize) * consts.MMinCell
+            const y = beam.y + Math.round((consts.canvasHeight / 3) / consts.UI_cellSize) * consts.MMinCell
+            return {
+                ...beam,
+                x,
+                y
+            }
+        })
 
-        return {nodes , beams:_beams}
+        return {nodes , beams}
     }
     static createNodes(_fixedNodes: IFixedNodeCreate[], _staticNodes: IStaticNodeCreate[], _nodes: ISimpleNodeCreate[]): FarmNode[] {
         const nodes: FarmNode[] = []

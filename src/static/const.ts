@@ -17,7 +17,7 @@ export const UI_cellSize = 45
 export const UI_nodeSize = UI_cellSize / 3
 export const UI_beamSize = UI_cellSize / 7
 export const MMinCell = 200
-export const SizeKoef = (MMinCell/UI_cellSize)
+export const SizeKoef = MMinCell/UI_cellSize
 
 export const sidebarWidth = 240
 export const canvasWidth  = 2500

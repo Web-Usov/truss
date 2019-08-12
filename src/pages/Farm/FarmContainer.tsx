@@ -5,6 +5,7 @@ import { Beam, IBeam, instanceOfBeam } from 'src/models/Farm/ModelBeam';
 import { Force, createForce, IForce } from 'src/models/Farm/ModelForce';
 import { IFarm, Farm,  FarmCalc, FarmFactory } from 'src/models/Farm/ModelFarm';
 import testFarm from './_testFarm'
+import { consts } from 'src/static';
 
 interface State extends IFarm {
     calculation: boolean
@@ -34,7 +35,7 @@ export class FarmContainer extends React.Component<Props, State> {
         } else this.defautlFarm()
     }
     addNode = (x: number, y: number, options?: INode) => {
-        const node = Farm.addNode(this.state.nodes, { ...options, x, y })
+        const node = Farm.addNode(this.state.nodes, { ...options, x:x*consts.SizeKoef, y:y*consts.SizeKoef })
         if (node) {
             this.setState({
                 nodes: [...this.state.nodes, node]
@@ -118,12 +119,14 @@ export class FarmContainer extends React.Component<Props, State> {
         return force
 
     }
-    moveNode = (_node: FarmNode, x: number, y: number, ) => {
-
+    moveNode = (_node: FarmNode, _x: number, _y: number, ) => {
+        const x = _x *consts.SizeKoef
+        const y = _y *consts.SizeKoef
         if (_node.isStatic) return false
         const oldNode = this.state.nodes.find(item => item.x === x && item.y === y)
         if (!oldNode) {
-            const node: FarmNode = { ..._node, x, y }
+            const node: FarmNode = { ..._node}
+            Farm.moveEntity(node,x,y)
             const beamsOfNode = this.state.beams.filter(item => (node && node.beamsID.includes(item.id)))
             beamsOfNode.forEach(item => {
                 if (node) {
@@ -149,8 +152,10 @@ export class FarmContainer extends React.Component<Props, State> {
         }
         return false
     }
-    moveBeam = (beam: Beam, x: number, y: number, place: 'start' | 'end' = 'end') => {
-
+    moveBeam = (beam: Beam, _x: number, _y: number, place: 'start' | 'end' = 'end') => {
+        
+        const x = _x *consts.SizeKoef
+        const y = _y *consts.SizeKoef
         beam = { ...beam }
         if (place === 'start') Farm.moveEntity(beam, x, y)
         else Farm.moveBeamEnd(beam, x, y)
@@ -254,11 +259,12 @@ export class FarmContainer extends React.Component<Props, State> {
         }
     }
     defautlFarm() {
-        const _farm = testFarm()
+        let _farm = testFarm()
         localStorage.removeItem('nodes')
         localStorage.removeItem('beams')
         
-        const {nodes, beams} = FarmFactory.firstPlacement(_farm.nodes, _farm.beams)
+        _farm = FarmFactory.firstPlacement(_farm.nodes, _farm.beams)
+        const {nodes,beams} = _farm
         this.setState({
             nodes,
             beams,
