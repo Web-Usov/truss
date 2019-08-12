@@ -186,15 +186,11 @@ export class FarmMath {
         return vij
     }
     static V_i(l:number[][], vij:number[][]){
-        let v: number[][] = MyMath.multMatrxi(l ,vij)
+        const v: number[][] = MyMath.multMatrxiV2(l ,vij)
         return v
     }
-    static P(kMest: number[][][], v:number[][][]){
-        const p: number[][][] = []
-        for (let i = 0; i < kMest.length; i++) {
-            p.push(MyMath.multMatrxi(kMest[i], v[i]))            
-        }
+    static P_i(k:number[][], v:number[][]){
+        const p: number[][] = MyMath.multMatrxiV2(k ,v)
         return p
-        
     }
 }

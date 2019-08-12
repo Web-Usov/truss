@@ -120,7 +120,7 @@ export class Farm {
             let nodeVindex = 0;
             farmNodes.forEach(node => {
                 farmNodesMap.set(node.id, node)
-                NodeCoord.push({ x: node.x * 10, y: node.y * 10 })
+                NodeCoord.push({ x: node.x, y: node.y}) // * 10
                 switch (node.fixation) {
                     case NodeFixation.X: {
                         nodeVindex++
@@ -161,7 +161,7 @@ export class Farm {
                     x: Number(nums[0]) - 1,
                     y: Number(nums[1]) - 1
                 })
-                const beamLength = Farm.getBeamLength(beam) * 10
+                const beamLength = Farm.getBeamLength(beam)// * 10
                 LinkLength.push(beamLength)
                 Kmest.push(FarmMath.Kmest_i(area, ModUpr, beamLength))
 
@@ -190,16 +190,16 @@ export class Farm {
             Va = FarmMath.SquareRoot(K, Forces)
             Vi = FarmMath.Vi(NodeV, Va)
             Vij = FarmMath.Vij(LinkNodes, Vi)
-            console.log("Va, Vi, Vij", Va, Vi, Vij);
+            console.log("Va", Va);
+            console.log("Vi", Vi);
+            console.log("Vij",Vij);
 
             for (let i = 0; i < N_Link; i++) {
-                V.push(FarmMath.V_i(Lambda[i], Vij[i]))         
+                V.push(FarmMath.V_i(Lambda[i], Vij[i]))    
+                P.push(FarmMath.P_i(Kmest[i],V[i]))     
             }
             console.log("V", V);
-            
-            // P = FarmMath.P(Kmest, V)
-            // console.log("V, P", V, P);
-            
+            console.log("P", P);
 
         } catch (e) {
             cb(e)

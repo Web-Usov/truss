@@ -44,17 +44,20 @@ class MyMath {
                 result[i][k] = sum
             }
         }
-        console.log(result);
+        // console.log(result);
         return result
 
     }
-    // static multMatrxiV2(a: number[][], b: number[][]) : number[][]{
-    //     // const result = MathJs.multiply(a,b)
-    //     // if(result instanceof MathJs.MathArray){
-
-    //     // }
-    //     // return 
-    // }
+    static multMatrxiV2(a: number[][], b: number[][]) : number[][]{
+        let result: number[][] = []
+        try {
+            result = (MathJs.multiply(a,b) as number[][])
+            
+        } catch (error) {
+            console.error("multMatrxiV2:", error);
+        }        
+        return result
+    }
 }
 
 
