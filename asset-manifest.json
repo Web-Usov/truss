@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "./static/css/main.84bbde08.chunk.css",
-    "main.js": "./static/js/main.6b2cfb3e.chunk.js",
-    "main.js.map": "./static/js/main.6b2cfb3e.chunk.js.map",
+    "main.css": "./static/css/main.1953de04.chunk.css",
+    "main.js": "./static/js/main.be064e9d.chunk.js",
+    "main.js.map": "./static/js/main.be064e9d.chunk.js.map",
     "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
     "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
-    "static/js/2.2daeeb86.chunk.js": "./static/js/2.2daeeb86.chunk.js",
-    "static/js/2.2daeeb86.chunk.js.map": "./static/js/2.2daeeb86.chunk.js.map",
+    "static/js/2.4dfb60f6.chunk.js": "./static/js/2.4dfb60f6.chunk.js",
+    "static/js/2.4dfb60f6.chunk.js.map": "./static/js/2.4dfb60f6.chunk.js.map",
     "index.html": "./index.html",
-    "precache-manifest.4e935969ea38dbce90e17885931b48fe.js": "./precache-manifest.4e935969ea38dbce90e17885931b48fe.js",
+    "precache-manifest.d6699db96e663752f9911e25cb89b057.js": "./precache-manifest.d6699db96e663752f9911e25cb89b057.js",
     "service-worker.js": "./service-worker.js",
-    "static/css/main.84bbde08.chunk.css.map": "./static/css/main.84bbde08.chunk.css.map",
+    "static/css/main.1953de04.chunk.css.map": "./static/css/main.1953de04.chunk.css.map",
     "static/media/airBridge.png": "./static/media/airBridge.7d581a65.png",
     "static/media/bridge.png": "./static/media/bridge.e53bced3.png",
-    "static/media/fixation.svg": "./static/media/fixation.9b63597e.svg",
+    "static/media/fixation.svg": "./static/media/fixation.dd261ca6.svg",
     "static/media/icon.png": "./static/media/icon.68e274b2.png",
     "static/media/ogImage.png": "./static/media/ogImage.0619e300.png"
   }
