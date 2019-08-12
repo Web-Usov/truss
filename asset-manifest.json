@@ -1,20 +1,20 @@
 {
   "files": {
-    "main.css": "./static/css/main.1953de04.chunk.css",
-    "main.js": "./static/js/main.be064e9d.chunk.js",
-    "main.js.map": "./static/js/main.be064e9d.chunk.js.map",
-    "runtime~main.js": "./static/js/runtime~main.d653cc00.js",
-    "runtime~main.js.map": "./static/js/runtime~main.d653cc00.js.map",
-    "static/js/2.4dfb60f6.chunk.js": "./static/js/2.4dfb60f6.chunk.js",
-    "static/js/2.4dfb60f6.chunk.js.map": "./static/js/2.4dfb60f6.chunk.js.map",
-    "index.html": "./index.html",
-    "precache-manifest.d6699db96e663752f9911e25cb89b057.js": "./precache-manifest.d6699db96e663752f9911e25cb89b057.js",
-    "service-worker.js": "./service-worker.js",
-    "static/css/main.1953de04.chunk.css.map": "./static/css/main.1953de04.chunk.css.map",
-    "static/media/airBridge.png": "./static/media/airBridge.7d581a65.png",
-    "static/media/bridge.png": "./static/media/bridge.e53bced3.png",
-    "static/media/fixation.svg": "./static/media/fixation.dd261ca6.svg",
-    "static/media/icon.png": "./static/media/icon.68e274b2.png",
-    "static/media/ogImage.png": "./static/media/ogImage.0619e300.png"
+    "main.css": "https://web-usov.github.io/truss/static/css/main.1953de04.chunk.css",
+    "main.js": "https://web-usov.github.io/truss/static/js/main.51e84515.chunk.js",
+    "main.js.map": "https://web-usov.github.io/truss/static/js/main.51e84515.chunk.js.map",
+    "runtime~main.js": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js",
+    "runtime~main.js.map": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js.map",
+    "static/js/2.4633db83.chunk.js": "https://web-usov.github.io/truss/static/js/2.4633db83.chunk.js",
+    "static/js/2.4633db83.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.4633db83.chunk.js.map",
+    "index.html": "https://web-usov.github.io/truss/index.html",
+    "precache-manifest.0a8d0023a6a2f0a308213e820db400e4.js": "https://web-usov.github.io/truss/precache-manifest.0a8d0023a6a2f0a308213e820db400e4.js",
+    "service-worker.js": "https://web-usov.github.io/truss/service-worker.js",
+    "static/css/main.1953de04.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.1953de04.chunk.css.map",
+    "static/media/airBridge.png": "https://web-usov.github.io/truss/static/media/airBridge.7d581a65.png",
+    "static/media/bridge.png": "https://web-usov.github.io/truss/static/media/bridge.e53bced3.png",
+    "static/media/fixation.svg": "https://web-usov.github.io/truss/static/media/fixation.dd261ca6.svg",
+    "static/media/icon.png": "https://web-usov.github.io/truss/static/media/icon.68e274b2.png",
+    "static/media/ogImage.png": "https://web-usov.github.io/truss/static/media/ogImage.0619e300.png"
   }
 }
