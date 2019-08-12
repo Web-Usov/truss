@@ -7,10 +7,10 @@ import { HashRouter, Router } from 'react-router-dom';
 import App from './App';
 import './index.css';
 
-const isGitHubPages = process.env.REACT_APP_GHP || 'false';
+const isGitHubPages = process.env.REACT_APP_GHP === 'true' || false;
 
 const Root = () => {    
-    if (isGitHubPages === 'true') return (
+    if (isGitHubPages) return (
         <HashRouter>
             <App />
         </HashRouter>

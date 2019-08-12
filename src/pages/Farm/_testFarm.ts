@@ -1,27 +1,27 @@
 import { FarmNode, NodeFixation } from "src/models/Farm/ModelNode";
 import { Beam } from "src/models/Farm/ModelBeam";
-import { Farm } from "src/models/Farm/ModelFarm";
+import {  FarmFactory } from "src/models/Farm/ModelFarm";
 
 export default () => {
     let nodes: FarmNode[] = []
     let beams: Beam[] = []
 
-    nodes = Farm.createNodes(
+    nodes = FarmFactory.createNodes(
         [
             {
-                x: 1000,
+                x: 0,
                 y: 1000,
                 fixation: NodeFixation.XY,
             },
             {
-                x: 1450,
+                x: 3000,
                 y: 1000,
                 fixation: NodeFixation.Y,
             }
         ],
         [
             {
-                x: 1150,
+                x: 1000,
                 y: 1000,
                 angle: 90,
                 value: 9000

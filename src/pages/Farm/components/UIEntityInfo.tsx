@@ -5,7 +5,7 @@ import { Delete as DeleteIcon, Info as InfoEntityIcon } from '@material-ui/icons
 import { Sidebar } from 'src/components';
 import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode, FarmNode, NodeFixation } from 'src/models/Farm/ModelNode';
-import { instanceOfBeam } from 'src/models/Farm/ModelBeam';
+import { instanceOfBeam, Beam } from 'src/models/Farm/ModelBeam';
 import { Farm } from 'src/models/Farm/ModelFarm';
 import { Force } from 'src/models/Farm/ModelForce';
 
@@ -16,13 +16,10 @@ const styles = (theme: Theme) => createStyles({
     title: {
         marginBottom: theme.spacing(2)
     },
-    btnGroup:{
-        marginTop:theme.spacing(2)
+    btnGroup: {
+        marginTop: theme.spacing(2)
     }
 })
-
-
-
 
 interface EntityInfoProps extends WithStyles<typeof styles> {
     entity?: Entity | undefined,
@@ -32,71 +29,70 @@ interface EntityInfoProps extends WithStyles<typeof styles> {
 interface EntityInfoState {
 
 }
-
+const TextRow = ({ text, className }: { text: string, className?: string }) =>     (
+    <React.Fragment>
+        <Typography variant="subtitle2">
+            {text}
+        </Typography>
+        <Divider />
+    </React.Fragment>
+)
+const TextRows = ({ text, className }: { text: string[], className?: string }) => {
+    if (text.length === 0) return (<React.Fragment />)
+    return (
+        <React.Fragment>
+            {text.map((str,i) => (
+                <Typography variant="subtitle2" key={i}>
+                    {str}
+                </Typography>
+            ))}
+            <Divider />
+        </React.Fragment>
+    )
+}
 class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>{
     constructor(props: EntityInfoProps) {
         super(props)
         this.state = {
-
         }
     }
     viewForceInfo(force: Force) {
         return (
-            <React.Fragment>
-                <Typography variant="subtitle2">
-                    Сила: {force.value} H
-                </Typography>
-                <Typography variant="subtitle2">
-                    Угол: {force.angle}
-                </Typography>
-                <Divider />
-
-            </React.Fragment>
+            <TextRows text={[`Сила: ${force.value} H`, `Угол: ${force.angle}°`]} />
         )
     }
-    viewFixationInfo(node : FarmNode){
+    viewFixationInfo(node: FarmNode) {
         switch (node.fixation) {
-            case NodeFixation.X : return (
-                <React.Fragment>
-                    <Typography variant="subtitle2">
-                        Фиксация по оси X
-                    </Typography>
-                    <Divider />    
-                </React.Fragment>
+            case NodeFixation.X: return (
+                <TextRow text={"Фиксация по оси X"} />
             )
-            case NodeFixation.Y : return (
-                <React.Fragment>
-                    <Typography variant="subtitle2">
-                        Фиксация по оси Y
-                    </Typography>
-                    <Divider />    
-                </React.Fragment>
+            case NodeFixation.Y: return (
+                <TextRow text={"Фиксация по оси Y"} />
             )
-            case NodeFixation.XY : return (
-                <React.Fragment>
-                    <Typography variant="subtitle2">
-                        Фиксация по оси X и Y
-                    </Typography>
-                    <Divider />    
-                </React.Fragment>
+            case NodeFixation.XY: return (
+                <TextRow text={"Фиксация по осям Х и Y"} />
             )
-            default : return undefined
+            default: return undefined
         }
     }
-    viewInfo(entity: Entity | undefined) {
+    NodeInfo(node: FarmNode) {
         const { classes, onDelete } = this.props
-        if (instanceOfNode(entity)) return (
+        console.log(node);
+        
+        return (
             <Box className={classes.root}>
                 <Typography variant="h6" className={classes.title}>
-                    Узел {entity.name}
+                    Узел {node.name}
                 </Typography>
-                {entity.forceX && this.viewForceInfo(entity.forceX)}
-                {entity.forceY && this.viewForceInfo(entity.forceY)}
-                {this.viewFixationInfo(entity)} 
+                <TextRows text={[`X: ${node.x}`,`Y: ${node.y}`]}/>
+                {node.withNewPosition && (<TextRows text={[`ΔX: ${node.newX}`,`ΔY: ${node.newY}`]}/>)}
+                {node.forceX && this.viewForceInfo(node.forceX)}
+                {node.forceY && this.viewForceInfo(node.forceY)}
+                {this.viewFixationInfo(node)}
                 <div className={classes.btnGroup}>
                     <IconButton
                         aria-label="Delete"
-                        onClick={() => onDelete(entity)}
+                        onClick={() => onDelete(node)}
                     >
                         <DeleteIcon />
                     </IconButton>
@@ -104,26 +100,29 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                 </div>
             </Box>
         )
-        else if (instanceOfBeam(entity)) return (
+    }
+    BeamInfo(beam: Beam) {
+        const { classes, onDelete } = this.props
+        return (
             <Box className={classes.root}>
                 <Typography variant="h6" className={classes.title}>
-                    Стержень {entity.name}
+                    Стержень {beam.name}
                 </Typography>
-                <Typography variant="subtitle2">
-                    Длина: {entity.length || Farm.getBeamLength(entity)}
-                </Typography>
-                <Divider />    
+                <TextRow text={`Длина: ${beam.length || Farm.getBeamLength(beam)}`}/>
                 <div className={classes.btnGroup}>
                     <IconButton
                         aria-label="Delete"
-                        onClick={() => onDelete(entity)}
+                        onClick={() => onDelete(beam)}
                     >
                         <DeleteIcon />
                     </IconButton>
-
                 </div>
             </Box>
         )
+    }
+    viewInfo(entity: Entity | undefined) {
+        if (instanceOfNode(entity)) return this.NodeInfo(entity)
+        else if (instanceOfBeam(entity)) return this.BeamInfo(entity)
     }
     render() {
         const { entity } = this.props

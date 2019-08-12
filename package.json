@@ -44,7 +44,7 @@
     "build": "set PUBLIC_URL=./&& craco  build",
     "test": "craco  test",
     "eject": "craco  eject",
-    "predeploy": "set PUBLIC_URL=https://web-usov.github.io/truss&& npm run build",
+    "predeploy": "set PUBLIC_URL=https://web-usov.github.io/truss&& craco build",
     "deploy": "gh-pages -d build"
   },
   "eslintConfig": {

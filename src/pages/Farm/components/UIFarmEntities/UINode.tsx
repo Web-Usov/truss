@@ -7,6 +7,7 @@ import { Force } from 'src/models/Farm/ModelForce';
 import { KonvaEventObject } from 'konva/types/Node';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
+import { SizeKoef } from 'src/static/const';
 
 const size = consts.UI_nodeSize
 interface UINodeProps {
@@ -88,8 +89,8 @@ class UINode extends React.Component<UINodeProps>{
 
         return (
             <Group
-                x={node.x}
-                y={node.y}
+                x={node.x / SizeKoef}
+                y={node.y / SizeKoef}
                 _useStrictMode
                 onClick={(e: any) => onClick(e, node)}
             >
@@ -126,8 +127,8 @@ class UINode extends React.Component<UINodeProps>{
                 />
                 <Circle
                     radius={size}
-                    x={node.x - node.x}
-                    y={node.y - node.y}
+                    x={0}
+                    y={0}
                     onDragEnd={(e: KonvaEventObject<DragEvent>) => {
                         e.target.to({
                             x: 0,

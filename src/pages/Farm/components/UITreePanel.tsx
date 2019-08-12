@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge } from '@material-ui/core';
+import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge, Box } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore, Brightness1 as CircleIcon } from '@material-ui/icons';
 import { Sidebar } from 'src/components';
@@ -39,8 +39,8 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
     }
     componentWillMount() {
         const { tabs } = this.state
-        tabs.set('Узлы', false)
-        tabs.set('Стержни', false)
+        tabs.set('Узлы', true)
+        tabs.set('Стержни', true)
         this.setState({ tabs: new Map(tabs) })
     }
     openTab(tab: string): void {
@@ -52,7 +52,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         const { selectedEntity, classes, onSelect } = this.props
         const { tabs } = this.state
         return (
-            <React.Fragment>
+            <Box>
                 <ListItem button onClick={() => this.openTab(title)}>
                     {icon && (
                         <ListItemIcon>
@@ -76,7 +76,7 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                             >
                                 {instanceOfNode(item) && (
                                     <ListItemIcon>
-                                        <CircleIcon style={{color:UI.getNodeColor(item)}}/>
+                                        <CircleIcon style={{ color: UI.getNodeColor(item) }} />
                                     </ListItemIcon>
                                 )}
                                 <ListItemText primary={item.name} />
@@ -85,13 +85,13 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                     </List>
                 </Collapse>
                 <Divider />
-            </React.Fragment>
+            </Box>
         )
     }
     render() {
         const { nodes, beams } = this.props
-        beams.sort((a:Beam, b: Beam) => {
-            return a.name > b.name ? 1 : -1 
+        beams.sort((a: Beam, b: Beam) => {
+            return a.name > b.name ? 1 : -1
         })
         return (
             <Sidebar

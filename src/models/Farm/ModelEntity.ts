@@ -8,7 +8,8 @@ export interface IEntity {
     name?: string
     newX?: number
     newY?: number
-    type?:'entity' | 'node' | 'beam' | 'force'
+    type?:'entity' | 'node' | 'beam' | 'force',
+    withNewPosition?: boolean
 }
 export interface Entity {    
     id: string
@@ -18,11 +19,12 @@ export interface Entity {
     name: string;
     newX: number;
     newY: number;
-    type:'entity' | 'node' | 'beam' | 'force'
+    type:'entity' | 'node' | 'beam' | 'force',
+    withNewPosition:boolean
 }
 
 export const createEntity = (props:IEntity = {}) :Entity => {
-    const { x, y, name, angle, id, newX, newY, type } = props
+    const { x, y, name, angle, id, newX, newY, type, withNewPosition } = props
     const entity : Entity =  {
         id: id || uuid(),
         x: x || 0,
@@ -31,7 +33,8 @@ export const createEntity = (props:IEntity = {}) :Entity => {
         name: name || "",
         newX: newX || x || 0,
         newY: newY || y || 0,
-        type:type || 'entity'
+        type:type || 'entity',
+        withNewPosition: withNewPosition || false
     }
     entity.name = name || entity.id
     return entity

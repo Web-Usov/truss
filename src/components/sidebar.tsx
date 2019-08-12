@@ -2,15 +2,15 @@ import * as React from 'react'
 import { Theme, createStyles, withStyles, Fab, Drawer, Tooltip, Typography, Divider } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Close as CloseIcon } from '@material-ui/icons';
+import { sidebarWidth } from 'src/static/const';
 
-const drawerWidth = 240;
 
 const styles = (theme: Theme) => createStyles({
     drawer: {
         position: 'relative'
     },
     drawerPaper: {
-        width: drawerWidth,
+        width: sidebarWidth,
     },
     toogleIcon: {
         position: 'absolute',
@@ -37,17 +37,25 @@ interface SidebarState {
     viewTooltip: boolean
 
 }
-
+const localStr = "Sidebar_state:"
 class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
     constructor(props: SidebarProps) {
         super(props)
         this.state = {
-            open: false,
+            open: true,
             viewTooltip: false
         }
         this.switchDrawer = this.switchDrawer.bind(this)
     }
+    componentWillMount(){
+        if(this.props.title){
+            const localState = localStorage.getItem(localStr+this.props.title)
+            if(localState)
+            this.setState({open: localState === "true"})
+        }
+    }
     switchDrawer() {
+        localStorage.setItem(localStr+this.props.title,(!this.state.open ? "true" : "false"))
         this.setState(
             {
                 open: !this.state.open,
@@ -91,9 +99,9 @@ class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
                     onClose={() => this.changeViewtooltip(false)}>
                     <Fab
                         style={{
-                            left: anchor === 'left' ? !open ? 15 : drawerWidth + 15 : "auto",
+                            left: anchor === 'left' ? !open ? 15 : sidebarWidth + 15 : "auto",
                             
-                            right: anchor === 'right' ? !open ? 15 : drawerWidth + 15 : "auto"
+                            right: anchor === 'right' ? !open ? 15 : sidebarWidth + 15 : "auto"
                         }}
                         color="secondary"
                         size="medium"

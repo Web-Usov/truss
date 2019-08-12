@@ -5,6 +5,7 @@ import { Beam } from 'src/models/Farm/ModelBeam';
 import { consts } from 'src/static';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
+import { SizeKoef } from 'src/static/const';
 
 interface UIBeamProps {
     onClick(e: Konva.KonvaEventObject<MouseEvent>, beam: Beam): void
@@ -29,10 +30,10 @@ class UIBeam extends React.Component<UIBeamProps>{
         return (
             <Line
                 points={[
-                    beam.x,
-                    beam.y,
-                    beam.endX,
-                    beam.endY
+                    beam.x / SizeKoef,
+                    beam.y / SizeKoef,
+                    beam.endX / SizeKoef,
+                    beam.endY / SizeKoef
                 ]}
                 stroke={UI.getBeamColor(beam)}
                 strokeWidth={size}

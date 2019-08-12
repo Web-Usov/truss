@@ -3,7 +3,7 @@ import { UIFarm } from './components'
 import { FarmNode, INode, instanceOfNode } from 'src/models/Farm/ModelNode';
 import { Beam, IBeam, instanceOfBeam } from 'src/models/Farm/ModelBeam';
 import { Force, createForce, IForce } from 'src/models/Farm/ModelForce';
-import { IFarm, Farm, CalcData } from 'src/models/Farm/ModelFarm';
+import { IFarm, Farm,  FarmCalc, FarmFactory } from 'src/models/Farm/ModelFarm';
 import testFarm from './_testFarm'
 
 interface State extends IFarm {
@@ -28,9 +28,9 @@ export class FarmContainer extends React.Component<Props, State> {
         const nodesJSON = localStorage.getItem("nodes")
         const beamsJSON = localStorage.getItem("beams")
         if (nodesJSON && beamsJSON) {
-            const nodes: FarmNode[] = JSON.parse(nodesJSON)
-            const beams: Beam[] = JSON.parse(beamsJSON)
-            this.setState({ nodes, beams })
+            const _nodes: FarmNode[] = JSON.parse(nodesJSON)
+            const _beams: Beam[] = JSON.parse(beamsJSON)
+            this.setState({ nodes: _nodes, beams: _beams })
         } else this.defautlFarm()
     }
     addNode = (x: number, y: number, options?: INode) => {
@@ -188,11 +188,10 @@ export class FarmContainer extends React.Component<Props, State> {
                 }
             })
             nodes = nodes.filter(i => (instanceOfNode(entity) && i.id !== entity.id))
-            nodes = Farm.setNodesName(nodes)
-            beams = Farm.setBeamsName(beams, nodes)
+            const { nodes: upNodes, beams: upBeams } = Farm.update(nodes, beams)
             this.setState({
-                nodes,
-                beams
+                nodes: upNodes,
+                beams: upBeams
             })
             return true
 
@@ -223,28 +222,43 @@ export class FarmContainer extends React.Component<Props, State> {
         return false
     }
     async calculateFarm() {
-        let nodes = this.state.nodes.filter(node => (node.beamsID.length !== 0 || node.isStatic))
-        nodes = Farm.sortNodes(nodes)
-        const beams = Farm.setBeamsName(this.state.beams, nodes)
+        let { nodes, beams } = Farm.normalize(this.state.nodes, this.state.beams)
         this.setState({
             nodes,
             beams
         })
         try {
-            const {P, LinkNodes = []} = await Farm.calculateFarm(nodes, beams)
+            const { P, LinkNodes, Vi } = await FarmCalc.init(nodes, beams)
+            nodes = nodes.map((node, i) => {
+                return {
+                    ...node,
+                    newX: Vi[i].x,
+                    newY: Vi[i].y,
+                    withNewPosition: true
+                }
+            })
             P.forEach((row, i) => {
                 const link = (LinkNodes[i].x + 1) + " - " + (LinkNodes[i].y + 1)
-                console.log(`${i+1} - [${link}] P1: ${row[0]}; P2: ${row[1]}; `);                
+                console.log(`${i + 1} - [${link}] P1: ${row[0]}; P2: ${row[1]}; `);
+            })
+            this.setState({
+                nodes
             })
 
+
         } catch (e) {
+            if (e.message)
+                alert(e.message)
+            else alert(e)
             console.error(e);
         }
     }
     defautlFarm() {
-        const { nodes, beams } = testFarm()
+        const _farm = testFarm()
         localStorage.removeItem('nodes')
         localStorage.removeItem('beams')
+        
+        const {nodes, beams} = FarmFactory.firstPlacement(_farm.nodes, _farm.beams)
         this.setState({
             nodes,
             beams,

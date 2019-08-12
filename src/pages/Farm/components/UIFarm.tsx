@@ -12,6 +12,7 @@ import { instanceOfNode } from 'src/models/Farm/ModelNode';
 import { FarmContainer } from '../FarmContainer'
 import { UIModes } from 'src/utils/UI';
 import { IFarm } from 'src/models/Farm/ModelFarm';
+import { consts } from 'src/static';
 
 
 
@@ -41,7 +42,7 @@ export interface UIFarmProps extends IFarm, WithStyles<typeof styles> {
     deleteEntity: typeof FarmContainer.prototype.deleteEntity
     defautlFarm: typeof FarmContainer.prototype.defautlFarm
     saveFarm: typeof FarmContainer.prototype.saveFarm,
-    calculateFarm:typeof FarmContainer.prototype.calculateFarm
+    calculateFarm: typeof FarmContainer.prototype.calculateFarm
     calculation: boolean,
 }
 
@@ -58,8 +59,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     constructor(props: UIFarmProps) {
         super(props)
         this.state = {
-            stageHeight: 1500,
-            stageWidth: 2500,
+            stageHeight: consts.canvasHeight,
+            stageWidth: consts.canvasWidth,
             uiMode: UIModes.none,
             selectedEntity: undefined,
             paintEntity: undefined,
@@ -78,7 +79,9 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     componentDidMount() {
         const { current: stage } = this.stage
         if (stage) {
-            const container: HTMLDivElement = stage.attrs.container.parentElement
+            const container: HTMLDivElement = stage.attrs.container.parentElement.parentElement
+            console.log(container);
+            
             if (container) {
                 container.scrollTop = (container.scrollHeight - container.offsetHeight) / 2
                 container.scrollLeft = (container.scrollWidth - container.offsetWidth) / 2
@@ -152,7 +155,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         if (isEmptyPlace) this.setState({ selectedEntity: undefined })
 
     }
-    UIonMouseMove(e: Konva.KonvaEventObject<MouseEvent>) {
+    UIonMouseMove(e: Konva.KonvaEventObject<MouseEvent>) {        
         const { calculation } = this.props
         if (calculation) return
         const { uiMode, paintEntity } = this.state
@@ -237,7 +240,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
             this.props.saveFarm()
     }
-    calculateFarm(e: React.FormEvent<HTMLButtonElement>){
+    calculateFarm(e: React.FormEvent<HTMLButtonElement>) {
         this.props.calculateFarm()
     }
     setSelectedMode(mode: UIModes) {
@@ -276,7 +279,6 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         selectedEntity={selectedEntity}
                         onSelect={this.selectEntity}
                     />
-
                     <UIStage
                         onClick={this.UIonClick}
                         onDrag={this.UIonDrag}
@@ -293,7 +295,6 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         entity={selectedEntity}
                         onDelete={this.deleteEntity} />
                 </Box>
-
                 <UIToolPanel
                     selected={uiMode}
                     onSelect={this.setSelectedMode.bind(this)} />
