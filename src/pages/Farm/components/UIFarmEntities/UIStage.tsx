@@ -9,8 +9,8 @@ import { consts } from 'src/static';
 import ScrollBar from 'react-custom-scrollbars';
 import { UIBeam, UINode } from '..';
 import { UIModes } from 'src/utils/UI';
-import { IFarm } from 'src/models/Farm/ModelFarm';
 import { sidebarWidth } from 'src/static/const';
+import { IFarm } from 'src/models/Farm/FarmTypes';
 
 const styles = (theme: Theme) => createStyles({
     root: {

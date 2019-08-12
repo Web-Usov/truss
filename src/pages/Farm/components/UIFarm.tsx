@@ -11,8 +11,8 @@ import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode } from 'src/models/Farm/ModelNode';
 import { FarmContainer } from '../FarmContainer'
 import { UIModes } from 'src/utils/UI';
-import { IFarm } from 'src/models/Farm/ModelFarm';
 import { consts } from 'src/static';
+import { IFarm } from 'src/models/Farm/FarmTypes';
 
 
 

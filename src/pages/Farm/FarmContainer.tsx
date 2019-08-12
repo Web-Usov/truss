@@ -3,9 +3,12 @@ import { UIFarm } from './components'
 import { FarmNode, INode, instanceOfNode } from 'src/models/Farm/ModelNode';
 import { Beam, IBeam, instanceOfBeam } from 'src/models/Farm/ModelBeam';
 import { Force, createForce, IForce } from 'src/models/Farm/ModelForce';
-import { IFarm, Farm,  FarmCalc, FarmFactory } from 'src/models/Farm/ModelFarm';
+import { Farm} from 'src/models/Farm/ModelFarm';
 import testFarm from './_testFarm'
 import { consts } from 'src/static';
+import { IFarm } from 'src/models/Farm/FarmTypes';
+import { FarmCalc } from 'src/models/Farm/FarmCalc';
+import { FarmFactory } from 'src/models/Farm/FarmFactory';
 
 interface State extends IFarm {
     calculation: boolean

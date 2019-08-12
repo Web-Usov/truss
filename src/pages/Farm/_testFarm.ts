@@ -1,6 +1,6 @@
 import { FarmNode, NodeFixation } from "src/models/Farm/ModelNode";
 import { Beam } from "src/models/Farm/ModelBeam";
-import {  FarmFactory } from "src/models/Farm/ModelFarm";
+import { FarmFactory } from "src/models/Farm/FarmFactory";
 
 export default () => {
     let nodes: FarmNode[] = []
