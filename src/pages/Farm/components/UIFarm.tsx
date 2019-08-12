@@ -58,8 +58,8 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     constructor(props: UIFarmProps) {
         super(props)
         this.state = {
-            stageHeight: 2000,
-            stageWidth: 2000,
+            stageHeight: 1500,
+            stageWidth: 2500,
             uiMode: UIModes.none,
             selectedEntity: undefined,
             paintEntity: undefined,

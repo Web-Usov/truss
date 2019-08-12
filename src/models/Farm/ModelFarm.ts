@@ -7,6 +7,9 @@ import { MyMath } from "src/utils";
 import { beam } from "src/static/colors";
 import { FarmMath } from "./FarmMath";
 
+const farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || false
+
+ 
 export interface IFarm {
     nodes: FarmNode[],
     beams: Beam[]
@@ -15,15 +18,20 @@ export interface ICoord {
     x: number,
     y: number
 }
-interface IFixedNode extends ICoord {
+interface IFixedNodeCreate extends ICoord {
     fixation: NodeFixation
 }
-interface IStaticNode extends ICoord {
+interface IStaticNodeCreate extends ICoord {
     angle: 0 | 90
     value: number
 }
-interface ISimpleNode extends ICoord {
+interface ISimpleNodeCreate extends ICoord {
 
+}
+
+export interface CalcData {
+    P:number[][][],
+    LinkNodes?:ICoord[]
 }
 export class Farm {
     static addNode(nodes: FarmNode[], props: INode): FarmNode | null {
@@ -61,7 +69,7 @@ export class Farm {
         beam.endX = x
         beam.endY = y
     }
-    static createNodes(_fixedNodes: IFixedNode[], _staticNodes: IStaticNode[], _nodes: ISimpleNode[]): FarmNode[] {
+    static createNodes(_fixedNodes: IFixedNodeCreate[], _staticNodes: IStaticNodeCreate[], _nodes: ISimpleNodeCreate[]): FarmNode[] {
         const nodes: FarmNode[] = []
         let index: number = 0;
         return nodes.concat(
@@ -88,124 +96,6 @@ export class Farm {
             (checkingBeam.startConnectedNodeID === node.id && checkingBeam.endConnectedNodeID === beam.startConnectedNodeID) ||
             (checkingBeam.id === beam.id && checkingBeam.startConnectedNodeID === node.id)
         )
-    }
-    static calculateFarm(_nodes: FarmNode[], _beams: Beam[], props: object, cb: (error?: string | null, data?: object) => void) {
-        let farmNodes: FarmNode[] = [..._nodes]
-        let farmBeams: Beam[] = [..._beams]
-        const farmNodesMap: Map<string, FarmNode> = new Map()
-        const farmBeamsMap: Map<string, Beam> = new Map()
-
-        const area: number = 225 //Площадь стержней
-        const ModUpr: number = 72000 // Модуль упругости 
-
-        const NodeCoord: ICoord[] = []
-        const NodeV: ICoord[] = []
-        const Forces: number[] = []
-        const LinkNodes: ICoord[] = []
-        const LinkLength: number[] = []
-        const Kmest: number[][][] = [] // Матрица жесткости
-        const Lambda0: ICoord[] = []
-        const Lambda :number[][][] = []
-        const Kobs: number[][][] = []
-        const IndexV: number[][] = []
-        let K: number[][] = []
-        let Va: number[] = []
-        let Vi: ICoord[] = []
-        let Vij: number[][][] = []
-        let V: number[][][] = []
-        let P: number[][][] = []
-
-        if (farmNodes.find(node => node.beamsID.length === 0 && node.isStatic)) return cb("Не все узлы соединены")
-        try {
-            let nodeVindex = 0;
-            farmNodes.forEach(node => {
-                farmNodesMap.set(node.id, node)
-                NodeCoord.push({ x: node.x, y: node.y}) // * 10
-                switch (node.fixation) {
-                    case NodeFixation.X: {
-                        nodeVindex++
-                        NodeV.push({ x: 0, y: nodeVindex })
-                        if (node.forceY) Forces.push(-node.forceY.value)
-
-                        break;
-                    }
-                    case NodeFixation.Y: {
-                        nodeVindex++
-                        NodeV.push({ x: nodeVindex, y: 0 })
-                        if (node.forceX) Forces.push(-node.forceX.value)
-                        else Forces.push(0)
-                        break;
-                    }
-                    case NodeFixation.YX:
-                    case NodeFixation.XY: {
-                        NodeV.push({ x: 0, y: 0 })
-                        break;
-                    }
-                    case NodeFixation.None: {
-                        nodeVindex++
-                        NodeV.push({ x: nodeVindex, y: nodeVindex + 1 })
-                        nodeVindex++
-                        if (node.forceX) Forces.push(-node.forceX.value)
-                        else Forces.push(0)
-                        if (node.forceY) Forces.push(-node.forceY.value)
-                        else Forces.push(0)
-                        break;
-                    }
-                    default: break;
-                }
-            })
-            farmBeams.forEach((beam, i) => {
-                farmBeamsMap.set(beam.id, beam)
-                const nums = beam.name.split(' - ')
-                LinkNodes.push({
-                    x: Number(nums[0]) - 1,
-                    y: Number(nums[1]) - 1
-                })
-                const beamLength = Farm.getBeamLength(beam)// * 10
-                LinkLength.push(beamLength)
-                Kmest.push(FarmMath.Kmest_i(area, ModUpr, beamLength))
-
-                const l_i = FarmMath.Lambda_i(NodeCoord[LinkNodes[i].x], NodeCoord[LinkNodes[i].y], LinkLength[i])
-                Lambda0.push(l_i)
-                Lambda.push([
-                    [ l_i.x, l_i.y, 0, 0 ],
-                    [0, 0, l_i.x, l_i.y]
-                ])
-                Kobs.push(FarmMath.Kobs_i(area, ModUpr, LinkLength[i], Lambda0[i]))
-                IndexV.push(FarmMath.IndexV_i(NodeV[LinkNodes[i].x], NodeV[LinkNodes[i].y]))
-            })
-
-            console.log("NodeCoord, LinkNodes, NodeV", NodeCoord, LinkNodes, NodeV);
-            console.log("LinkLength, Kmest", LinkLength, Kmest);
-            console.log("Lambda0, Kobs, IndexV,", Lambda0, Kobs, IndexV);
-
-            const N_Link = LinkNodes.length
-            const N_Nodes = NodeV.length
-            const N_DOF = Math.max(...NodeV.map(({ x, y }) => Math.max(x, y)))
-            console.log("N_Link, N_Nodes, N_DOF", N_Link, N_Nodes, N_DOF);
-
-            K = FarmMath.K(N_DOF, IndexV, Kobs)
-            console.log("K, Force", K, Forces);
-
-            Va = FarmMath.SquareRoot(K, Forces)
-            Vi = FarmMath.Vi(NodeV, Va)
-            Vij = FarmMath.Vij(LinkNodes, Vi)
-            console.log("Va", Va);
-            console.log("Vi", Vi);
-            console.log("Vij",Vij);
-
-            for (let i = 0; i < N_Link; i++) {
-                V.push(FarmMath.V_i(Lambda[i], Vij[i]))    
-                P.push(FarmMath.P_i(Kmest[i],V[i]))     
-            }
-            console.log("V", V);
-            console.log("P", P);
-
-        } catch (e) {
-            cb(e)
-        }
-
-
     }
     static getBeamLength(beam: Beam): number {
         return Math.round(MyMath.lengthBePoints(beam.x, beam.y, beam.endX, beam.endY) - 0.5)
@@ -254,5 +144,129 @@ export class Farm {
         }).map((node, index) => {
             return { ...node, name: index + 1 + "" }
         })
+    }
+
+    static  async calculateFarm(_nodes: FarmNode[], _beams: Beam[], props?: object) : Promise<CalcData> {
+        let farmNodes: FarmNode[] = [..._nodes]
+        let farmBeams: Beam[] = [..._beams]
+        const farmNodesMap: Map<string, FarmNode> = new Map()
+        const farmBeamsMap: Map<string, Beam> = new Map()
+
+        const area: number = 225 //Площадь стержней
+        const ModUpr: number = 72000 // Модуль упругости 
+
+        const NodeCoord: ICoord[] = []
+        const NodeV: ICoord[] = []
+        const Forces: number[] = []
+        const LinkNodes: ICoord[] = []
+        const LinkLength: number[] = []
+        const Kmest: number[][][] = [] // Матрица жесткости
+        const Lambda0: ICoord[] = []
+        const Lambda: number[][][] = []
+        const Kobs: number[][][] = []
+        const IndexV: number[][] = []
+        let K: number[][] = []
+        let Va: number[] = []
+        let Vi: ICoord[] = []
+        let Vij: number[][][] = []
+        let V: number[][][] = []
+        let P: number[][][] = []
+
+        if (farmNodes.find(node => node.beamsID.length === 0 && node.isStatic)) throw new Error("Не все узлый соединены")
+        try {
+            let nodeVindex = 0;
+            farmNodes.forEach(node => {
+                farmNodesMap.set(node.id, node)
+                NodeCoord.push({ x: node.x, y: node.y }) // * 10
+                switch (node.fixation) {
+                    case NodeFixation.X: {
+                        nodeVindex++
+                        NodeV.push({ x: 0, y: nodeVindex })
+                        if (node.forceY) Forces.push(-node.forceY.value)
+
+                        break;
+                    }
+                    case NodeFixation.Y: {
+                        nodeVindex++
+                        NodeV.push({ x: nodeVindex, y: 0 })
+                        if (node.forceX) Forces.push(-node.forceX.value)
+                        else Forces.push(0)
+                        break;
+                    }
+                    case NodeFixation.YX:
+                    case NodeFixation.XY: {
+                        NodeV.push({ x: 0, y: 0 })
+                        break;
+                    }
+                    case NodeFixation.None: {
+                        nodeVindex++
+                        NodeV.push({ x: nodeVindex, y: nodeVindex + 1 })
+                        nodeVindex++
+                        if (node.forceX) Forces.push(-node.forceX.value)
+                        else Forces.push(0)
+                        if (node.forceY) Forces.push(-node.forceY.value)
+                        else Forces.push(0)
+                        break;
+                    }
+                    default: break;
+                }
+            })
+            farmBeams.forEach((beam, i) => {
+                farmBeamsMap.set(beam.id, beam)
+                const nums = beam.name.split(' - ')
+                LinkNodes.push({
+                    x: Number(nums[0]) - 1,
+                    y: Number(nums[1]) - 1
+                })
+                const beamLength = Farm.getBeamLength(beam)// * 10
+                LinkLength.push(beamLength)
+                Kmest.push(FarmMath.Kmest_i(area, ModUpr, beamLength))
+
+                const l_i = FarmMath.Lambda_i(NodeCoord[LinkNodes[i].x], NodeCoord[LinkNodes[i].y], LinkLength[i])
+                Lambda0.push(l_i)
+                Lambda.push([
+                    [l_i.x, l_i.y, 0, 0],
+                    [0, 0, l_i.x, l_i.y]
+                ])
+                Kobs.push(FarmMath.Kobs_i(area, ModUpr, LinkLength[i], Lambda0[i]))
+                IndexV.push(FarmMath.IndexV_i(NodeV[LinkNodes[i].x], NodeV[LinkNodes[i].y]))
+            })
+
+            const N_Link = LinkNodes.length
+            const N_Nodes = NodeV.length
+            const N_DOF = Math.max(...NodeV.map(({ x, y }) => Math.max(x, y)))
+
+            K = FarmMath.K(N_DOF, IndexV, Kobs)
+
+            Va = FarmMath.SquareRoot(K, Forces)
+            Vi = FarmMath.Vi(NodeV, Va)
+            Vij = FarmMath.Vij(LinkNodes, Vi)
+
+            for (let i = 0; i < N_Link; i++) {
+                V.push(FarmMath.V_i(Lambda[i], Vij[i]))
+                P.push(FarmMath.P_i(Kmest[i], V[i]))
+            }
+
+            if(farmCalcDebug){
+                console.log("NodeCoord, LinkNodes, NodeV", NodeCoord, LinkNodes, NodeV);
+                console.log("Kobs, Kmest", Kobs, Kmest);
+                console.log("Lambda0, Lambda,", Lambda0, Lambda);
+                console.log("IndexV", IndexV);
+                console.log("N_Link, N_Nodes, N_DOF", N_Link, N_Nodes, N_DOF);
+                console.log("K, Force", K, Forces);
+                console.log("Va", Va);
+                console.log("Vi", Vi);
+                console.log("Vij", Vij);
+                console.log("V", V);
+                console.log("P", P);
+            }
+
+            return {P,LinkNodes}
+
+        } catch (e) {
+            throw new Error(e)
+        }
+
+
     }
 }

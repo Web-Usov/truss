@@ -1,13 +1,13 @@
 import * as React from 'react'
-import {UIFarm} from './components'
-import { FarmNode, INode,  instanceOfNode } from 'src/models/Farm/ModelNode';
-import { Beam, IBeam,  instanceOfBeam } from 'src/models/Farm/ModelBeam';
+import { UIFarm } from './components'
+import { FarmNode, INode, instanceOfNode } from 'src/models/Farm/ModelNode';
+import { Beam, IBeam, instanceOfBeam } from 'src/models/Farm/ModelBeam';
 import { Force, createForce, IForce } from 'src/models/Farm/ModelForce';
-import { IFarm, Farm } from 'src/models/Farm/ModelFarm';
+import { IFarm, Farm, CalcData } from 'src/models/Farm/ModelFarm';
 import testFarm from './_testFarm'
 
-interface State extends IFarm{
-    calculation:boolean
+interface State extends IFarm {
+    calculation: boolean
 }
 interface Props {
 
@@ -18,24 +18,24 @@ export class FarmContainer extends React.Component<Props, State> {
         this.state = {
             nodes: [],
             beams: [],
-            calculation:false
+            calculation: false
         }
         this.defautlFarm = this.defautlFarm.bind(this)
         this.saveFarm = this.saveFarm.bind(this)
         this.calculateFarm = this.calculateFarm.bind(this)
     }
-    componentDidMount() {        
+    componentDidMount() {
         const nodesJSON = localStorage.getItem("nodes")
         const beamsJSON = localStorage.getItem("beams")
         if (nodesJSON && beamsJSON) {
             const nodes: FarmNode[] = JSON.parse(nodesJSON)
-            const beams: Beam[] =  JSON.parse(beamsJSON)
-            this.setState({nodes,beams})
-        }else this.defautlFarm()
+            const beams: Beam[] = JSON.parse(beamsJSON)
+            this.setState({ nodes, beams })
+        } else this.defautlFarm()
     }
     addNode = (x: number, y: number, options?: INode) => {
-        const node = Farm.addNode(this.state.nodes,{...options,x,y})
-        if(node){
+        const node = Farm.addNode(this.state.nodes, { ...options, x, y })
+        if (node) {
             this.setState({
                 nodes: [...this.state.nodes, node]
             })
@@ -44,8 +44,8 @@ export class FarmContainer extends React.Component<Props, State> {
         return null
     }
     addBeam = (options?: IBeam) => {
-        const beam = Farm.addBeam(this.state.beams, {...options})
-        if(beam){
+        const beam = Farm.addBeam(this.state.beams, { ...options })
+        if (beam) {
             this.setState({
                 beams: [...this.state.beams, beam]
             })
@@ -61,7 +61,7 @@ export class FarmContainer extends React.Component<Props, State> {
         switch (place) {
             case 'start': {
                 beam.startConnectedNodeID = node.id
-                beam.name=node.name+" - "
+                beam.name = node.name + " - "
                 node.beamsID.push(beam.id)
                 Farm.moveEntity(beam, node.x, node.y)
                 this.setState(state => ({
@@ -82,7 +82,7 @@ export class FarmContainer extends React.Component<Props, State> {
                 if (!oldBeam) {
                     node.beamsID.push(beam.id)
                     beam.endConnectedNodeID = node.id
-                    beam.name=beam.name + node.name
+                    beam.name = beam.name + node.name
                     Farm.moveBeamEnd(beam, node.x, node.y)
                     this.setState(state => ({
                         nodes: state.nodes.map(item => {
@@ -163,8 +163,8 @@ export class FarmContainer extends React.Component<Props, State> {
         return true
     }
     deleteEntity = (id: string) => {
-        let nodes : FarmNode[] = [...this.state.nodes]
-        let beams : Beam[] = [...this.state.beams]
+        let nodes: FarmNode[] = [...this.state.nodes]
+        let beams: Beam[] = [...this.state.beams]
         let entity: Beam | FarmNode | undefined =
             this.state.beams.find(item => item.id === id) ||
             this.state.nodes.find(item => item.id === id)
@@ -177,7 +177,7 @@ export class FarmContainer extends React.Component<Props, State> {
                     if (beam.startConnectedNodeID === entity.id) _node = nodes.find(item => item.id === beam.endConnectedNodeID)
                     else _node = nodes.find(item => item.id === beam.startConnectedNodeID)
                     if (_node) {
-                        _node = {..._node}
+                        _node = { ..._node }
                         _node.beamsID = _node.beamsID.filter(id => id !== beam.id)
                         nodes = nodes.map(item => {
                             if (_node && item.id === _node.id) return _node
@@ -196,12 +196,12 @@ export class FarmContainer extends React.Component<Props, State> {
             })
             return true
 
-        } else if (instanceOfBeam(entity)) {            
+        } else if (instanceOfBeam(entity)) {
             [entity.startConnectedNodeID, entity.endConnectedNodeID].forEach(nodeID => {
                 if (nodeID && nodeID.length > 0) {
                     let _node = nodes.find(item => item.id === nodeID)
                     if (_node && instanceOfBeam(entity)) {
-                        _node = {..._node}
+                        _node = { ..._node }
                         _node.beamsID = _node.beamsID.filter(id => {
                             if (entity) return id !== entity.id
                             return false
@@ -215,24 +215,31 @@ export class FarmContainer extends React.Component<Props, State> {
             })
             beams = beams.filter(i => (instanceOfBeam(entity) && i.id !== entity.id))
             this.setState({
-                nodes,beams
+                nodes, beams
             })
             return true
         }
 
         return false
     }
-    calculateFarm(){
+    async calculateFarm() {
         let nodes = this.state.nodes.filter(node => (node.beamsID.length !== 0 || node.isStatic))
         nodes = Farm.sortNodes(nodes)
-        const beams = Farm.setBeamsName(this.state.beams,nodes)
+        const beams = Farm.setBeamsName(this.state.beams, nodes)
         this.setState({
             nodes,
             beams
         })
-        Farm.calculateFarm(nodes, beams,{}, (error, data) => {
-            if(error) console.error(error)
-        })
+        try {
+            const {P, LinkNodes = []} = await Farm.calculateFarm(nodes, beams)
+            P.forEach((row, i) => {
+                const link = (LinkNodes[i].x + 1) + " - " + (LinkNodes[i].y + 1)
+                console.log(`${i+1} - [${link}] P1: ${row[0]}; P2: ${row[1]}; `);                
+            })
+
+        } catch (e) {
+            console.error(e);
+        }
     }
     defautlFarm() {
         const { nodes, beams } = testFarm()
@@ -243,10 +250,10 @@ export class FarmContainer extends React.Component<Props, State> {
             beams,
         })
     }
-    saveFarm(){
-        const { nodes, beams} = this.state
-        localStorage.setItem('nodes', JSON.stringify(nodes)) 
-        localStorage.setItem('beams', JSON.stringify(beams))   
+    saveFarm() {
+        const { nodes, beams } = this.state
+        localStorage.setItem('nodes', JSON.stringify(nodes))
+        localStorage.setItem('beams', JSON.stringify(beams))
     }
     render() {
         return (

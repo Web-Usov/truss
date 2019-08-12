@@ -14,14 +14,14 @@ export default () => {
                 fixation: NodeFixation.XY,
             },
             {
-                x: 1300,
+                x: 1450,
                 y: 1000,
                 fixation: NodeFixation.Y,
             }
         ],
         [
             {
-                x: 1100,
+                x: 1150,
                 y: 1000,
                 angle: 90,
                 value: 9000
