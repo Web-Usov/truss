@@ -3,7 +3,7 @@ import { MyMath } from "src/utils";
 
 export class FarmCalc {
 
-    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || true
+    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || false
     static async init(NodeCoord: ICoord[], NodeV: ICoord[], Forces: number[], LinkNodes: ICoord[], LinkLength: number[], props: FarmCalcProps = {}): Promise<FarmCalcData> {
 
         const area: number = props.area || 225 //Площадь стержней
@@ -40,7 +40,8 @@ export class FarmCalc {
         const N_DOF = Math.max(...NodeV.map(({ x, y }) => Math.max(x, y)))
 
         K = this.K(N_DOF, IndexV, Kobs)
-        if(MyMath.getDetMatrix(K) === 0 ) throw Error("Данная конструкция (статически неопределимая) является механизмом")
+        
+        if(MyMath.getDetMatrix(K) < 1000 ) throw Error("Данная конструкция (статически неопределимая) является механизмом")
 
         Va = this.SquareRoot(K, Forces)
         Vi = this.Vi(NodeV, Va)

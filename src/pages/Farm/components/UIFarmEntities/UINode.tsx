@@ -18,18 +18,30 @@ interface UINodeProps {
     viewNewPos?:boolean
 }
 class UINode extends React.Component<UINodeProps>{
+    refGroup: React.RefObject<Konva.Group>
     constructor(props: UINodeProps) {
         super(props)
         this.viewForce = this.viewForce.bind(this)
+        this.refGroup = React.createRef()
     }
     shouldComponentUpdate(nextProps: UINodeProps) {
+        if(this.props.viewNewPos) return false
         return (
             nextProps.node !== this.props.node ||
             nextProps.mode !== this.props.mode ||
             nextProps.selected !== this.props.selected
         )
     }
-
+    componentDidMount(){
+        const {current:group} = this.refGroup
+        const {node, viewNewPos} = this.props
+        if(group && viewNewPos){
+            group.to({
+                x:node.newX / consts.UI.koefOnGrid,
+                Y:node.newY / consts.UI.koefOnGrid
+            })
+        }
+    }
     viewForce(force: Force) {
         const {viewNewPos } = this.props
         if(!viewNewPos)  return (
@@ -85,8 +97,14 @@ class UINode extends React.Component<UINodeProps>{
     }
     render() {
         const { onClick, mode, selected, node, viewNewPos } = this.props
-        const x = viewNewPos ? node.newX / consts.UI.koefOnGrid : node.x / consts.UI.koefOnGrid
-        const y = viewNewPos ? node.newY / consts.UI.koefOnGrid : node.y / consts.UI.koefOnGrid
+        const x =  node.x / consts.UI.koefOnGrid
+        const y =  node.y / consts.UI.koefOnGrid
+        // const x = viewNewPos ? node.newX / consts.UI.koefOnGrid : node.x / consts.UI.koefOnGrid
+        // const y = viewNewPos ? node.newY / consts.UI.koefOnGrid : node.y / consts.UI.koefOnGrid
+        if(viewNewPos){
+            if(node.x === node.newX && node.y === node.newY)
+            return <React.Fragment/>
+        }
         return (
             <Group
             
@@ -95,6 +113,8 @@ class UINode extends React.Component<UINodeProps>{
                 y={y}
                 _useStrictMode
                 onClick={viewNewPos ? () => {} : (e: any) => onClick(e, node)}
+                ref={this.refGroup}
+                
             >
                 {node.forceX && this.viewForce(node.forceX)}
                 {node.forceY && this.viewForce(node.forceY)}

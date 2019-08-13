@@ -15,9 +15,30 @@ interface UIBeamProps {
 }
 
 class UIBeam extends React.Component<UIBeamProps>{
+    refLine: React.RefObject<Konva.Line>
+    constructor(props  :UIBeamProps){
+        super(props)    
+        this.refLine = React.createRef()
 
+    }
+
+    componentDidMount(){
+        const {current:group} = this.refLine
+        const {beam, viewNewPos} = this.props
+        if(group && viewNewPos){
+            group.to({
+                points: [
+                    beam.newX / consts.UI.koefOnGrid,
+                    beam.newY / consts.UI.koefOnGrid,
+                    beam.newEndX / consts.UI.koefOnGrid,
+                    beam.newEndY / consts.UI.koefOnGrid
+                ]
+            })
+        }
+    }
     shouldComponentUpdate(nextProps: UIBeamProps) {
-        const { beam, mode, selected } = this.props
+        const { beam, mode, selected,viewNewPos } = this.props
+        if(viewNewPos) return false
         return (
             nextProps.beam !== beam ||
             nextProps.mode !== mode ||
@@ -28,22 +49,16 @@ class UIBeam extends React.Component<UIBeamProps>{
         const { onClick, mode, selected, beam, viewNewPos } = this.props
         const size = consts.UI.beamSize
 
-        let points: number[] = [
+        const points: number[] = [
             beam.x / consts.UI.koefOnGrid,
             beam.y / consts.UI.koefOnGrid,
             beam.endX / consts.UI.koefOnGrid,
             beam.endY / consts.UI.koefOnGrid
         ]
-        if (viewNewPos)
-            points = [
-                beam.newX / consts.UI.koefOnGrid,
-                beam.newY / consts.UI.koefOnGrid,
-                beam.newEndX / consts.UI.koefOnGrid,
-                beam.newEndY / consts.UI.koefOnGrid
-            ]
 
         return (
             <Line
+                ref={this.refLine}
                 opacity={viewNewPos ? 0.3 : 1}
                 points={points}
                 stroke={UI.getBeamColor(beam)}

@@ -8,19 +8,24 @@ export interface UIGridProps {
     widthBox: number
 
 }
-
-const UIGrid: React.FC<UIGridProps> = ({ widthCell, heightCell, heightBox, widthBox }) => {
-    const countOfX: number = widthBox / widthCell
-    const countOfY: number = heightBox / heightCell
-    const viewRows = () => {
+class UIGrid extends React.Component<UIGridProps>{
+    private countOfX: number = this.props.widthBox / this.props.widthCell
+    private countOfY: number = this.props.heightBox / this.props.heightCell
+    constructor(props: UIGridProps){
+        super(props)
+    }
+    shouldComponentUpdate(nextProps: Readonly<UIGridProps>, nextState: Readonly<{}>){
+        return nextProps.widthBox !== this.props.widthBox
+    }
+    viewRows() {
         const rows = []
-        for (let index = 0; index < countOfY; index++) {
+        for (let index = 0; index < this.countOfY; index++) {
             rows.push(<Line
                 points={[
                     0,
-                    index * heightCell,
-                    widthBox,
-                    index * heightCell,
+                    index * this.props.heightCell,
+                    this.props.widthBox,
+                    index * this.props.heightCell,
 
                 ]}
                 stroke="#ddd"
@@ -31,16 +36,16 @@ const UIGrid: React.FC<UIGridProps> = ({ widthCell, heightCell, heightBox, width
         return rows
     }
 
-    const viewColumns = () => {
+    viewColumns() {
         const columns = []
-        for (let index = 0; index < countOfX; index++) {
+        for (let index = 0; index < this.countOfX; index++) {
 
             columns.push(<Line
                 points={[
-                    index*widthCell,
+                    index * this.props.widthCell,
                     0,
-                    index*widthCell,
-                    heightBox,
+                    index * this.props.widthCell,
+                    this.props.heightBox,
 
                 ]}
                 stroke="#ddd"
@@ -51,13 +56,16 @@ const UIGrid: React.FC<UIGridProps> = ({ widthCell, heightCell, heightBox, width
         }
         return columns
     }
-    return (
-        <React.Fragment>
-            {viewColumns()}
-            {viewRows()}
+    render() {
+        console.log("pop");
 
-        </React.Fragment>
-    )
+        return (
+            <React.Fragment>
+                {this.viewColumns()}
+                {this.viewRows()}
+
+            </React.Fragment>
+        )
+    }
 }
-
 export default UIGrid

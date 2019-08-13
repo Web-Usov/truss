@@ -78,7 +78,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                     Узел {node.name}
                 </Typography>
                 <TextRows text={[`X: ${node.x} мм`,`Y: ${node.y} мм`]}/>
-                {node.withNewPosition && (<TextRows text={[`X': ${node.newX} мм`,`Y': ${node.newY} мм`]}/>)}
+                {node.withNewPosition && (<TextRows text={[`ΔX: ${node.newX-node.x} мм`,`ΔY': ${node.newY - node.y} мм`]}/>)}
                 {node.forceX && (<TextRows text={[`Сила: ${node.forceX.value} H`, `Угол: ${node.forceX.angle}°`]} />)}
                 {node.forceY && (<TextRows text={[`Сила: ${node.forceY.value} H`, `Угол: ${node.forceY.angle}°`]} />)}
                 {this.viewFixationInfo(node)}

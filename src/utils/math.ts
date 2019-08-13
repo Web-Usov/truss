@@ -59,7 +59,8 @@ class MyMath {
         return result
     }
     static getDetMatrix(array:number[][]) : number{
-        return MathJs.det(array)
+        const d = MathJs.det(array)        
+        return d
     }
 }
 
