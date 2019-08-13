@@ -99,12 +99,15 @@ class UINode extends React.Component<UINodeProps>{
         const { onClick, mode, selected, node, viewNewPos } = this.props
         const x =  node.x / consts.UI.koefOnGrid
         const y =  node.y / consts.UI.koefOnGrid
+        console.log("Node "+node.id);
+        
         // const x = viewNewPos ? node.newX / consts.UI.koefOnGrid : node.x / consts.UI.koefOnGrid
         // const y = viewNewPos ? node.newY / consts.UI.koefOnGrid : node.y / consts.UI.koefOnGrid
         if(viewNewPos){
             if(node.x === node.newX && node.y === node.newY)
             return <React.Fragment/>
         }
+
         return (
             <Group
             

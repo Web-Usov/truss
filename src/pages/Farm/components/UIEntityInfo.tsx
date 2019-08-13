@@ -7,7 +7,6 @@ import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode, FarmNode, NodeFixation } from 'src/models/Farm/ModelNode';
 import { instanceOfBeam, Beam } from 'src/models/Farm/ModelBeam';
 import Farm from 'src/models/Farm/Farm';
-import { Force } from 'src/models/Farm/ModelForce';
 
 const styles = (theme: Theme) => createStyles({
     root: {

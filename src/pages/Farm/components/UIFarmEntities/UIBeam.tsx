@@ -36,6 +36,15 @@ class UIBeam extends React.Component<UIBeamProps>{
             })
         }
     }
+    // isChanged(oldBeam:Beam, newBeam:Beam){
+    //     return (
+    //         (oldBeam.x !== newBeam.x) ||            
+    //         (oldBeam.y !== newBeam.y) ||            
+    //         (oldBeam.endY !== newBeam.endY) ||            
+    //         (oldBeam.endX !== newBeam.endX) ||            
+    //         (oldBeam.withNewPosition !== newBeam.withNewPosition)
+    //     )
+    // }
     shouldComponentUpdate(nextProps: UIBeamProps) {
         const { beam, mode, selected,viewNewPos } = this.props
         if(viewNewPos) return false
@@ -54,8 +63,7 @@ class UIBeam extends React.Component<UIBeamProps>{
             beam.y / consts.UI.koefOnGrid,
             beam.endX / consts.UI.koefOnGrid,
             beam.endY / consts.UI.koefOnGrid
-        ]
-
+        ]        
         return (
             <Line
                 ref={this.refLine}
