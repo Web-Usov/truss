@@ -1,15 +1,15 @@
 import { FarmNode, createNode } from "./ModelNode";
 import { createForce } from "./ModelForce";
-import { consts } from "src/static";
+import { canvas, UI } from "src/static/const";
 import { Beam } from "./ModelBeam";
 import { IFarm, IFixedNodeCreate, IStaticNodeCreate, ISimpleNodeCreate } from "./FarmTypes";
 
 export class FarmFactory {
-    static firstPlacement(_nodes: FarmNode[], _beams: Beam[]) : IFarm {
+    static firstPlacement(_nodes: FarmNode[], _beams: Beam[]): IFarm {
 
         const nodes = _nodes.map(node => {
-            const x = node.x + Math.round((consts.canvasWidth / 3) / consts.UI_cellSize) * consts.MMinCell
-            const y = node.y + Math.round((consts.canvasHeight / 3) / consts.UI_cellSize) * consts.MMinCell
+            const x = node.x + Math.round((canvas.width / 3) / UI.cellSize) * UI.MMinCell
+            const y = node.y + Math.round((canvas.height / 3) / UI.cellSize) * UI.MMinCell
             return {
                 ...node,
                 x,
@@ -17,8 +17,8 @@ export class FarmFactory {
             }
         })
         const beams = _beams.map(beam => {
-            const x = beam.x + Math.round((consts.canvasWidth / 3) / consts.UI_cellSize) * consts.MMinCell
-            const y = beam.y + Math.round((consts.canvasHeight / 3) / consts.UI_cellSize) * consts.MMinCell
+            const x = beam.x + Math.round((canvas.width / 3) / UI.cellSize) * UI.MMinCell
+            const y = beam.y + Math.round((canvas.height / 3) / UI.cellSize) * UI.MMinCell
             return {
                 ...beam,
                 x,
@@ -26,7 +26,31 @@ export class FarmFactory {
             }
         })
 
-        return {nodes , beams}
+        return { nodes, beams }
+    }
+    static parse(nodesJSON:string, beamsJSON:string):IFarm{
+        let nodes:FarmNode[] = JSON.parse(nodesJSON)
+        let beams:Beam[] = JSON.parse(beamsJSON)
+
+        nodes = nodes.map((node) => {
+            return {
+                ...node,
+                newX:node.x,
+                newY:node.y,
+                withNewPosition:false,
+            }
+        })
+        beams = beams.map((beam) => {
+            return {
+                ...beam,
+                withNewPosition:false,
+            }
+        })
+
+        return {
+            nodes,
+            beams
+        }
     }
     static createNodes(_fixedNodes: IFixedNodeCreate[], _staticNodes: IStaticNodeCreate[], _nodes: ISimpleNodeCreate[]): FarmNode[] {
         const nodes: FarmNode[] = []
@@ -50,3 +74,5 @@ export class FarmFactory {
         )
     }
 }
+
+export default FarmFactory

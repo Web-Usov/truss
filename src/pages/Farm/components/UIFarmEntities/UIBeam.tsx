@@ -1,17 +1,17 @@
 import * as React from 'react'
-import { Line } from 'react-konva/lib/ReactKonvaCore'
+import { Line } from 'react-konva'
 import Konva from 'konva'
 import { Beam } from 'src/models/Farm/ModelBeam';
 import { consts } from 'src/static';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
-import { SizeKoef } from 'src/static/const';
 
 interface UIBeamProps {
     onClick(e: Konva.KonvaEventObject<MouseEvent>, beam: Beam): void
     mode: UIModes,
     selected: boolean,
-    beam: Beam
+    beam: Beam,
+    viewNewPos?: boolean
 }
 
 class UIBeam extends React.Component<UIBeamProps>{
@@ -25,24 +25,35 @@ class UIBeam extends React.Component<UIBeamProps>{
         )
     }
     render() {
-        const { onClick, mode, selected, beam } = this.props
-        const size = consts.UI_beamSize
+        const { onClick, mode, selected, beam, viewNewPos } = this.props
+        const size = consts.UI.beamSize
+
+        let points: number[] = [
+            beam.x / consts.UI.koefOnGrid,
+            beam.y / consts.UI.koefOnGrid,
+            beam.endX / consts.UI.koefOnGrid,
+            beam.endY / consts.UI.koefOnGrid
+        ]
+        if (viewNewPos)
+            points = [
+                beam.newX / consts.UI.koefOnGrid,
+                beam.newY / consts.UI.koefOnGrid,
+                beam.newEndX / consts.UI.koefOnGrid,
+                beam.newEndY / consts.UI.koefOnGrid
+            ]
+
         return (
             <Line
-                points={[
-                    beam.x / SizeKoef,
-                    beam.y / SizeKoef,
-                    beam.endX / SizeKoef,
-                    beam.endY / SizeKoef
-                ]}
+                opacity={viewNewPos ? 0.3 : 1}
+                points={points}
                 stroke={UI.getBeamColor(beam)}
                 strokeWidth={size}
-                shadowBlur={selected ? 8 : 2}
+                shadowBlur={selected && !viewNewPos ? 8 : 2}
 
-                hitStrokeWidth={size * 4}
-                onClick={(e: any) => onClick(e, beam)}
-                onMouseEnter={(e: any) => UI.beamMouseEnter(e,beam, mode)}
-                onMouseLeave={(e: any) => UI.beamMouseLeave(e)}
+                hitStrokeWidth={viewNewPos ? 0 : size * 4}
+                onClick={viewNewPos ? () => { } : (e: any) => onClick(e, beam)}
+                onMouseEnter={viewNewPos ? () => { } : (e: any) => UI.beamMouseEnter(e, beam, mode)}
+                onMouseLeave={viewNewPos ? () => { } : (e: any) => UI.beamMouseLeave(e)}
             />
         )
 

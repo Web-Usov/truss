@@ -6,7 +6,7 @@ export interface FarmCalcProps {
     modUpr?: number,
     zKoef?: number
 }
-export interface CalcData {
+export interface FarmCalcData {
     P: number[][][],
     Vi: ICoord[],
     LinkNodes: ICoord[],

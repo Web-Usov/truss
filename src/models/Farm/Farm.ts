@@ -1,9 +1,11 @@
-import { FarmNode, createNode, INode } from "./ModelNode";
+import FarmCalc from './FarmCalc';
+import { FarmNode, createNode, INode, NodeFixation } from "./ModelNode";
 import { Beam, IBeam, createBeam, instanceOfBeam } from "./ModelBeam";
 import { Entity } from "./ModelEntity";
 import uuid from 'uuid'
 import { MyMath } from "src/utils";
-import { IFarm } from './FarmTypes';
+import { IFarm, ICoord, FarmCalcData, FarmCalcProps } from './FarmTypes';
+import { consts } from 'src/static';
 
 export class Farm {
     static addNode(nodes: FarmNode[], props: INode): FarmNode | null {
@@ -129,5 +131,99 @@ export class Farm {
             beams
         }
     }
+
+    static async calculate(nodes: FarmNode[], beams: Beam[], props?: FarmCalcProps): Promise<FarmCalcData> {
+        const NodeCoord: ICoord[] = []
+        const NodeV: ICoord[] = []
+        const LinkNodes: ICoord[] = []
+        const Forces: number[] = []
+        const LinkLength: number[] = []
+        const _NodeMap: Map<string, FarmNode> = new Map()
+
+        if (nodes.find(node => node.beamsID.length === 0 && node.isStatic)) throw new Error("Не все узлы соединены")
+        let _nodeVindex = 0;
+        nodes.forEach((node, i) => {
+            NodeCoord.push({ x: node.x, y: node.y })
+            _NodeMap.set(node.id, node)
+            switch (node.fixation) {
+                case NodeFixation.X: {
+                    _nodeVindex++
+                    NodeV.push({ x: 0, y: _nodeVindex })
+                    if (node.forceY) Forces.push(-node.forceY.value)
+
+                    break;
+                }
+                case NodeFixation.Y: {
+                    _nodeVindex++
+                    NodeV.push({ x: _nodeVindex, y: 0 })
+                    if (node.forceX) Forces.push(-node.forceX.value)
+                    else Forces.push(0)
+                    break;
+                }
+                case NodeFixation.YX:
+                case NodeFixation.XY: {
+                    NodeV.push({ x: 0, y: 0 })
+                    break;
+                }
+                case NodeFixation.None: {
+                    _nodeVindex++
+                    NodeV.push({ x: _nodeVindex, y: _nodeVindex + 1 })
+                    _nodeVindex++
+                    if (node.forceX) Forces.push(-node.forceX.value)
+                    else Forces.push(0)
+                    if (node.forceY) Forces.push(-node.forceY.value)
+                    else Forces.push(0)
+                    break;
+                }
+                default: break;
+            }
+        })
+        beams.forEach((beam, i) => {
+            const nums = beam.name.split(' - ')
+            LinkNodes.push({
+                x: Number(nums[0]) - 1,
+                y: Number(nums[1]) - 1
+            })
+            LinkLength.push(Farm.getBeamLength(beam))
+        })
+
+        const data = await FarmCalc.init(NodeCoord, NodeV, Forces, LinkNodes, LinkLength, props)
+        return data
+    }
+
+    static correctAfterCalc(nodes: FarmNode[], beams:Beam[], {Vi,P}:FarmCalcData) : IFarm{
+        const bufNodeMap: Map<string, FarmNode> = new Map()
+        let _nodes = nodes.map((item, i) => {
+            const node = {
+                ...item,
+                newX: Math.round(item.x + (Vi[i].x * consts.UI.koefOfNewPos)),
+                newY: Math.round(item.y - (Vi[i].y * consts.UI.koefOfNewPos)),
+                withNewPosition: true
+            }
+            bufNodeMap.set(node.id,node)
+            return node
+        })
+        let _beams = beams.map((beam, i) => {
+            const startNode = (bufNodeMap.get(beam.startConnectedNodeID) as FarmNode)
+            const endNode = (bufNodeMap.get(beam.endConnectedNodeID) as FarmNode)
+            return {
+                ...beam,
+                newX: startNode.newX,
+                newY: startNode.newY,
+                newEndX: endNode.newX,
+                newEndY: endNode.newY,
+                startForce:Math.round(P[i][0][0]),
+                endForce:Math.round(P[i][1][0]),
+                withNewPosition: true
+            }
+        })
+
+        return {
+            nodes:_nodes,
+            beams:_beams
+        }
+        
+    }
 }
 
+export default Farm

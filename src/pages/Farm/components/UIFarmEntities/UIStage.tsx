@@ -9,20 +9,19 @@ import { consts } from 'src/static';
 import ScrollBar from 'react-custom-scrollbars';
 import { UIBeam, UINode } from '..';
 import { UIModes } from 'src/utils/UI';
-import { sidebarWidth } from 'src/static/const';
 import { IFarm } from 'src/models/Farm/FarmTypes';
 
 const styles = (theme: Theme) => createStyles({
     root: {
         backgroundColor: "#ddd",
-        display:'flex', 
-        alignItems:'center', 
-        justifyContent:'center'
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     stage: {
         backgroundColor: "#fff",
-        boxShadow:theme.shadows[2],
-        borderRadius:8,
+        boxShadow: theme.shadows[2],
+        borderRadius: 8,
     }
 })
 
@@ -34,14 +33,15 @@ export interface UIStageProps extends IFarm, WithStyles<typeof styles> {
     onClick(e: Konva.KonvaEventObject<MouseEvent>, entity?: Entity): void,
     onMouseMove(e: Konva.KonvaEventObject<MouseEvent | TouchEvent>): void,
     onDrag(e: Konva.KonvaEventObject<DragEvent>, entity: Entity): void,
-    stage: React.RefObject<Stage & Konva.Stage>
+    stage: React.RefObject<Stage & Konva.Stage>,
+    viewNewPos: boolean
 }
 
-const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, beams, nodes, uiMode, selectedEntity }) => {
+const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, beams, nodes, uiMode, selectedEntity, viewNewPos }) => {
     return (
         <ScrollBar
             autoHide>
-            <Box style={{width: stageWidth + sidebarWidth*2,height: stageHeight + sidebarWidth }}
+            <Box style={{ width: stageWidth + consts.UI.sidebarWidth * 2 + 20, height: stageHeight + consts.UI.sidebarWidth }}
                 className={classes.root}>
                 <Stage
                     height={stageHeight}
@@ -54,14 +54,14 @@ const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWid
                 >
 
                     <Layer className="layer" >
-                        
+
                         <UIGrid
-                            heightCell={consts.UI_cellSize}
-                            widthCell={consts.UI_cellSize}
+                            heightCell={consts.UI.cellSize}
+                            widthCell={consts.UI.cellSize}
                             heightBox={stageHeight}
                             widthBox={stageWidth}
                         />
-                        
+
                         {beams.map(beam => (
                             <UIBeam
                                 key={beam.id}
@@ -80,6 +80,28 @@ const UIStage: React.FC<UIStageProps> = ({ classes, stage, stageHeight, stageWid
                                 drag={onDrag}
                                 onClick={onClick}
                                 selected={selectedEntity === node}
+                            />
+                        ))}
+
+                        {viewNewPos && beams.map(beam => (
+                            <UIBeam
+                                key={beam.id}
+                                beam={beam}
+                                mode={uiMode}
+                                onClick={onClick}
+                                selected={selectedEntity === beam}
+                                viewNewPos={true}
+                            />
+                        ))}
+                        {viewNewPos && nodes.map(node => (
+                            <UINode
+                                key={node.id}
+                                node={node}
+                                mode={uiMode}
+                                drag={onDrag}
+                                onClick={onClick}
+                                selected={selectedEntity === node}
+                                viewNewPos={true}
                             />
                         ))}
                     </Layer>

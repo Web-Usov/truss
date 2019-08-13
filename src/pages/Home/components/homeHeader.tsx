@@ -34,15 +34,15 @@ const HomeHeader = ({classes} : WithStyles<typeof styles>) => {
 	return (
 		<header className={classes.root}>
 			<img 
-				src={consts.bridgeIcon_2} 
+				src={consts.img.bridgeIcon_2} 
 				alt="logo" 
 				className={classes.logo} 
 			/>
 			<Typography variant="h3" className={classes.title}>
-				{consts.title}
+				{consts.str.title}
 			</Typography>
 			<Typography variant="subtitle1" align="center" className={classes.descripton}>
-				{consts.description}
+				{consts.str.description}
 			</Typography>
 			<Button
 				component={Link}

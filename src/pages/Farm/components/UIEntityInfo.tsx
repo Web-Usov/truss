@@ -6,7 +6,7 @@ import { Sidebar } from 'src/components';
 import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode, FarmNode, NodeFixation } from 'src/models/Farm/ModelNode';
 import { instanceOfBeam, Beam } from 'src/models/Farm/ModelBeam';
-import { Farm } from 'src/models/Farm/ModelFarm';
+import Farm from 'src/models/Farm/Farm';
 import { Force } from 'src/models/Farm/ModelForce';
 
 const styles = (theme: Theme) => createStyles({
@@ -56,11 +56,6 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
         this.state = {
         }
     }
-    viewForceInfo(force: Force) {
-        return (
-            <TextRows text={[`Сила: ${force.value} H`, `Угол: ${force.angle}°`]} />
-        )
-    }
     viewFixationInfo(node: FarmNode) {
         switch (node.fixation) {
             case NodeFixation.X: return (
@@ -82,10 +77,10 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                 <Typography variant="h6" className={classes.title}>
                     Узел {node.name}
                 </Typography>
-                <TextRows text={[`X: ${node.x}`,`Y: ${node.y}`]}/>
-                {node.withNewPosition && (<TextRows text={[`ΔX: ${node.newX}`,`ΔY: ${node.newY}`]}/>)}
-                {node.forceX && this.viewForceInfo(node.forceX)}
-                {node.forceY && this.viewForceInfo(node.forceY)}
+                <TextRows text={[`X: ${node.x} мм`,`Y: ${node.y} мм`]}/>
+                {node.withNewPosition && (<TextRows text={[`X': ${node.newX} мм`,`Y': ${node.newY} мм`]}/>)}
+                {node.forceX && (<TextRows text={[`Сила: ${node.forceX.value} H`, `Угол: ${node.forceX.angle}°`]} />)}
+                {node.forceY && (<TextRows text={[`Сила: ${node.forceY.value} H`, `Угол: ${node.forceY.angle}°`]} />)}
                 {this.viewFixationInfo(node)}
                 <div className={classes.btnGroup}>
                     <IconButton
@@ -106,7 +101,8 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                 <Typography variant="h6" className={classes.title}>
                     Стержень {beam.name}
                 </Typography>
-                <TextRow text={`Длина: ${beam.length || Farm.getBeamLength(beam)}`}/>
+                <TextRow text={`Длина: ${beam.length || Farm.getBeamLength(beam)} мм`}/>
+                {beam.withNewPosition && (<TextRows text={[`Сила в начале: ${beam.startForce} H`,`Сила в конце: ${beam.endForce} H`]} />)}
                 <div className={classes.btnGroup}>
                     <IconButton
                         aria-label="Delete"

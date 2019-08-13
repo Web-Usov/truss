@@ -11,7 +11,7 @@ import { Entity } from 'src/models/Farm/ModelEntity';
 import { instanceOfNode } from 'src/models/Farm/ModelNode';
 import { FarmContainer } from '../FarmContainer'
 import { UIModes } from 'src/utils/UI';
-import { consts } from 'src/static';
+import {  canvas} from 'src/static/const';
 import { IFarm } from 'src/models/Farm/FarmTypes';
 
 
@@ -44,13 +44,14 @@ export interface UIFarmProps extends IFarm, WithStyles<typeof styles> {
     saveFarm: typeof FarmContainer.prototype.saveFarm,
     calculateFarm: typeof FarmContainer.prototype.calculateFarm
     calculation: boolean,
+    calculated: boolean,
 }
 
 export interface UIFarmState {
     stageWidth: number,
     stageHeight: number,
     uiMode: UIModes,
-    selectedEntity: Entity | undefined,
+    selectedEntityID: string,
     paintEntity: Entity | undefined
 }
 
@@ -59,10 +60,10 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     constructor(props: UIFarmProps) {
         super(props)
         this.state = {
-            stageHeight: consts.canvasHeight,
-            stageWidth: consts.canvasWidth,
+            stageHeight: canvas.height,
+            stageWidth: canvas.width,
             uiMode: UIModes.none,
-            selectedEntity: undefined,
+            selectedEntityID: "",
             paintEntity: undefined,
         }
         this.UIonClick = this.UIonClick.bind(this)
@@ -97,7 +98,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 case UIModes.none: {
                     if (!isEmptyPlace) {
                         this.selectEntity(entity);
-                    } else this.setState({ selectedEntity: undefined })
+                    } else this.setState({ selectedEntityID: "" })
 
                     break;
                 }
@@ -147,10 +148,11 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                 default:
                     break;
             }
+            
+            if (isEmptyPlace) this.setState({ selectedEntityID: "" })
         }
 
 
-        if (isEmptyPlace) this.setState({ selectedEntity: undefined })
 
     }
     UIonMouseMove(e: Konva.KonvaEventObject<MouseEvent>) {        
@@ -201,13 +203,14 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         switch (e.key) {
             case "Escape": {
                 this.deletePaintEntity()
-
+                this.setState({
+                    uiMode:0
+                })
                 break;
             }
             default:
                 break;
         }
-
     }
     deletePaintEntity() {
         if (this.state.paintEntity)
@@ -219,16 +222,16 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
     deleteEntity(entity: Entity) {
         const { calculation } = this.props
         if (calculation) return
-        if (this.state.selectedEntity && this.state.selectedEntity.id === entity.id)
+        if (this.state.selectedEntityID && this.state.selectedEntityID === entity.id)
             this.setState({
-                selectedEntity: undefined
+                selectedEntityID: ""
             })
         this.props.deleteEntity(entity.id)
     }
     selectEntity(entity: Entity | undefined) {
         const { calculation } = this.props
         if (calculation) return
-        if (entity) this.setState({ selectedEntity: entity })
+        if (entity) this.setState({ selectedEntityID: entity.id })
     }
     clearFarm(): void {
         if (window.confirm('Вы уверены, что хотите очистить холст?'))
@@ -252,8 +255,9 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
         })
     }
     render() {
-        const { stageHeight, stageWidth, uiMode, selectedEntity } = this.state
-        const { classes, nodes, beams, calculation } = this.props
+        const { stageHeight, stageWidth, uiMode, selectedEntityID} = this.state
+        const { classes, nodes, beams, calculation, calculated } = this.props
+        const selectedEntity = ([...nodes,...beams].find(item => item.id === selectedEntityID) as Entity)
         return (
             <Box className={classes.root}>
                 <Stats isActive={true} />
@@ -288,6 +292,7 @@ class UIFarm extends React.Component<UIFarmProps, UIFarmState>{
                         stage={this.stage}
                         selectedEntity={selectedEntity}
                         uiMode={uiMode}
+                        viewNewPos={calculated}
                     />
                     <UIEntityInfo
                         entity={selectedEntity}

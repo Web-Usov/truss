@@ -7,15 +7,15 @@ import { Force } from 'src/models/Farm/ModelForce';
 import { KonvaEventObject } from 'konva/types/Node';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
-import { SizeKoef } from 'src/static/const';
 
-const size = consts.UI_nodeSize
+const size = consts.UI.nodeSize
 interface UINodeProps {
     node: FarmNode,
     drag(e: Konva.KonvaEventObject<DragEvent>, node: FarmNode): void
     onClick(e: Konva.KonvaEventObject<MouseEvent>, node: FarmNode): void
     mode: UIModes,
-    selected: boolean
+    selected: boolean,    
+    viewNewPos?:boolean
 }
 class UINode extends React.Component<UINodeProps>{
     constructor(props: UINodeProps) {
@@ -31,35 +31,34 @@ class UINode extends React.Component<UINodeProps>{
     }
 
     viewForce(force: Force) {
-        return (
+        const {viewNewPos } = this.props
+        if(!viewNewPos)  return (
             <React.Fragment>
-
                 <Arrow
                     points={[
                         0,
                         0,
-                        consts.UI_cellSize,
+                        consts.UI.cellSize,
                         0,
                     ]}
                     stroke={UI.theme.palette.grey[300]}
                     strokeWidth={size / 3}
                     shadowBlur={2}
-                    pointerLength={consts.UI_cellSize / 10}
-                    pointerWidth={consts.UI_cellSize / 10}
+                    pointerLength={consts.UI.cellSize / 10}
+                    pointerWidth={consts.UI.cellSize / 10}
                     hitStrokeWidth={size * 2}
                     rotation={force.value > 0 ? force.angle : 180 + force.angle}
                 />
                 <Text
-                    x={force.angle === 0 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize) : consts.UI_cellSize / 3}
-                    y={force.angle === 90 ? (force.value > 0 ? consts.UI_cellSize / 3 : -consts.UI_cellSize / 2) : -consts.UI_cellSize / 1.5}
-                    text={force.value + "H"}
+                    x={force.angle === 0 ? (force.value > 0 ? consts.UI.cellSize / 3 : -consts.UI.cellSize) : consts.UI.cellSize / 3}
+                    y={force.angle === 90 ? (force.value > 0 ? consts.UI.cellSize / 3 : -consts.UI.cellSize / 2) : -consts.UI.cellSize / 1.5}
+                    text={force.value + " H"}
                 />
             </React.Fragment>
 
         )
     }
     viewFixation(angle: 0 | 90) {
-
         return (<Group
             x={0}
             y={0}
@@ -68,9 +67,9 @@ class UINode extends React.Component<UINodeProps>{
             <Line
                 points={[
                     0, 0,
-                    0, consts.UI_cellSize,
-                    -consts.UI_cellSize / 2, consts.UI_cellSize,
-                    consts.UI_cellSize / 2, consts.UI_cellSize,
+                    0, consts.UI.cellSize,
+                    -consts.UI.cellSize / 2, consts.UI.cellSize,
+                    consts.UI.cellSize / 2, consts.UI.cellSize,
                 ]}
                 stroke={UI.theme.palette.grey[300]}
                 strokeWidth={size / 4}
@@ -80,19 +79,22 @@ class UINode extends React.Component<UINodeProps>{
                 radius={size / 2}
                 fill={UI.theme.palette.grey[500]}
                 x={0}
-                y={consts.UI_cellSize - (size / 1.7)}
+                y={consts.UI.cellSize - (size / 1.7)}
             />
         </Group>)
     }
     render() {
-        const { onClick, mode, selected, node } = this.props
-
+        const { onClick, mode, selected, node, viewNewPos } = this.props
+        const x = viewNewPos ? node.newX / consts.UI.koefOnGrid : node.x / consts.UI.koefOnGrid
+        const y = viewNewPos ? node.newY / consts.UI.koefOnGrid : node.y / consts.UI.koefOnGrid
         return (
             <Group
-                x={node.x / SizeKoef}
-                y={node.y / SizeKoef}
+            
+                opacity={viewNewPos ? 0.3 : 1}
+                x={x}
+                y={y}
                 _useStrictMode
-                onClick={(e: any) => onClick(e, node)}
+                onClick={viewNewPos ? () => {} : (e: any) => onClick(e, node)}
             >
                 {node.forceX && this.viewForce(node.forceX)}
                 {node.forceY && this.viewForce(node.forceY)}
@@ -105,11 +107,10 @@ class UINode extends React.Component<UINodeProps>{
                     x={0}
                     y={0}
                     fill={UI.getNodeColor(node)}
-                    shadowBlur={selected ? 8 : 2}
+                    shadowBlur={selected && !viewNewPos ? 8 : 2}
                     stroke={UI.getNodeStorkeColor(node,mode)}
                     strokeWidth={UI.getNodeStorkeWidth(node, mode)}
-
-                    hitStrokeWidth={size * 2}
+                    hitStrokeWidth={viewNewPos ? 0 : size * 2}
                 />
                 <Text
                     x={-size}
@@ -118,8 +119,6 @@ class UINode extends React.Component<UINodeProps>{
                     fontSize={18}
                     fill="#fff"
                     shadowBlur={8}
-                    // stroke="#555"
-                    // strokeWidth={0.1}
                     fontFamily='Trebuchet MS'
                     width={size * 2}
                     verticalAlign="middle"
@@ -135,10 +134,10 @@ class UINode extends React.Component<UINodeProps>{
                             y: 0,
                         })
                     }}
-                    hitStrokeWidth={size * 2}
-                    draggable={mode === UIModes.move && !node.isStatic}
-                    onMouseEnter={(e: any) => UI.nodeMouseEnter(e, node, mode)}
-                    onMouseLeave={(e: any) => UI.nodeMouseLeave(e)}
+                    hitStrokeWidth={viewNewPos ? 0 : size * 2}
+                    draggable={mode === UIModes.move && !node.isStatic && !viewNewPos}
+                    onMouseEnter={viewNewPos ? () => {} : (e: any) => UI.nodeMouseEnter(e, node, mode)}
+                    onMouseLeave={viewNewPos ? () => {} :(e: any) => UI.nodeMouseLeave(e)}
                     onDragMove={(e: KonvaEventObject<DragEvent>) => this.props.drag(e, node)}
                 />
             </Group>

@@ -11,10 +11,10 @@ class MyMath {
     }
 
     static cellX(x: number): number {
-        return Math.round(x / consts.UI_cellSize) * consts.UI_cellSize
+        return Math.round(x / consts.UI.cellSize) * consts.UI.cellSize
     }
     static cellY(y: number): number {
-        return Math.round(y / consts.UI_cellSize) * consts.UI_cellSize
+        return Math.round(y / consts.UI.cellSize) * consts.UI.cellSize
     }
     static signum(x: number) {
         if (x > 0) return 1
@@ -57,6 +57,9 @@ class MyMath {
             console.error("multMatrxiV2:", error);
         }        
         return result
+    }
+    static getDetMatrix(array:number[][]) : number{
+        return MathJs.det(array)
     }
 }
 

@@ -2,7 +2,7 @@ import * as React from 'react'
 import clsx from 'clsx'
 import { Theme, createStyles, withStyles, AppBar, Toolbar } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { consts } from 'src/static';
+import { img } from 'src/static/const';
 import { Link } from 'react-router-dom';
 import { AppBarProps } from '@material-ui/core/AppBar';
 
@@ -35,7 +35,7 @@ const UIAppBar: React.FC<UIToolBarProps> = ({ classes, children, className, colo
             >
                 <img
                     alt="Logo Icon"
-                    src={consts.bridgeIcon_2}
+                    src={img.bridgeIcon_2}
                 />
             </Link>
         ))

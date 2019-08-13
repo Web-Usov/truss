@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Theme, createStyles, withStyles, Fab, Drawer, Tooltip, Typography, Divider } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Close as CloseIcon } from '@material-ui/icons';
-import { sidebarWidth } from 'src/static/const';
+import { UI } from 'src/static/const';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -10,7 +10,7 @@ const styles = (theme: Theme) => createStyles({
         position: 'relative'
     },
     drawerPaper: {
-        width: sidebarWidth,
+        width: UI.sidebarWidth,
     },
     toogleIcon: {
         position: 'absolute',
@@ -99,9 +99,9 @@ class Sidebar extends React.PureComponent<SidebarProps, SidebarState>{
                     onClose={() => this.changeViewtooltip(false)}>
                     <Fab
                         style={{
-                            left: anchor === 'left' ? !open ? 15 : sidebarWidth + 15 : "auto",
+                            left: anchor === 'left' ? !open ? 15 : UI.sidebarWidth + 15 : "auto",
                             
-                            right: anchor === 'right' ? !open ? 15 : sidebarWidth + 15 : "auto"
+                            right: anchor === 'right' ? !open ? 15 : UI.sidebarWidth + 15 : "auto"
                         }}
                         color="secondary"
                         size="medium"
