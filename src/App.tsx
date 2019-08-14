@@ -3,11 +3,10 @@ import { Switch, Route } from 'react-router-dom';
 import Helment from 'react-helmet'
 import {CssBaseline} from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/styles';
-import { FarmPage, Home } from './pages'
+import { FarmPage, Home, TrussPage } from './pages'
 import { navPath } from './navigation'
 import {str, img} from './static/const';
 import { theme } from './utils/UI';
-
 interface IAppProps {}
 
 class App extends React.Component<IAppProps> {
@@ -43,6 +42,7 @@ class App extends React.Component<IAppProps> {
 					<Switch>
 						<Route path={navPath.HOME_PAGE} component={Home} exact />
 						<Route path={navPath.FARM_PAGE} component={FarmPage} />
+						<Route path={navPath.TRUSS_PAGE} component={TrussPage} />
 					</Switch>
 
 				</ThemeProvider>

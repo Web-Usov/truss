@@ -1,5 +1,4 @@
 import * as React from 'react'
-import { IHomeStore } from 'src/store/home/homeReducer';
 import { Theme, WithStyles, createStyles, withStyles } from '@material-ui/core'
 import { HomeHeader } from './components';
 
@@ -13,7 +12,7 @@ const styles = (theme: Theme) => createStyles({
 	}
 })
 
-export interface IHomeProps extends IHomeStore, WithStyles<typeof styles> {
+export interface IHomeProps extends WithStyles<typeof styles> {
 	setTitle: (title: string) => void,
 }
 
