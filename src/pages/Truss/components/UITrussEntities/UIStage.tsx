@@ -30,7 +30,7 @@ const styles = (theme: Theme) => createStyles({
 
 export interface UIStageProps extends ITruss, WithStyles<typeof styles> {
     uiMode: UIModes,
-    selectedEntity: TEntity | undefined,
+    selectedEntity: TEntity | null,
     stageHeight: number,
     stageWidth: number,
     onClick(e: Konva.KonvaEventObject<MouseEvent>, entity?: TEntity): void,
@@ -65,7 +65,7 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                             widthBox={stageWidth}
                         />
 
-                        {/* {beams.map(beam => (
+                        {beams.map(beam => (
                             <UIBeam
                                 key={beam.id}
                                 beam={beam}
@@ -73,7 +73,7 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                                 onClick={onClick}
                                 selected={selectedEntity === beam}
                             />
-                        ))} */}
+                        ))}
 
                         {nodes.map(node => (
                             <UINode

@@ -4,7 +4,7 @@ import { Beam } from "src/models/Farm/ModelBeam";
 import Konva from "konva";
 import { Stage } from "konva/types/Stage";
 import { createMuiTheme } from "@material-ui/core";
-import { TNode } from "src/models/Truss";
+import { TNode, TBeam } from "src/models/Truss";
 
 export enum UIModes {
     none,
@@ -70,7 +70,7 @@ export const getNodeStorkeWidth = (node: FarmNode | TNode, mode : UIModes): numb
     }
 }
 
-export const getBeamColor = (beam : Beam) : string => {
+export const getBeamColor = (beam : Beam | TBeam) : string => {
     return colors.beam
 }
 
@@ -115,7 +115,7 @@ export const nodeMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>):void => {
     if (stage) stage.container().style.cursor = 'default'
 }
 
-export const beamMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, beam:Beam, mode: UIModes) :void =>  {
+export const beamMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, beam:Beam | TBeam, mode: UIModes) :void =>  {
     const stage: typeof Stage & Konva.Stage = e.target.getStage()
 
     switch (mode) {

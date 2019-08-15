@@ -1,11 +1,10 @@
-import * as React from 'react'
-import { Theme, createStyles, withStyles, List, ListItem, ListItemText, Collapse, ListItemIcon, Divider, Badge, Box } from '@material-ui/core';
+import { Badge, Box, Collapse, createStyles, Divider, List, ListItem, ListItemIcon, ListItemText, Theme, withStyles } from '@material-ui/core';
+import { Brightness1 as CircleIcon, ExpandLess, ExpandMore, GpsNotFixed as NodeIcon, List as TreePanelIcon, Timeline as BeamIcon } from '@material-ui/icons';
 import { WithStyles } from '@material-ui/styles';
-import { GpsNotFixed as NodeIcon, Timeline as BeamIcon, List as TreePanelIcon, ExpandLess, ExpandMore, Brightness1 as CircleIcon } from '@material-ui/icons';
+import { observer } from 'mobx-react';
+import * as React from 'react';
 import { Sidebar } from 'src/components';
-import { Entity } from 'src/models/Farm/ModelEntity';
-import { Beam } from 'src/models/Farm/ModelBeam';
-import { FarmNode, instanceOfNode } from 'src/models/Farm/ModelNode';
+import { TBeam, TEntity, TNode } from 'src/models/Truss';
 import { UI } from 'src/utils';
 
 const styles = (theme: Theme) => createStyles({
@@ -15,10 +14,10 @@ const styles = (theme: Theme) => createStyles({
 })
 
 interface TreePanelProps extends WithStyles<typeof styles> {
-    nodes: FarmNode[],
-    beams: Beam[]
-    selectedEntity: Entity | undefined
-    onSelect(entity: Entity): void
+    nodes?: TNode[],
+    beams?: TBeam[]
+    selectedEntityID?: string
+    onSelect?(id: string): void
 }
 
 interface TreeState {
@@ -27,6 +26,7 @@ interface TreeState {
 
 }
 
+@observer
 class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
     constructor(props: TreePanelProps) {
         super(props)
@@ -48,8 +48,12 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         tabs.set(tab, !tabs.get(tab))
         this.setState({ tabs: new Map(tabs) })
     }
-    viewListItem(entityArray: Entity[], title: string, icon?: JSX.Element) {
-        const { selectedEntity, classes, onSelect } = this.props
+    viewListItem(entityArray: TEntity[], title: string, icon?: JSX.Element) {
+        const {
+            selectedEntityID = "",
+            classes,
+            onSelect = () => { }
+        } = this.props
         const { tabs } = this.state
         return (
             <Box>
@@ -71,10 +75,10 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
                                 button
                                 className={classes.nested}
                                 key={item.id}
-                                selected={selectedEntity === item}
-                                onClick={(e) => onSelect(item)}
+                                selected={selectedEntityID === item.id}
+                                onClick={(e) => onSelect(item.id)}
                             >
-                                {instanceOfNode(item) && (
+                                {(item instanceof TNode) && (
                                     <ListItemIcon>
                                         <CircleIcon style={{ color: UI.getNodeColor(item) }} />
                                     </ListItemIcon>
@@ -89,8 +93,8 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         )
     }
     render() {
-        const { nodes, beams } = this.props
-        beams.sort((a: Beam, b: Beam) => {
+        const { nodes = [], beams = [] } = this.props
+        beams.sort((a: TBeam, b: TBeam) => {
             return a.name > b.name ? 1 : -1
         })
         return (
