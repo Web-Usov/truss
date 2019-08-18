@@ -7,7 +7,7 @@ import { WithStyles, withStyles } from '@material-ui/styles';
 
 
 const styles = (theme: Theme) => createStyles({
-	root:{
+	root: {
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
@@ -16,7 +16,7 @@ const styles = (theme: Theme) => createStyles({
 	},
 	logo: {
 		width: "20%",
-		height:'20%'
+		height: '20%'
 	},
 	title: {
 		padding: 40
@@ -30,13 +30,13 @@ const styles = (theme: Theme) => createStyles({
 })
 
 
-const HomeHeader = ({classes} : WithStyles<typeof styles>) => {
+const HomeHeader = ({ classes }: WithStyles<typeof styles>) => {
 	return (
 		<header className={classes.root}>
-			<img 
-				src={consts.img.bridgeIcon_2} 
-				alt="logo" 
-				className={classes.logo} 
+			<img
+				src={consts.img.bridgeIcon_2}
+				alt="logo"
+				className={classes.logo}
 			/>
 			<Typography variant="h3" className={classes.title}>
 				{consts.str.title}
@@ -46,7 +46,7 @@ const HomeHeader = ({classes} : WithStyles<typeof styles>) => {
 			</Typography>
 			<Button
 				component={Link}
-				to={navPath.FARM_PAGE}
+				to={navPath.TRUSS_PAGE}
 				variant="contained"
 				size="large"
 				color="secondary"

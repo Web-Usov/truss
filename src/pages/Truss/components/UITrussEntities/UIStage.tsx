@@ -2,15 +2,13 @@ import * as React from 'react'
 import { Theme, createStyles, withStyles, Box } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { Stage, Layer, } from 'react-konva';
-import { Entity } from 'src/models/Farm/ModelEntity';
 import Konva from 'konva';
 import UIGrid from './UIGrid';
 import { consts } from 'src/static';
 import ScrollBar from 'react-custom-scrollbars';
 import { UIBeam, UINode } from '..';
 import { UIModes } from 'src/utils/UI';
-import { IFarm } from 'src/models/Farm/FarmTypes';
-import { ITruss, ITrussArray } from 'src/models/Truss/TTypes';
+import { ITrussArray } from 'src/models/Truss/TTypes';
 import { TEntity } from 'src/models/Truss';
 import { observer } from 'mobx-react-lite';
 

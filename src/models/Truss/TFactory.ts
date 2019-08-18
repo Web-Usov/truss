@@ -5,7 +5,7 @@ import { canvas, UI } from 'src/static/const';
 
 export class TrussFactory {
     static firstPlacement(_nodes: TNode[], _beams: TBeam[]) {
-        _nodes.map(node => {
+        _nodes.forEach(node => {
             const x = node.coord.x + Math.round((canvas.width / 3) / UI.cellSize) * UI.MMinCell
             const y = node.coord.y + Math.round((canvas.height / 3) / UI.cellSize) * UI.MMinCell
             node.moveTo(x, y)

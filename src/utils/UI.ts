@@ -1,6 +1,4 @@
-import { FarmNode } from "src/models/Farm/ModelNode";
 import { colors } from "src/static";
-import { Beam } from "src/models/Farm/ModelBeam";
 import Konva from "konva";
 import { Stage } from "konva/types/Stage";
 import { createMuiTheme } from "@material-ui/core";
@@ -17,9 +15,9 @@ export enum UIModes {
 export const theme = createMuiTheme({
     palette: {
         primary: {
-            dark:"#0A4467",
+            dark: "#0A4467",
             main: "#1e779e",
-            light:'#51A8D6'
+            light: '#51A8D6'
         },
         secondary: {
             dark: "#a83e19",
@@ -27,21 +25,21 @@ export const theme = createMuiTheme({
             light: "#F39B7C",
             // light:"#f0965d"
         },
-        background:{
-            default:'linear-gradient(35deg, #6863bf 0%, #067d93 50%, #e68a68 100%)'
-        }  
-        
+        background: {
+            default: 'linear-gradient(35deg, #6863bf 0%, #067d93 50%, #e68a68 100%)'
+        }
+
     },
 });
-export const getNodeColor = (node: FarmNode | TNode):string => {
-    
+export const getNodeColor = (node: TNode): string => {
+
     if (node.isStatic) {
         if (node.fixation) return colors.fixedNode
         return colors.staticNode
     }
     return colors.node
 }
-export const getNodeStorkeColor = (node: FarmNode | TNode, mode : UIModes):string => {
+export const getNodeStorkeColor = (node: TNode, mode: UIModes): string => {
     switch (mode) {
         case UIModes.move: {
             if (node.isStatic) return theme.palette.secondary.dark
@@ -55,7 +53,7 @@ export const getNodeStorkeColor = (node: FarmNode | TNode, mode : UIModes):strin
             return theme.palette.secondary.main
     }
 }
-export const getNodeStorkeWidth = (node: FarmNode | TNode, mode : UIModes): number =>  {
+export const getNodeStorkeWidth = (node: TNode, mode: UIModes): number => {
     switch (mode) {
         case UIModes.move: {
             if (node.isStatic) return 0
@@ -70,12 +68,12 @@ export const getNodeStorkeWidth = (node: FarmNode | TNode, mode : UIModes): numb
     }
 }
 
-export const getBeamColor = (beam : Beam | TBeam) : string => {
+export const getBeamColor = (beam: TBeam): string => {
     return colors.beam
 }
 
 
-export const nodeMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, node:FarmNode | TNode, mode: UIModes):void => {
+export const nodeMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, node: TNode, mode: UIModes): void => {
     const stage: typeof Stage & Konva.Stage = e.target.getStage()
     switch (mode) {
         case UIModes.delete:
@@ -110,12 +108,12 @@ export const nodeMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, node:FarmN
     }
 
 }
-export const nodeMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>):void => {
+export const nodeMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>): void => {
     const stage: typeof Stage & Konva.Stage = e.target.getStage()
     if (stage) stage.container().style.cursor = 'default'
 }
 
-export const beamMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, beam:Beam | TBeam, mode: UIModes) :void =>  {
+export const beamMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, beam: TBeam, mode: UIModes): void => {
     const stage: typeof Stage & Konva.Stage = e.target.getStage()
 
     switch (mode) {
@@ -131,7 +129,7 @@ export const beamMouseEnter = (e: Konva.KonvaEventObject<MouseEvent>, beam:Beam 
     }
 
 }
-export const beamMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>) :void => {
+export const beamMouseLeave = (e: Konva.KonvaEventObject<MouseEvent>): void => {
     const stage: typeof Stage & Konva.Stage = e.target.getStage()
     if (stage) stage.container().style.cursor = 'default'
 }

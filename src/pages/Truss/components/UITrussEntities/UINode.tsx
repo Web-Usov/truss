@@ -3,11 +3,11 @@ import { KonvaEventObject } from 'konva/types/Node';
 import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Arrow, Circle, Group, Line, Text } from 'react-konva';
-import { NodeFixation } from 'src/models/Farm/ModelNode';
 import { TNode } from 'src/models/Truss';
 import { consts } from 'src/static';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
+import { NodeFixation } from 'src/models/Truss/TTypes';
 
 const size = consts.UI.nodeSize
 interface UINodeProps {

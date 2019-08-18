@@ -1,9 +1,8 @@
 import { action, computed, observable } from "mobx";
-import { NodeFixation } from "../Farm/ModelNode";
 import TBeam from "./TBeam";
 import { TrussCalc } from './TCalc';
 import TNode from "./TNode";
-import { ICoord, ITBeam, ITNode, TrussCalcData, TrussCalcProps } from "./TTypes";
+import { ICoord, ITBeam, ITNode, TrussCalcData, TrussCalcProps, NodeFixation } from "./TTypes";
 import { TEntity } from ".";
 
 class Truss {

@@ -1,69 +1,84 @@
 import * as React from 'react'
-import { Theme, createStyles, withStyles, Button } from '@material-ui/core';
+import { Theme, createStyles, withStyles, Button, ButtonGroup, Fab, Icon, Tooltip } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import { AppBar } from 'src/components';
+import { Build as CalcIcon, SaveAlt as SaveIcon, DeleteForever as ClearIcon } from '@material-ui/icons';
 
 const styles = (theme: Theme) => createStyles({
-    root:{
+    root: {
 
     },
-    btn:{
-        marginLeft:theme.spacing(2),
-        marginRight:theme.spacing(2)
+    btnIcon: {
+        fontSize: 18,
+        marginTop: 3,
+        marginBottom: 3,
     },
-    grow:{
-        flexGrow:1
+    grow: {
+        flexGrow: 1
     }
 })
 
 export interface UIHeaderProps extends WithStyles<typeof styles> {
-    hundleSave?:(e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleClear?:(e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleCalculate?:(e: React.FormEvent<HTMLButtonElement>) => void,
-    disabled?:boolean
+    hundleSave?: (e: React.FormEvent<HTMLButtonElement>) => void,
+    hundleClear?: (e: React.FormEvent<HTMLButtonElement>) => void,
+    hundleCalculate?: (e: React.FormEvent<HTMLButtonElement>) => void,
+    disabled?: boolean
 }
 
 const UIHeader: React.FC<UIHeaderProps> = (
-    { 
-        classes, 
-        hundleSave = (e) => {alert("Буедет реализовано в будущем")},
-        hundleClear = (e) => {alert("Буедет реализовано в будущем")},
-        hundleCalculate = (e) => {alert("Буедет реализовано в будущем")},
+    {
+        classes,
+        hundleSave = (e) => { alert("Буедет реализовано в будущем") },
+        hundleClear = (e) => { alert("Буедет реализовано в будущем") },
+        hundleCalculate = (e) => { alert("Буедет реализовано в будущем") },
         disabled = false
     }) => {
+    const btns = [
+        {
+            text: "Расчет фермы",
+            action: hundleCalculate,
+            icon: (<CalcIcon className={classes.btnIcon} />)
+        },
+        {
+            text: "Сохранить ферму в кэш",
+            action: hundleSave,
+            icon: (<SaveIcon className={classes.btnIcon} />)
+        },
+        {
+            text: "Очистить холст",
+            action: hundleClear,
+            icon: (<ClearIcon className={classes.btnIcon} />)
+        }
+    ]
+    const Btn = (text: string = "", action: (e: React.FormEvent<HTMLButtonElement>) => void, icon: JSX.Element) => (
+        <Tooltip
+            title={text}>
+            <Button
+                onClick={action}
+                disabled={disabled}
+            >{icon}</Button>
+        </Tooltip>
+    )
 
     return (
-        <AppBar 
+        <AppBar
             className={classes.root}
         >
-            <div className={classes.grow}/>
-            <Button
+
+            <ButtonGroup
+                size="small"
                 color="secondary"
-                variant="contained"
-                className={classes.btn}
-                onClick={hundleCalculate}
-                disabled={disabled}
-            >
-                Расчет
-            </Button>
-            <Button
+                variant="contained">
+                {btns.map(b => (
+                    Btn(b.text, b.action, b.icon)
+                ))}
+            </ButtonGroup>
+            <div className={classes.grow} />
+            <Fab
                 color="secondary"
-                variant="contained"
-                className={classes.btn}
-                onClick={hundleSave}
-                disabled={disabled}
-            >
-                Сохранить
-            </Button>
-            <Button
-                color="secondary"
-                variant="contained"
-                className={classes.btn}
-                onClick={hundleClear}
-                disabled={disabled}
-            >
-                Очистить
-            </Button>
+                size="small">
+                <Icon>priority_high</Icon>
+            </Fab>
         </AppBar>
     )
 }
