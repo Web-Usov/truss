@@ -41,8 +41,8 @@ export interface UITrussProps extends WithStyles<typeof styles> {
     moveEndBeam: typeof TrussContainer.prototype.moveEndBeam,
     connectBeamToNode: typeof TrussContainer.prototype.connectBeamToNode,
     deleteEntity: typeof TrussContainer.prototype.deleteEntity
-    // defautlFarm: typeof FarmContainer.prototype.defautlFarm
-    // saveFarm: typeof FarmContainer.prototype.saveFarm,
+    clearTruss: typeof TrussContainer.prototype.clearTruss
+    cacheTruss: typeof TrussContainer.prototype.cacheTruss,
     calculate: typeof TrussContainer.prototype.calculate
     calculation: boolean,
     calculated: boolean,
@@ -73,8 +73,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         this.onKeyHandle = this.onKeyHandle.bind(this)
         this.selectEntity = this.selectEntity.bind(this)
         this.deleteEntity = this.deleteEntity.bind(this)
-        // this.clearFarm = this.clearFarm.bind(this)
-        // this.saveFarm = this.saveFarm.bind(this)
+        this.clearFarm = this.clearFarm.bind(this)
+        this.saveFarm = this.saveFarm.bind(this)
         this.calculate = this.calculate.bind(this)
         this.stage = React.createRef();
     }
@@ -232,14 +232,14 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         if (calculation) return
         if (id) this.setState({ selectedEntityID: id })
     }
-    // clearFarm(): void {
-    //     if (window.confirm('Вы уверены, что хотите очистить холст?'))
-    //         this.props.defautlFarm()
-    // }
-    // saveFarm(e: React.FormEvent<HTMLButtonElement>) {
-    //     if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
-    //         this.props.saveFarm()
-    // }
+    clearFarm(): void {
+        if (window.confirm('Вы уверены, что хотите очистить холст?'))
+            this.props.clearTruss()
+    }
+    saveFarm(e: React.FormEvent<HTMLButtonElement>) {
+        if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
+            this.props.cacheTruss()
+    }
     calculate(e: React.FormEvent<HTMLButtonElement>) {
         this.props.calculate()
     }
@@ -266,8 +266,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                     onKeyHandle={this.onKeyHandle}
                 />
                 <UIHeader
-                    // hundleClear={this.clearFarm}
-                    // hundleSave={this.saveFarm}
+                    hundleClear={this.clearFarm}
+                    hundleSave={this.saveFarm}
                     hundleCalculate={this.calculate}
                     disabled={calculation} />
 

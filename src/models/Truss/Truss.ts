@@ -4,22 +4,30 @@ import TBeam from "./TBeam";
 import { TrussCalc } from './TCalc';
 import TNode from "./TNode";
 import { ICoord, ITBeam, ITNode, TrussCalcData, TrussCalcProps } from "./TTypes";
+import { TEntity } from ".";
 
 class Truss {
     @observable private _nodes: Map<typeof TNode.prototype.id, TNode>
     @observable private _beams: Map<typeof TBeam.prototype.id, TBeam>
     @observable private _calcData: TrussCalcData = {}
+
     @computed public get nodes() {
         return this._nodes
     }
     @computed public get nodesArray() {
+        // return Array.from(this._nodes.values()).sort(this.sortByName)
         return Array.from(this._nodes.values())
     }
     @computed public get beams() {
         return this._beams
     }
     @computed public get beamsArray() {
+        // return Array.from(this._beams.values()).sort(this.sortByName)
         return Array.from(this._beams.values())
+    }
+
+    @computed public get calcData() {
+        return this._calcData
     }
     constructor() {
         this._nodes = new Map()
@@ -51,17 +59,19 @@ class Truss {
         node.moveTo(x, y)
     }
     @action
-    public sortNodes(): void {
-
-        const nodes = this.nodesArray.sort((a: TNode, b: TNode) => {
+    public setNodes(nodes: typeof Truss.prototype.nodes) {
+        this._nodes = new Map(nodes)
+    }
+    @action
+    public sortNodesByCoord(_nodes: TNode[] = this.nodesArray) {
+        const nodes = _nodes.sort((a: TNode, b: TNode) => {
             if (a.coord.y < b.coord.y) return -1
             else if (a.coord.y === b.coord.y) if (a.coord.x < b.coord.x) return -1; else return 1
             else return 1
         })
-        console.log(nodes);
 
         nodes.forEach((n, i) => {
-            n.name = (i + 1) + ""
+            n.name = (i + 1).toString()
         })
     }
 
@@ -105,6 +115,11 @@ class Truss {
         return beam
     }
 
+    @action
+    public setBeams(beams: typeof Truss.prototype.beams) {
+        this._beams = new Map(beams)
+    }
+
     private _findOldBeamByNode(node: TNode, beam: TBeam, checkingBeam: TBeam): boolean {
         return (
             (checkingBeam.startConnectedNode === beam.startConnectedNode && checkingBeam.endConnectedNode === node) ||
@@ -113,19 +128,21 @@ class Truss {
         )
     }
 
-    // Generals actions
+
+    // Calculation
     @action
-    public async calculate(props?: TrussCalcProps) {
+    public async calculate(props?: TrussCalcProps): Promise<true> {
         const NodeCoord: ICoord[] = []
         const NodeV: ICoord[] = []
         const LinkNodes: ICoord[] = []
         const Forces: number[] = []
         const LinkLength: number[] = []
 
-        this.sortNodes()
+        const { nodes, beams } = await this.updateBeforeCalc(
+            [...this.nodesArray],
+            [...this.beamsArray]
+        )
 
-        const nodes = [...this.nodesArray]
-        const beams = [...this.beamsArray]
         if (nodes.find(node => node.beams.length === 0 && node.isStatic)) throw new Error("Не все узлы соединены")
         let _nodeVindex = 0;
         nodes.forEach((node, i) => {
@@ -134,15 +151,13 @@ class Truss {
                 case NodeFixation.X: {
                     _nodeVindex++
                     NodeV.push({ x: 0, y: _nodeVindex })
-                    if (node.forceY) Forces.push(-node.forceY.value)
-
+                    Forces.push(-node.forceY)
                     break;
                 }
                 case NodeFixation.Y: {
                     _nodeVindex++
                     NodeV.push({ x: _nodeVindex, y: 0 })
-                    if (node.forceX) Forces.push(-node.forceX.value)
-                    else Forces.push(0)
+                    Forces.push(-node.forceX)
                     break;
                 }
                 case NodeFixation.YX:
@@ -154,10 +169,8 @@ class Truss {
                     _nodeVindex++
                     NodeV.push({ x: _nodeVindex, y: _nodeVindex + 1 })
                     _nodeVindex++
-                    if (node.forceX) Forces.push(-node.forceX.value)
-                    else Forces.push(0)
-                    if (node.forceY) Forces.push(-node.forceY.value)
-                    else Forces.push(0)
+                    Forces.push(-node.forceX)
+                    Forces.push(-node.forceY)
                     break;
                 }
                 default: break;
@@ -173,10 +186,43 @@ class Truss {
         })
 
         const data = await TrussCalc.init(NodeCoord, NodeV, Forces, LinkNodes, LinkLength, props)
-        this._calcData = data
+
+
+        await this.updateAfterCalc(nodes, beams, data)
+        return true
     }
 
+    @action
+    public async updateBeforeCalc(nodes: TNode[] = this.nodesArray, beams: TBeam[] = this.beamsArray): Promise<{ nodes: TNode[], beams: TBeam[] }> {
+        this.sortNodesByCoord(nodes)
+        beams = beams.sort(this.sortByName)
+        return { nodes, beams }
+    }
 
+    @action
+    private async updateAfterCalc(nodes: TNode[], beams: TBeam[], data: TrussCalcData): Promise<{ nodes: TNode[], beams: TBeam[] }> {
+        this._calcData = data
+        const { P, Vi } = data
+
+        if (!Vi || !P) throw new Error("Нет расчетных данных")
+
+        for (let n of this.nodes.values()) {
+            const coord: ICoord = { ...Vi[Number(n.name) - 1] }
+            n.dCoord = {
+                x: +coord.x.toFixed(4),
+                y: +coord.y.toFixed(4)
+            }
+        }
+        let i = 0
+        for (let b of this.beams.values()) {
+            b.startForce = Math.round(P[i][0][0])
+            b.endForce = Math.round(P[i][1][0])
+            i++
+        }
+        return { nodes, beams }
+
+    }
+    //Other Actions
     @action
     public delete(id: string) {
         let entity: TBeam | TNode | undefined = undefined
@@ -207,11 +253,21 @@ class Truss {
             this._beams.delete(entity.id)
         }
     }
-
     @action
-    public setNodes(nodes: typeof Truss.prototype.nodes) {
-        this._nodes = new Map(nodes)
-        this.sortNodes()
+    public clear() {
+        this._beams.clear()
+        this._nodes.clear()
+    }
+    private sortByName = (a: TEntity, b: TEntity): number => {
+        if (a instanceof TBeam) {
+            const numsA = a.name.split(' - ')
+            const numA = Number(numsA[0] + numsA[1])
+            const numsB = b.name.split(' - ')
+            const numB = Number(numsB[0] + numsB[1])
+            return numA > numB ? 1 : -1
+        } else {
+            return a.name > b.name ? 1 : -1
+        }
     }
 }
 export default new Truss()

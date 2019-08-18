@@ -32,12 +32,16 @@ class TBeam extends TEntity {
         } else return this._endCoord
     }
 
-    @observable private _dEndCoord: ICoord;
-    @computed public get dEndCoord(): ICoord {
-        return this._dEndCoord;
+    @computed public get dCoord(): ICoord {
+        if (this._startConnectedNode) {
+            return this._startConnectedNode.dCoord
+        } else return this._entity.dCoord
     }
-    public set dEndCoord(v: ICoord) {
-        this._dEndCoord = v;
+
+    @computed public get dEndCoord(): ICoord {
+        if (this._endConnectedNode) {
+            return this._endConnectedNode.dCoord
+        } else return this._entity.dCoord
     }
     // # Coord 
 
@@ -70,15 +74,15 @@ class TBeam extends TEntity {
 
     constructor(props: ITBeam = {}) {
         super(props)
-        const { startConnectedNode, endConnectedNode, coord, endCoord, dEndCoord, startForce, endForce } = props
+        const { dCoord, startConnectedNode, endConnectedNode, coord, endCoord,  startForce, endForce } = props
         this._entity = {
             ...this,
-            coord: coord || { x: 0, y: 0 }
+            coord: coord || { x: 0, y: 0 },
+            dCoord: dCoord || { x: 0, y: 0 }
         }
         this._startConnectedNode = startConnectedNode || null
         this._endConnectedNode = endConnectedNode || null
         this._endCoord = endCoord || this.coord
-        this._dEndCoord = dEndCoord || { x: 0, y: 0 }
         this._startForce = startForce || 0
         this._endForce = endForce || 0
 

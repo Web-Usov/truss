@@ -78,8 +78,8 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                 </Typography>
                 <TextRows text={[`X: ${node.coord.x} мм`, `Y: ${node.coord.y} мм`]} />
                 <TextRows text={[`ΔX: ${node.dCoord.x} мм`, `ΔY': ${node.dCoord.y} мм`]} />
-                {node.forceX && (<TextRows text={[`Сила: ${node.forceX.value} H`, `Угол: ${node.forceX.angle}°`]} />)}
-                {node.forceY && (<TextRows text={[`Сила: ${node.forceY.value} H`, `Угол: ${node.forceY.angle}°`]} />)}
+                {node.forceX !== 0 && (<TextRow text={`Сила по оси Х: ${node.forceX} H`} />)}
+                {node.forceY !== 0 && (<TextRow text={`Сила по оси Y: ${node.forceY} H`} />)}
                 {this.viewFixationInfo(node)}
                 <div className={classes.btnGroup}>
                     <IconButton
@@ -101,7 +101,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                     Стержень {beam.name}
                 </Typography>
                 <TextRow text={`Длина: ${beam.length} мм`} />
-                <TextRows text={[`Сила в начале: ${beam.startForce} H`, `Сила в конце: ${beam.endForce} H`]} />
+                <TextRows text={[`Усилия в стержне`, `В начале: ${beam.startForce} H`, `В конце: ${beam.endForce} H`]} />
                 <div className={classes.btnGroup}>
                     <IconButton
                         aria-label="Delete"

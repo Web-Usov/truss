@@ -1,5 +1,4 @@
 import TBeam from "./TBeam";
-import TForce from "./TForce";
 import TNode from "./TNode";
 
 
@@ -13,9 +12,9 @@ export interface ITEntity {
 
 export interface ITNode extends ITEntity {
     beamsID?: string[]
-    forceX?: TForce,
-    forceY?: TForce,
-    isStatic?: boolean
+    forceX?: number
+    forceY?: number,
+    isStatic?: boolean,
     fixation?: NodeFixation
 }
 
@@ -23,17 +22,16 @@ export interface ITBeam extends ITEntity {
     startConnectedNode?: TNode
     endConnectedNode?: TNode
     endCoord?: ICoord
-    dEndCoord?: ICoord,
     startForce?: number,
     endForce?: number
 }
 
-export interface ITForce extends ITEntity {
-    value?: number
-    angle?: 0 | 90
-}
 
 export interface ITruss {
+    nodes: Map<string, TNode>
+    beams: Map<string, TBeam>
+}
+export interface ITrussArray {
     nodes: TNode[]
     beams: TBeam[]
 }

@@ -3,7 +3,7 @@ import { MyMath } from "src/utils";
 
 export class FarmCalc {
 
-    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || false
+    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || true
     static async init(NodeCoord: ICoord[], NodeV: ICoord[], Forces: number[], LinkNodes: ICoord[], LinkLength: number[], props: FarmCalcProps = {}): Promise<FarmCalcData> {
 
         const area: number = props.area || 225 //Площадь стержней

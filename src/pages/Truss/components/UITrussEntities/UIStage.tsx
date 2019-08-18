@@ -10,7 +10,7 @@ import ScrollBar from 'react-custom-scrollbars';
 import { UIBeam, UINode } from '..';
 import { UIModes } from 'src/utils/UI';
 import { IFarm } from 'src/models/Farm/FarmTypes';
-import { ITruss } from 'src/models/Truss/TTypes';
+import { ITruss, ITrussArray } from 'src/models/Truss/TTypes';
 import { TEntity } from 'src/models/Truss';
 import { observer } from 'mobx-react-lite';
 
@@ -28,7 +28,7 @@ const styles = (theme: Theme) => createStyles({
     }
 })
 
-export interface UIStageProps extends ITruss, WithStyles<typeof styles> {
+export interface UIStageProps extends ITrussArray, WithStyles<typeof styles> {
     uiMode: UIModes,
     selectedEntity: TEntity | null,
     stageHeight: number,
@@ -37,7 +37,7 @@ export interface UIStageProps extends ITruss, WithStyles<typeof styles> {
     onMouseMove(e: Konva.KonvaEventObject<MouseEvent | TouchEvent>): void,
     onDrag(e: Konva.KonvaEventObject<DragEvent>, entity: TEntity): void,
     stage: React.RefObject<Stage & Konva.Stage>,
-    viewNewPos: boolean
+    viewNewPos: boolean,
 }
 
 const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight, stageWidth, onClick, onMouseMove, onDrag, beams, nodes, uiMode, selectedEntity, viewNewPos }) => {
@@ -86,7 +86,7 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                             />
                         ))}
 
-                        {/* {viewNewPos && beams.map(beam => (
+                        {viewNewPos && beams.map(beam => (
                             <UIBeam
                                 key={beam.id}
                                 beam={beam}
@@ -106,7 +106,7 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                                 selected={selectedEntity === node}
                                 viewNewPos={true}
                             />
-                        ))} */}
+                        ))}
                     </Layer>
                 </Stage>
             </Box>

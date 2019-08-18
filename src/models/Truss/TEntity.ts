@@ -29,7 +29,7 @@ abstract class TEntity {
         this._dCoord = v;
     }
 
-    constructor({ coord, id, name, dCoord }: ITEntity = {}) {
+    constructor({ coord, id, name, dCoord}: ITEntity = {}) {
         this._id = id || uuid()
         this._name = name || this._id
         this._coord = coord || { x: 0, y: 0 }

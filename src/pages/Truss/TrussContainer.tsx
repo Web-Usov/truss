@@ -8,25 +8,35 @@ import { UIFarm } from './components';
 
 interface State {
     calculation: boolean,
-    calculated: boolean
+    calculated: boolean,
+    loadFromCache: boolean
 }
 interface Props {
 
 }
 @observer
 export class TrussContainer extends React.Component<Props, State>  {
+    private nodesCacheName = "nodes:array"
+    private beamsCacheName = "beams:array"
     constructor(props: Props) {
         super(props)
         this.state = {
             calculation: false,
             calculated: false,
+            loadFromCache: false
         }
+    }
+    componentWillMount() {
+        if (localStorage.getItem(this.nodesCacheName) && localStorage.getItem(this.beamsCacheName))
+            this.setState({ loadFromCache: true })
     }
     componentDidMount() {
         this.setDefaultTruss()
     }
+
     // Node
     addNode = (x: number, y: number, options?: ITNode) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             return farm.addNode({
                 ...options,
@@ -42,6 +52,7 @@ export class TrussContainer extends React.Component<Props, State>  {
         }
     }
     moveNode = (_node: TNode, _x: number, _y: number) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             const x = _x * consts.UI.koefOnGrid
             const y = _y * consts.UI.koefOnGrid
@@ -54,6 +65,7 @@ export class TrussContainer extends React.Component<Props, State>  {
     }
     // Beam
     addBeam = (options?: ITBeam) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             return farm.addBeam(options)
         } catch (e) {
@@ -63,6 +75,7 @@ export class TrussContainer extends React.Component<Props, State>  {
         }
     }
     moveEndBeam = (_beam: TBeam, _x: number, _y: number) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             const x = _x * consts.UI.koefOnGrid
             const y = _y * consts.UI.koefOnGrid
@@ -74,6 +87,7 @@ export class TrussContainer extends React.Component<Props, State>  {
         }
     }
     connectBeamToNode = (_node: TNode, _beam: TBeam, place: 'start' | 'end') => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             switch (place) {
                 case 'start': {
@@ -93,6 +107,7 @@ export class TrussContainer extends React.Component<Props, State>  {
     }
     // Generals actions
     deleteEntity = (id: string) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             farm.delete(id)
         } catch (e) {
@@ -102,32 +117,66 @@ export class TrussContainer extends React.Component<Props, State>  {
         }
     }
     // Calculate
-    calculate = (props?: TrussCalcProps) => {
+    calculate = async (props?: TrussCalcProps) => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
+            this.setState({ calculation: true })
             console.log("Calculate");
+            await farm.calculate()
+            this.setState({ calculated: true, calculation: false })
 
-            farm.sortNodes()
         } catch (e) {
             console.error("calculate", e);
             if (e.message) alert(e.message)
             else alert(e)
+
+            this.setState({ calculated: false, calculation: false })
         }
     }
 
     setDefaultTruss = () => {
+        if (this.state.calculated) this.setState({ calculated: false })
         try {
             console.log("setDefaultTruss");
-            const _truss = genTruss()
-            farm.setNodes(_truss)
+
+            if (this.state.loadFromCache) {
+                this.loadTrussFromCache()
+            } else {
+                const _truss = genTruss()
+                farm.setNodes(_truss)
+                farm.sortNodesByCoord()
+                TrussFactory.firstPlacement(farm.nodesArray, farm.beamsArray)
+            }
+
         } catch (e) {
             console.error("setDefaultTruss", e);
             if (e.message) alert(e.message)
             else alert(e)
         }
     }
+    cacheTruss = () => {
+        const { beamsJSON, nodesJSON } = TrussFactory.toString(farm)
+        localStorage.setItem(this.nodesCacheName, nodesJSON)
+        localStorage.setItem(this.beamsCacheName, beamsJSON)
+    }
 
+    loadTrussFromCache = async () => {
+        const nodesJSON = localStorage.getItem(this.nodesCacheName)
+        const beamsJSON = localStorage.getItem(this.beamsCacheName)
+        if (nodesJSON && beamsJSON) {
+            const { nodes, beams } = await TrussFactory.parse(nodesJSON, beamsJSON)
+            farm.setNodes(nodes)
+            farm.setBeams(beams)
+        }
+    }
+    clearTruss = async () => {
+        await this.setState({ loadFromCache: false })
+        localStorage.removeItem(this.nodesCacheName)
+        localStorage.removeItem(this.beamsCacheName)
+        await farm.clear()
+        this.setDefaultTruss()
+    }
     render() {
-
         return (
             <UIFarm
                 {...this.state}

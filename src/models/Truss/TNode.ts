@@ -1,6 +1,5 @@
 import TEntity from "./TEntity";
 import { ITNode, NodeFixation } from "./TTypes";
-import TForce from "./TForce";
 import { observable, action, computed } from "mobx";
 
 class TNode extends TEntity {
@@ -9,14 +8,20 @@ class TNode extends TEntity {
         return this._beamsID;
     }
 
-    private _forceX: TForce | null;
-    public get forceX(): TForce | null {
+    private _forceX: number;
+    public get forceX(): number {
         return this._forceX;
     }
+    public set forceX(v: number) {
+        this._forceX = v
+    }
 
-    private _forceY: TForce | null;
-    public get forceY(): TForce | null {
+    private _forceY: number;
+    public get forceY(): number {
         return this._forceY;
+    }
+    public set forceY(v: number) {
+        this._forceY = v
     }
 
     private _isStatic: boolean;
@@ -29,12 +34,13 @@ class TNode extends TEntity {
         return this._fixation;
     }
 
+
     constructor(props: ITNode = {}) {
         super(props)
         const { beamsID, forceX, forceY, isStatic, fixation } = props
         this._beamsID = beamsID || []
-        this._forceX = forceX || null
-        this._forceY = forceY || null
+        this._forceX = forceX || 0
+        this._forceY = forceY || 0
         this._isStatic = isStatic || false
         this._fixation = fixation || NodeFixation.None
     }

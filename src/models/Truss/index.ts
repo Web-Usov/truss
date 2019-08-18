@@ -1,9 +1,8 @@
 import * as TTypes from './TTypes'
-import Truss  from './Truss'
-import TEntity  from './TEntity'
-import TNode  from './TNode'
-import TBeam  from './TBeam'
-import TForce  from './TForce'
+import Truss from './Truss'
+import TEntity from './TEntity'
+import TNode from './TNode'
+import TBeam from './TBeam'
 
 export {
     TTypes,
@@ -11,5 +10,4 @@ export {
     TEntity,
     TNode,
     TBeam,
-    TForce
 }

@@ -97,6 +97,9 @@ class UITreePanel extends React.PureComponent<TreePanelProps, TreeState>{
         beams.sort((a: TBeam, b: TBeam) => {
             return a.name > b.name ? 1 : -1
         })
+        nodes.sort((a: TNode, b: TNode) => {
+            return a.name > b.name ? 1 : -1
+        })
         return (
             <Sidebar
                 anchor="left"

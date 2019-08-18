@@ -3,7 +3,7 @@ import { ICoord, TrussCalcData, TrussCalcProps } from "./TTypes";
 
 export class TrussCalc {
 
-    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || false
+    private static farmCalcDebug = process.env.REACT_APP_FARM_CALC_DEBUG === "true" || true
     static async init(NodeCoord: ICoord[], NodeV: ICoord[], Forces: number[], LinkNodes: ICoord[], LinkLength: number[], props: TrussCalcProps = {}): Promise<TrussCalcData> {
 
         const area: number = props.area || 225 //Площадь стержней
