@@ -1,10 +1,9 @@
-import * as React from 'react'
-import { Theme, createStyles, withStyles, Button, ButtonGroup, Fab, Icon, Tooltip } from '@material-ui/core';
+import { createStyles, Fab, Icon, Theme, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
+import * as React from 'react';
 import { AppBar } from 'src/components';
-import { Build as CalcIcon, SaveAlt as SaveIcon, DeleteForever as ClearIcon } from '@material-ui/icons';
-import { Btn } from 'src/components/Btns';
-import { BtnProps } from 'src/components/Btns/btn';
+import { DisabledBtn, MenuBtn } from 'src/components/Btns';
+import { headerMenu } from '../actions';
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -21,47 +20,27 @@ const styles = (theme: Theme) => createStyles({
 })
 
 export interface UIHeaderProps extends WithStyles<typeof styles> {
-    hundleSave?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-    hundleClear?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-    hundleCalculate?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
-    disabled?: boolean
+    onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>, a: string) => void,
+    disabled?: DisabledBtn
 }
 
 const UIHeader: React.FC<UIHeaderProps> = (
     {
         classes,
-        hundleSave = (e) => { alert("Буедет реализовано в будущем") },
-        hundleClear = (e) => { alert("Буедет реализовано в будущем") },
-        hundleCalculate = (e) => { alert("Буедет реализовано в будущем") },
-        disabled = false
+        onClick = () => { },
+        disabled = {} as DisabledBtn
     }) => {
-    const btns: BtnProps[] = [
-        {
-            title: "Сохранить ферму в кэш",
-            onClick: hundleSave,
-            icon: (<SaveIcon />)
-        },
-        {
-            title: "Очистить холст",
-            onClick: hundleClear,
-            icon: (<ClearIcon />)
-        }
-    ]
 
     return (
-        <AppBar
-            className={classes.root}
-        >
-            {btns.map(b => (
-                <Btn
-                    title={b.title}
-
-                    onClick={b.onClick}
-                    icon={b.icon}
-                    key={b.title}
-                    onlyIcon={true}
-                />)
-            )}
+        <AppBar className={classes.root} >
+            {headerMenu.map(m => {
+                m.items.forEach(b => {
+                    b.disabled = disabled[b.todo] === true
+                })
+                return (
+                    <MenuBtn {...m} onClickToAction={onClick} size={"small"} />
+                )
+            })}
             <div className={classes.grow} />
             <Fab
                 color="secondary"

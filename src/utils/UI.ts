@@ -1,8 +1,8 @@
-import { colors } from "src/static";
+import { createMuiTheme } from "@material-ui/core";
 import Konva from "konva";
 import { Stage } from "konva/types/Stage";
-import { createMuiTheme } from "@material-ui/core";
-import { TNode, TBeam } from "src/models/Truss";
+import { TBeam, TNode } from "src/models/Truss";
+import { colors } from "src/static";
 
 export enum UIModes {
     none,
@@ -35,7 +35,7 @@ export const theme = createMuiTheme({
             tooltip: {
                 fontSize: 14
             }
-        }
+        },
     }
 });
 export const getNodeColor = (node: TNode): string => {

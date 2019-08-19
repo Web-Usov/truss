@@ -1,14 +1,13 @@
-import * as React from 'react'
-import { Theme, createStyles, withStyles, Paper } from '@material-ui/core';
-import { ToggleButtonGroup } from '@material-ui/lab'
-import { WithStyles } from '@material-ui/styles';
-import { ZoomOutMap as MoveIcon, MyLocation as AddNodeIcon, Delete as DeleteIcon, Power as ConnectIcon } from '@material-ui/icons';
-import { Build as CalcIcon, SaveAlt as SaveIcon, DeleteForever as ClearIcon } from '@material-ui/icons';
-
+import { createStyles, Paper, Theme, withStyles } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles';
+import { ToggleButtonGroup } from '@material-ui/lab';
+import { WithStyles } from '@material-ui/styles';
+import * as React from 'react';
 import { ToggleBtn } from 'src/components/Btns';
+import Btn from 'src/components/Btns/btn';
 import { UIModes } from 'src/utils/UI';
-import Btn, { BtnProps } from 'src/components/Btns/btn';
+import { modsButtons, toolsButtons } from '../actions';
+
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -27,13 +26,24 @@ const styles = (theme: Theme) => createStyles({
     },
     modsBtnGroup: {
         borderRadius: 0,
-        backgroundColor: 'transparent'
+        backgroundColor: 'transparent',
+        verticalAlign: "middle"
     },
+    vHr: {
+        display: "inline-block",
+        width: 2,
+        height: '100%',
+        minHeight: 48,
+        verticalAlign: "middle",
+        backgroundColor: theme.palette.secondary.light,
+        opacity: 0.5,
+        marginRight: 10
+    }
 })
 
 
 export interface IMode {
-    name: string,
+    title: string,
     mod: UIModes
     icon: JSX.Element
 }
@@ -43,40 +53,11 @@ export interface IMode {
 export interface UIToolPanelProps extends WithStyles<typeof styles> {
     selected: UIModes
     onSelect(mod: UIModes): void,
-    onClickCalc?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void
+    onClick?: (e: React.MouseEvent<HTMLElement, MouseEvent>, a: string) => void
 }
 
-const UIToolPanel: React.FC<UIToolPanelProps> = ({ onSelect, selected, classes, onClickCalc = () => { } }) => {
-    const mods: IMode[] = [
-        {
-            name: "Перемещение",
-            mod: UIModes.move,
-            icon: (<MoveIcon />)
-        },
-        {
-            name: "Добавить узел",
-            mod: UIModes.addNode,
-            icon: (<AddNodeIcon />)
-        },
-        {
-            name: "Соединить узлы",
-            mod: UIModes.addBeam,
-            icon: (<ConnectIcon />)
-        },
-        {
-            name: "Удалить",
-            mod: UIModes.delete,
-            icon: (<DeleteIcon />)
-        }
-    ]
-    const btns: BtnProps[] = [
-        {
-            title: "Расчет фермы",
-            onClick: onClickCalc,
-            icon: (<CalcIcon />),
-            fab: true
-        }
-    ]
+const UIToolPanel: React.FC<UIToolPanelProps> = ({ onSelect, selected, classes, onClick = () => { } }) => {
+
     return (
         <Paper className={classes.root}>
             <ToggleButtonGroup
@@ -86,20 +67,24 @@ const UIToolPanel: React.FC<UIToolPanelProps> = ({ onSelect, selected, classes, 
                 size="medium"
                 className={classes.modsBtnGroup}
             >
-                {mods.map(item => (
+                {modsButtons.map(item => (
                     <ToggleBtn
                         key={item.mod}
                         value={item.mod}
                         selected={item.mod === selected}
                         icon={item.icon}
-                        name={item.name}
-
+                        name={item.title}
                     />
                 ))}
-                {btns.map(b => (
-                    <Btn title={b.title} icon={b.icon} onClick={b.onClick} fab={b.fab} key={b.title} />
-                ))}
             </ToggleButtonGroup>
+            <div className={classes.vHr} />
+            {toolsButtons.map(b => (
+                <Btn {...b}
+                    onClickToAction={onClick}
+                    fab={b.fab}
+                    key={b.title}
+                    size="medium" />
+            ))}
         </Paper>
     )
 }

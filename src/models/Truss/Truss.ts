@@ -1,14 +1,14 @@
 import { action, computed, observable } from "mobx";
+import { TEntity } from ".";
 import TBeam from "./TBeam";
 import { TrussCalc } from './TCalc';
 import TNode from "./TNode";
-import { ICoord, ITBeam, ITNode, TrussCalcData, TrussCalcProps, NodeFixation } from "./TTypes";
-import { TEntity } from ".";
+import { ICoord, ITBeam, ITNode, NodeFixation, TrussCalcData, TrussCalcProps } from "./TTypes";
 
 class Truss {
     @observable private _nodes: Map<typeof TNode.prototype.id, TNode>
     @observable private _beams: Map<typeof TBeam.prototype.id, TBeam>
-    @observable private _calcData: TrussCalcData = {}
+    @observable private _calcData: TrussCalcData | undefined
 
     @computed public get nodes() {
         return this._nodes
@@ -35,10 +35,10 @@ class Truss {
         this.connectBeamToStartNode = this.connectBeamToStartNode.bind(this)
     }
     // Actions with Node
-    @action public addNode(props: ITNode = {}): TNode {
+    @action public addNode(props: ITNode = {}): TNode | void {
         if (this._nodes.size > 12) throw new Error("Превышено число узлов")
         for (let n of this._nodes.values()) {
-            if (n.coord === props.coord) throw new Error("На данном месте уже стоит узел")
+            if (n.coord === props.coord) return // throw new Error("На данном месте уже стоит узел")
         }
         const name = (this._nodes.size + 1) + ""
         const node = new TNode({
@@ -51,7 +51,7 @@ class Truss {
     @action public moveNode(id: string, x: number, y: number): void {
         const node = this._nodes.get(id)
         if (!node) throw new Error("Не найден узел")
-        if (node.isStatic || node.fixation !== NodeFixation.None) throw new Error("Данный узел нельзя перемещать")
+        if (node.isStatic || node.fixation !== NodeFixation.None) return //throw new Error("Данный узел нельзя перемещать")
         for (let n of this._nodes.values()) {
             if (n.coord.x === x && n.coord.y === y) return
         }
@@ -107,7 +107,7 @@ class Truss {
         const node = this._nodes.get(nodeID)
         if (!beam || !node) throw new Error("Не найдены компоненты")
         for (let b of this._beams.values()) {
-            if (this._findOldBeamByNode(node, beam, b)) throw new Error("Нельзя присоединить")
+            if (this._findOldBeamByNode(node, beam, b)) return // throw new Error("Нельзя присоединить")
         }
         beam.connectEndNode(node)
         node.conncetBeam(beam.id)
@@ -229,7 +229,7 @@ class Truss {
         else if (this._nodes.has(id)) entity = this._nodes.get(id)
 
         if (entity instanceof TNode) {
-            if (entity.isStatic) throw new Error("Нельзя удалить этот узел")
+            if (entity.isStatic) return // throw new Error("Нельзя удалить этот узел")
             const beamsOfNode = this.beamsArray.filter(item => (entity instanceof TNode && entity.beams.includes(item.id)))
             beamsOfNode.forEach(beam => {
                 if (entity instanceof TNode) {

@@ -1,7 +1,9 @@
-import { Btn } from './btn'
-import { ToggleBtn } from './toggleBtn'
+import { Btn } from './btn';
+import { MenuBtn } from './menuBtn';
+import { ToggleBtn } from './toggleBtn';
 
-export {
-    Btn,
-    ToggleBtn,
+export { Btn, ToggleBtn, MenuBtn };
+
+export interface DisabledBtn {
+    [i: string]: boolean
 }

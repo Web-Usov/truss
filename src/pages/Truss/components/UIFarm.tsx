@@ -5,13 +5,17 @@ import * as React from 'react';
 import KeyHandler from 'react-key-handler';
 import { Stage } from "react-konva";
 import Stats from 'react-stats';
+import { DialogFull } from 'src/components';
 import { TBeam, TEntity, TNode, Truss } from 'src/models/Truss';
 import { UIEntityInfo, UITreePanel } from 'src/pages/Truss/components';
 import { canvas } from 'src/static/const';
 import { MyMath } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
 import { UIHeader, UIStage, UIToolPanel } from '.';
+import { actions } from '../actions';
 import { TrussContainer } from '../TrussContainer';
+import UICalcData from './UICalcData';
+
 
 
 
@@ -53,7 +57,8 @@ export interface UITrussState {
     stageHeight: number,
     uiMode: UIModes,
     selectedEntityID: string,
-    paintEntity: TBeam | null
+    paintEntity: TBeam | null,
+    openModal: string | null
 }
 @observer
 class UITruss extends React.Component<UITrussProps, UITrussState>{
@@ -66,6 +71,7 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
             uiMode: UIModes.none,
             selectedEntityID: "",
             paintEntity: null,
+            openModal: null
         }
         this.UIonClick = this.UIonClick.bind(this)
         this.UIonDrag = this.UIonDrag.bind(this)
@@ -76,6 +82,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         this.clearFarm = this.clearFarm.bind(this)
         this.saveFarm = this.saveFarm.bind(this)
         this.calculate = this.calculate.bind(this)
+        this.handleBtnClick = this.handleBtnClick.bind(this)
+        this.modalStateChange = this.modalStateChange.bind(this)
         this.stage = React.createRef();
     }
     componentDidMount() {
@@ -236,11 +244,11 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         if (window.confirm('Вы уверены, что хотите очистить холст?'))
             this.props.clearTruss()
     }
-    saveFarm(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    saveFarm(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
         if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
             this.props.cacheTruss()
     }
-    calculate(e: React.MouseEvent<HTMLElement, MouseEvent>) {
+    calculate(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
         this.props.calculate()
     }
     setSelectedMode(mode: UIModes) {
@@ -252,6 +260,44 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
             uiMode: mode || 0,
             paintEntity: null
         })
+    }
+    handleBtnClick(e: React.MouseEvent<HTMLElement, MouseEvent>, a: string) {
+        switch (a) {
+            case actions.HEADER.CANVAS.CLEAR: {
+                this.clearFarm()
+                break;
+            }
+            case actions.HEADER.CANVAS.SAVE: {
+                this.saveFarm(e)
+                break;
+            }
+            case actions.TOOLS.TRUSS.CALC:
+            case actions.HEADER.CALC.DO: {
+                this.calculate(e)
+                break;
+            }
+            case actions.HEADER.CALC.RESULT: {
+                if (this.props.farm.calcData)
+                    this.modalStateChange(actions.HEADER.CALC.RESULT)
+            }
+            default: {
+                break;
+            }
+        }
+    }
+    modalStateChange(s: string | null) {
+        this.setState({ openModal: s })
+    }
+    viewDialogs() {
+        if (this.props.farm.calcData) return (
+            <DialogFull
+                title="Результаты рассчетов"
+                open={this.state.openModal === actions.HEADER.CALC.RESULT}
+                handleClose={() => this.modalStateChange(null)}>
+                <UICalcData {...this.props.farm.calcData} />
+            </DialogFull>
+        )
+
     }
     render() {
         const { stageHeight, stageWidth, uiMode, selectedEntityID } = this.state
@@ -266,9 +312,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                     onKeyHandle={this.onKeyHandle}
                 />
                 <UIHeader
-                    hundleClear={this.clearFarm}
-                    hundleSave={this.saveFarm}
-                    disabled={calculation} />
+                    disabled={{ [actions.HEADER.CALC.RESULT]: !Boolean(this.props.farm.calcData) }}
+                    onClick={this.handleBtnClick} />
 
                 <div className={classes.toolbar} />
                 <Box className={classes.stageBox}>
@@ -299,7 +344,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                 <UIToolPanel
                     selected={uiMode}
                     onSelect={this.setSelectedMode.bind(this)}
-                    onClickCalc={this.calculate} />
+                    onClick={this.handleBtnClick} />
+                {this.viewDialogs()}
             </Box>
         )
     }

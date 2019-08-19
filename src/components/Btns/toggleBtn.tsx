@@ -1,18 +1,13 @@
-import * as React from 'react'
-import { Theme, createStyles, withStyles, Tooltip } from '@material-ui/core';
-import { ToggleButton } from '@material-ui/lab'
+import { createStyles, Theme, Tooltip, withStyles } from '@material-ui/core';
+import { fade } from '@material-ui/core/styles';
+import { ToggleButton } from '@material-ui/lab';
+import { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
 import { WithStyles } from '@material-ui/styles';
 import clsx from 'clsx';
-import { fade } from '@material-ui/core/styles';
-import { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
+import * as React from 'react';
 
 
-export interface ToggleBtnProps extends WithStyles<typeof styles> {
-    selected: boolean,
-    value?: any,
-    name?: string,
-    icon: JSX.Element
-}
+
 const styles = (theme: Theme) => createStyles({
     btn: {
         marginLeft: theme.spacing(2),
@@ -45,7 +40,12 @@ const styles = (theme: Theme) => createStyles({
     selected: {},
 })
 
-
+export interface ToggleBtnProps extends WithStyles<typeof styles> {
+    selected: boolean,
+    value?: any,
+    name?: string,
+    icon: JSX.Element
+}
 
 
 

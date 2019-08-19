@@ -54,10 +54,10 @@ export interface TrussCalcProps {
     modUpr?: number,
     zKoef?: number
 }
-export interface TrussCalcData {
-    P?: number[][][],
-    Vi?: ICoord[],
-    LinkNodes?: ICoord[],
+export type TrussCalcData = {
+    P: number[][][],
+    Vi: ICoord[],
+    LinkNodes: ICoord[],
 }
 
 export interface IFixedNodeCreate extends ICoord {
