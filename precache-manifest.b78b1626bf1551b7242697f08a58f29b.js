@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "2ed6b0376ab6cb42946f3aa4619ff9d8",
+    "revision": "d76a39a528804d2429431f6609ba60bc",
     "url": "https://web-usov.github.io/truss/index.html"
   },
   {
