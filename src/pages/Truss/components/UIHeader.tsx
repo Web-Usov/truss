@@ -1,4 +1,4 @@
-import { createStyles, Fab, Icon, Theme, withStyles } from '@material-ui/core';
+import { createStyles, Theme, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { AppBar } from 'src/components';
@@ -38,15 +38,10 @@ const UIHeader: React.FC<UIHeaderProps> = (
                     b.disabled = disabled[b.todo] === true
                 })
                 return (
-                    <MenuBtn {...m} onClickToAction={onClick} size={"small"} />
+                    <MenuBtn {...m} onClickToAction={onClick} size={"medium"} />
                 )
             })}
             <div className={classes.grow} />
-            <Fab
-                color="secondary"
-                size="small">
-                <Icon>priority_high</Icon>
-            </Fab>
         </AppBar>
     )
 }

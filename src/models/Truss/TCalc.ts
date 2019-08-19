@@ -14,6 +14,7 @@ export class TrussCalc {
         const Lambda: number[][][] = []
         const Kobs: number[][][] = []
         const IndexV: number[][] = []
+        let G: number
 
         let K: number[][] = []
         let Va: number[] = []
@@ -65,8 +66,8 @@ export class TrussCalc {
             console.log("V", V);
             console.log("P", P);
         }
-
-        return { P, LinkNodes, Vi }
+        G = this.G(LinkLength, P)
+        return { P, LinkNodes, Vi, G }
     }
 
     private static Kmest_i(area: number, modUpr: number, length_i: number) {
@@ -255,6 +256,13 @@ export class TrussCalc {
     private static P_i(k: number[][], v: number[][]) {
         const p: number[][] = MyMath.multMatrxiV2(k, v)
         return p
+    }
+    private static G(LinkLength: number[], p: number[][][]): number {
+        let sum = 0
+        LinkLength.forEach((b, i) => {
+            sum += b * Math.abs(p[i][0][0])
+        })
+        return sum
     }
 }
 export default TrussCalc

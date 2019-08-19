@@ -58,6 +58,7 @@ export type TrussCalcData = {
     P: number[][][],
     Vi: ICoord[],
     LinkNodes: ICoord[],
+    G: number
 }
 
 export interface IFixedNodeCreate extends ICoord {

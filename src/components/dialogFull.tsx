@@ -3,7 +3,8 @@ import { AppBar, Box, Dialog, IconButton, Slide, Toolbar, Typography } from '@ma
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { TransitionProps } from '@material-ui/core/transitions';
 import CloseIcon from '@material-ui/icons/Close';
-import React from 'react';
+import * as React from 'react';
+
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
 
@@ -33,8 +34,9 @@ interface Props {
     handleClose: () => void,
     children?: React.ReactNode
 }
-export default function FullScreenDialog({ children, open, handleClose, title }: Props) {
-    const classes = useStyles();
+export default function FullScreenDialog(props: Props) {
+    const classes = useStyles(props);
+    const { children, open, handleClose, title } = props
     return (
         <Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
             <AppBar className={classes.appBar}>

@@ -279,6 +279,7 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
             case actions.HEADER.CALC.RESULT: {
                 if (this.props.farm.calcData)
                     this.modalStateChange(actions.HEADER.CALC.RESULT)
+                break;
             }
             default: {
                 break;
@@ -301,7 +302,7 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
     }
     render() {
         const { stageHeight, stageWidth, uiMode, selectedEntityID } = this.state
-        const { classes, farm, calculation, calculated } = this.props
+        const { classes, farm, calculated } = this.props
         const selectedEntity: TEntity | null = selectedEntityID ? farm.beams.get(selectedEntityID) || farm.nodes.get(selectedEntityID) || null : null
         return (
             <Box className={classes.root}>

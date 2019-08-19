@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
             marginBottom: theme.spacing(2)
         },
         title: {
-            paddingTop: theme.spacing(2),
-            paddingLeft: theme.spacing(2)
+            padding: theme.spacing(2),
         },
     }),
 );
@@ -26,8 +25,8 @@ interface Props extends TrussCalcData { }
 
 
 const UICalcData: React.FC<Props> = observer((props) => {
-    const classes = useStyles();
-    const { Vi, P, LinkNodes } = props
+    const classes = useStyles(props);
+    const { Vi, P, LinkNodes, G } = props
 
     const viewVi = (vi: typeof props.Vi) => {
         const rows: string[][] = []
@@ -68,6 +67,11 @@ const UICalcData: React.FC<Props> = observer((props) => {
 
     return (
         <Box className={classes.root}>
+            <Paper className={classes.tableBox}>
+                <Typography variant="h6" className={classes.title}>
+                    G: {Math.round(G)} (Н·мм)
+                </Typography>
+            </Paper>
             {viewP(P, LinkNodes)}
             {viewVi(Vi)}
         </Box>
