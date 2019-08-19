@@ -30,6 +30,13 @@ export const theme = createMuiTheme({
         }
 
     },
+    overrides: {
+        MuiTooltip: {
+            tooltip: {
+                fontSize: 14
+            }
+        }
+    }
 });
 export const getNodeColor = (node: TNode): string => {
 

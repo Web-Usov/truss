@@ -1,12 +1,18 @@
 import * as React from 'react'
 import { Theme, createStyles, withStyles, Tooltip } from '@material-ui/core';
-import {  ToggleButton } from '@material-ui/lab'
+import { ToggleButton } from '@material-ui/lab'
 import { WithStyles } from '@material-ui/styles';
 import clsx from 'clsx';
 import { fade } from '@material-ui/core/styles';
 import { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
 
 
+export interface ToggleBtnProps extends WithStyles<typeof styles> {
+    selected: boolean,
+    value?: any,
+    name?: string,
+    icon: JSX.Element
+}
 const styles = (theme: Theme) => createStyles({
     btn: {
         marginLeft: theme.spacing(2),
@@ -41,14 +47,9 @@ const styles = (theme: Theme) => createStyles({
 
 
 
-export interface MyToggleButtonProps extends WithStyles<typeof styles> {
-    selected: boolean,
-    value?:any,
-    name?:string,
-    icon:JSX.Element
-}
 
-const MyToggleButton: React.FC<MyToggleButtonProps & ToggleButtonProps> = ({  selected, classes , value, name, icon, ...other}) => {
+
+const MyToggleButton: React.FC<ToggleBtnProps & ToggleButtonProps> = ({ selected, classes, value, name, icon, ...other }) => {
     return (
         <ToggleButton
             key={name}
@@ -60,7 +61,7 @@ const MyToggleButton: React.FC<MyToggleButtonProps & ToggleButtonProps> = ({  se
                 }
             )}
             {...other}
-            
+
         >
             <Tooltip title={name}>
                 {icon}
@@ -68,5 +69,5 @@ const MyToggleButton: React.FC<MyToggleButtonProps & ToggleButtonProps> = ({  se
         </ToggleButton>
     )
 }
-
+export const ToggleBtn = withStyles(styles)(MyToggleButton)
 export default withStyles(styles)(MyToggleButton)

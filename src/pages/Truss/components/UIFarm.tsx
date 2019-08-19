@@ -236,11 +236,11 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         if (window.confirm('Вы уверены, что хотите очистить холст?'))
             this.props.clearTruss()
     }
-    saveFarm(e: React.FormEvent<HTMLButtonElement>) {
+    saveFarm(e: React.MouseEvent<HTMLElement, MouseEvent>) {
         if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
             this.props.cacheTruss()
     }
-    calculate(e: React.FormEvent<HTMLButtonElement>) {
+    calculate(e: React.MouseEvent<HTMLElement, MouseEvent>) {
         this.props.calculate()
     }
     setSelectedMode(mode: UIModes) {
@@ -268,7 +268,6 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                 <UIHeader
                     hundleClear={this.clearFarm}
                     hundleSave={this.saveFarm}
-                    hundleCalculate={this.calculate}
                     disabled={calculation} />
 
                 <div className={classes.toolbar} />
@@ -299,7 +298,8 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                 </Box>
                 <UIToolPanel
                     selected={uiMode}
-                    onSelect={this.setSelectedMode.bind(this)} />
+                    onSelect={this.setSelectedMode.bind(this)}
+                    onClickCalc={this.calculate} />
             </Box>
         )
     }

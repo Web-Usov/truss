@@ -1,9 +1,9 @@
 import Sidebar from './sidebar'
 import AppBar from './appBar'
-import MyToggleButton from './myToggleButton'
+import * as Btns from './Btns'
 
 export {
     Sidebar,
     AppBar,
-    MyToggleButton
+    Btns
 }

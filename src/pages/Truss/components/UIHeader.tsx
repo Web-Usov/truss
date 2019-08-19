@@ -3,6 +3,8 @@ import { Theme, createStyles, withStyles, Button, ButtonGroup, Fab, Icon, Toolti
 import { WithStyles } from '@material-ui/styles';
 import { AppBar } from 'src/components';
 import { Build as CalcIcon, SaveAlt as SaveIcon, DeleteForever as ClearIcon } from '@material-ui/icons';
+import { Btn } from 'src/components/Btns';
+import { BtnProps } from 'src/components/Btns/btn';
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -19,9 +21,9 @@ const styles = (theme: Theme) => createStyles({
 })
 
 export interface UIHeaderProps extends WithStyles<typeof styles> {
-    hundleSave?: (e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleClear?: (e: React.FormEvent<HTMLButtonElement>) => void,
-    hundleCalculate?: (e: React.FormEvent<HTMLButtonElement>) => void,
+    hundleSave?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+    hundleClear?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
+    hundleCalculate?: (e: React.MouseEvent<HTMLElement, MouseEvent>) => void,
     disabled?: boolean
 }
 
@@ -33,46 +35,33 @@ const UIHeader: React.FC<UIHeaderProps> = (
         hundleCalculate = (e) => { alert("Буедет реализовано в будущем") },
         disabled = false
     }) => {
-    const btns = [
+    const btns: BtnProps[] = [
         {
-            text: "Расчет фермы",
-            action: hundleCalculate,
-            icon: (<CalcIcon className={classes.btnIcon} />)
+            title: "Сохранить ферму в кэш",
+            onClick: hundleSave,
+            icon: (<SaveIcon />)
         },
         {
-            text: "Сохранить ферму в кэш",
-            action: hundleSave,
-            icon: (<SaveIcon className={classes.btnIcon} />)
-        },
-        {
-            text: "Очистить холст",
-            action: hundleClear,
-            icon: (<ClearIcon className={classes.btnIcon} />)
+            title: "Очистить холст",
+            onClick: hundleClear,
+            icon: (<ClearIcon />)
         }
     ]
-    const Btn = (text: string = "", action: (e: React.FormEvent<HTMLButtonElement>) => void, icon: JSX.Element) => (
-        <Tooltip
-            title={text}>
-            <Button
-                onClick={action}
-                disabled={disabled}
-            >{icon}</Button>
-        </Tooltip>
-    )
 
     return (
         <AppBar
             className={classes.root}
         >
+            {btns.map(b => (
+                <Btn
+                    title={b.title}
 
-            <ButtonGroup
-                size="small"
-                color="secondary"
-                variant="contained">
-                {btns.map(b => (
-                    Btn(b.text, b.action, b.icon)
-                ))}
-            </ButtonGroup>
+                    onClick={b.onClick}
+                    icon={b.icon}
+                    key={b.title}
+                    onlyIcon={true}
+                />)
+            )}
             <div className={classes.grow} />
             <Fab
                 color="secondary"
