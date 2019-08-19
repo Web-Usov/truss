@@ -1,19 +1,19 @@
 {
   "files": {
-    "main.css": "https://web-usov.github.io/truss/static/css/main.1953de04.chunk.css",
-    "main.js": "https://web-usov.github.io/truss/static/js/main.ca59df4d.chunk.js",
-    "main.js.map": "https://web-usov.github.io/truss/static/js/main.ca59df4d.chunk.js.map",
+    "main.css": "https://web-usov.github.io/truss/static/css/main.84bbde08.chunk.css",
+    "main.js": "https://web-usov.github.io/truss/static/js/main.249eff16.chunk.js",
+    "main.js.map": "https://web-usov.github.io/truss/static/js/main.249eff16.chunk.js.map",
     "runtime~main.js": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js",
     "runtime~main.js.map": "https://web-usov.github.io/truss/static/js/runtime~main.eb1909e4.js.map",
-    "static/js/2.4d092886.chunk.js": "https://web-usov.github.io/truss/static/js/2.4d092886.chunk.js",
-    "static/js/2.4d092886.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.4d092886.chunk.js.map",
+    "static/js/2.e59ed6aa.chunk.js": "https://web-usov.github.io/truss/static/js/2.e59ed6aa.chunk.js",
+    "static/js/2.e59ed6aa.chunk.js.map": "https://web-usov.github.io/truss/static/js/2.e59ed6aa.chunk.js.map",
     "index.html": "https://web-usov.github.io/truss/index.html",
-    "precache-manifest.18e7a3021935f9d477c4606ff6177ca6.js": "https://web-usov.github.io/truss/precache-manifest.18e7a3021935f9d477c4606ff6177ca6.js",
+    "precache-manifest.253317f38ce19af0616a6d0dccf8dd98.js": "https://web-usov.github.io/truss/precache-manifest.253317f38ce19af0616a6d0dccf8dd98.js",
     "service-worker.js": "https://web-usov.github.io/truss/service-worker.js",
-    "static/css/main.1953de04.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.1953de04.chunk.css.map",
+    "static/css/main.84bbde08.chunk.css.map": "https://web-usov.github.io/truss/static/css/main.84bbde08.chunk.css.map",
     "static/media/airBridge.png": "https://web-usov.github.io/truss/static/media/airBridge.7d581a65.png",
     "static/media/bridge.png": "https://web-usov.github.io/truss/static/media/bridge.e53bced3.png",
-    "static/media/fixation.svg": "https://web-usov.github.io/truss/static/media/fixation.dd261ca6.svg",
+    "static/media/fixation.svg": "https://web-usov.github.io/truss/static/media/fixation.9b63597e.svg",
     "static/media/icon.png": "https://web-usov.github.io/truss/static/media/icon.68e274b2.png",
     "static/media/ogImage.png": "https://web-usov.github.io/truss/static/media/ogImage.0619e300.png"
   }
