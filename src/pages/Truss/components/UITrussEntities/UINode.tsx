@@ -4,10 +4,10 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { Arrow, Circle, Group, Line, Text } from 'react-konva';
 import { TNode } from 'src/models/Truss';
+import { NodeFixation } from 'src/models/Truss/TTypes';
 import { consts } from 'src/static';
 import { UI } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
-import { NodeFixation } from 'src/models/Truss/TTypes';
 
 
 const size = consts.UI.nodeSize
@@ -88,7 +88,7 @@ const UINode: React.FC<UINodeProps> = observer(({
     let x = node.coord.x / consts.UI.koefOnGrid
     let y = node.coord.y / consts.UI.koefOnGrid
     if (viewNewPos) {
-        if (node.dCoord.x === 0 && node.dCoord.y === 0) return <React.Fragment />
+        if (Math.abs(node.dCoord.x) < 0.2 && Math.abs(node.dCoord.y) < 0.2) return <React.Fragment />
         x = (node.coord.x + node.dCoord.x * consts.UI.koefOfNewPos) / consts.UI.koefOnGrid
         y = (node.coord.y - node.dCoord.y * consts.UI.koefOfNewPos) / consts.UI.koefOnGrid
 
@@ -104,10 +104,10 @@ const UINode: React.FC<UINodeProps> = observer(({
         >
             {node.forceX !== 0 && viewForce(node.forceX, 0)}
             {node.forceY !== 0 && viewForce(node.forceY, 90)}
-            {node.fixation === NodeFixation.X && viewFixation(90)}
-            {node.fixation === NodeFixation.Y && viewFixation(0)}
-            {node.fixation === NodeFixation.XY && viewFixation(90)}
-            {node.fixation === NodeFixation.YX && viewFixation(0)}
+            {node.fixation === NodeFixation.x && viewFixation(90)}
+            {node.fixation === NodeFixation.y && viewFixation(0)}
+            {node.fixation === NodeFixation.xy && viewFixation(90)}
+            {node.fixation === NodeFixation.yx && viewFixation(0)}
 
             <Circle
                 radius={size}

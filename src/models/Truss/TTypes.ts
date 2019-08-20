@@ -42,11 +42,11 @@ export interface ICoord {
 }
 
 export enum NodeFixation {
-    None = 0,
-    X = 1,
-    Y = 2,
-    XY = 3,
-    YX = XY
+    none = "none",
+    x = "x",
+    y = "y",
+    xy = "xy",
+    yx = xy
 }
 
 export interface TrussCalcProps {
@@ -62,7 +62,7 @@ export type TrussCalcData = {
 }
 
 export interface IFixedNodeCreate extends ICoord {
-    fixation: NodeFixation
+    fixation: 'none' | 'x' | 'y' | 'xy'
 }
 export interface IStaticNodeCreate extends ICoord {
     forceX?: number

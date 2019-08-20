@@ -1,11 +1,12 @@
 import { Button, ListItemIcon, MenuItem, MenuList, Paper, Popover } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import * as React from 'react';
 import { BtnProps } from './btn';
 
 export interface MenuBtnProps {
     title: string,
-    icon?: JSX.Element,
+    icon?: React.ComponentType<SvgIconProps>,
     items: BtnProps[],
 }
 
@@ -63,12 +64,12 @@ export function MenuBtn(props: MenuBtnProps & ButtonProps & {
                 keepMounted
 
             >
-                <Paper onMouseLeave={handleClose}>
+                <Paper>
                     <MenuList>
                         {items.map(i => (
-                            <MenuItem onClick={(e) => handleItemClick(e, i.todo)} disabled={i.disabled}>
+                            <MenuItem onClick={(e) => handleItemClick(e, i.todo)} disabled={i.disabled} key={i.title}>
                                 {i.icon !== undefined && (<ListItemIcon>
-                                    {i.icon}
+                                    <i.icon />
                                 </ListItemIcon>)}
                                 {i.title}
                             </MenuItem>

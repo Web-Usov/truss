@@ -57,13 +57,13 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
     }
     viewFixationInfo(node: TNode) {
         switch (node.fixation) {
-            case NodeFixation.X: return (
+            case NodeFixation.x: return (
                 <TextRow text={"Фиксация по оси X"} />
             )
-            case NodeFixation.Y: return (
+            case NodeFixation.y: return (
                 <TextRow text={"Фиксация по оси Y"} />
             )
-            case NodeFixation.XY: return (
+            case NodeFixation.xy: return (
                 <TextRow text={"Фиксация по осям Х и Y"} />
             )
             default: return undefined
@@ -101,7 +101,7 @@ class UIEntityInfo extends React.PureComponent<EntityInfoProps, EntityInfoState>
                     Стержень {beam.name}
                 </Typography>
                 <TextRow text={`Длина: ${beam.length} мм`} />
-                <TextRows text={[`Усилия в стержне`, `В начале: ${beam.startForce} H`, `В конце: ${beam.endForce} H`]} />
+                <TextRow text={`Усилие в стержне: ${beam.startForce} H`} />
                 <div className={classes.btnGroup}>
                     <IconButton
                         aria-label="Delete"

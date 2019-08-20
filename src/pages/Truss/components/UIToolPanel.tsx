@@ -1,12 +1,13 @@
 import { createStyles, Paper, Theme, withStyles } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { ToggleButtonGroup } from '@material-ui/lab';
 import { WithStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { ToggleBtn } from 'src/components/Btns';
 import Btn from 'src/components/Btns/btn';
 import { UIModes } from 'src/utils/UI';
-import { modsButtons, toolsButtons } from '../actions';
+import { modsButtons, toolsButtons } from '../actions/toolsPanel';
 
 
 const styles = (theme: Theme) => createStyles({
@@ -45,7 +46,8 @@ const styles = (theme: Theme) => createStyles({
 export interface IMode {
     title: string,
     mod: UIModes
-    icon: JSX.Element
+    // icon: JSX.Element
+    icon: React.ComponentType<SvgIconProps>
 }
 
 

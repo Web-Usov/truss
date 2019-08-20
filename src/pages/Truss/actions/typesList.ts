@@ -6,6 +6,9 @@ export const HEADER = {
     CALC: {
         DO: "header-calc-do",
         RESULT: "header-calc-result"
+    },
+    TRUSS: {
+        SELECT: "header-truss-select"
     }
 }
 export const TOOLS = {

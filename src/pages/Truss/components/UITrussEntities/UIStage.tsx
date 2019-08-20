@@ -1,16 +1,16 @@
-import * as React from 'react'
-import { Theme, createStyles, withStyles, Box } from '@material-ui/core';
+import { Box, createStyles, Theme, withStyles } from '@material-ui/core';
 import { WithStyles } from '@material-ui/styles';
-import { Stage, Layer, } from 'react-konva';
 import Konva from 'konva';
-import UIGrid from './UIGrid';
-import { consts } from 'src/static';
-import ScrollBar from 'react-custom-scrollbars';
-import { UIBeam, UINode } from '..';
-import { UIModes } from 'src/utils/UI';
-import { ITrussArray } from 'src/models/Truss/TTypes';
-import { TEntity } from 'src/models/Truss';
 import { observer } from 'mobx-react-lite';
+import * as React from 'react';
+import ScrollBar from 'react-custom-scrollbars';
+import { Layer, Stage } from 'react-konva';
+import { TEntity } from 'src/models/Truss';
+import { ITrussArray } from 'src/models/Truss/TTypes';
+import { consts } from 'src/static';
+import { UIModes } from 'src/utils/UI';
+import { UIBeam, UINode } from '..';
+import UIGrid from './UIGrid';
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -72,18 +72,6 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                                 selected={selectedEntity === beam}
                             />
                         ))}
-
-                        {nodes.map(node => (
-                            <UINode
-                                key={node.id}
-                                node={node}
-                                mode={uiMode}
-                                drag={onDrag}
-                                onClick={onClick}
-                                selected={selectedEntity === node}
-                            />
-                        ))}
-
                         {viewNewPos && beams.map(beam => (
                             <UIBeam
                                 key={beam.id}
@@ -92,6 +80,16 @@ const UIStage: React.FC<UIStageProps> = (observer(({ classes, stage, stageHeight
                                 onClick={onClick}
                                 selected={selectedEntity === beam}
                                 viewNewPos={true}
+                            />
+                        ))}
+                        {nodes.map(node => (
+                            <UINode
+                                key={node.id}
+                                node={node}
+                                mode={uiMode}
+                                drag={onDrag}
+                                onClick={onClick}
+                                selected={selectedEntity === node}
                             />
                         ))}
                         {viewNewPos && nodes.map(node => (

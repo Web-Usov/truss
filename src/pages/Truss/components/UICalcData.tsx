@@ -5,12 +5,12 @@ import { TrussCalcData } from 'src/models/Truss/TTypes';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
-            width: '100%',
+            // width: '100%',
             overflowX: 'auto',
             paddingTop: theme.spacing(2)
         },
         table: {
-            minWidth: 650,
+            minWidth: 450,
         },
         tableBox: {
             marginBottom: theme.spacing(2)
@@ -45,10 +45,9 @@ const UICalcData: React.FC<Props> = observer((props) => {
             rows.push([
                 `${beams[i].x + 1} - ${beams[i].y + 1}`,
                 b[0][0].toFixed(0),
-                b[1][0].toFixed(0)
             ])
         })
-        return viewTable("Усилия в стержнях", ['Стержень', 'Сила в начале (H)', 'Сила в конце (H)'], rows)
+        return viewTable("Усилия в стержнях", ['Стержень', 'Усилие (H)'], rows)
     }
 
     const viewTable = (title: string, head: string[], rows: string[][]) => {

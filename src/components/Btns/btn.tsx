@@ -1,11 +1,13 @@
 import { Button, Fab, Tooltip } from '@material-ui/core';
 import { ButtonProps } from '@material-ui/core/Button';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import * as React from 'react';
 
 export interface BtnProps {
     title?: string,
     todo: string,
-    icon?: JSX.Element,
+    // icon?: JSX.Element,
+    icon?: React.ComponentType<SvgIconProps>,
     disabled?: boolean,
     fab?: boolean,
     onlyIcon?: boolean
@@ -15,7 +17,7 @@ export const Btn: React.FC<BtnProps & ButtonProps & {
 }> = (props) => {
     const {
         title = "",
-        icon = (<React.Fragment />),
+        icon,
         disabled = false,
         onClickToAction,
         todo,
@@ -39,7 +41,7 @@ export const Btn: React.FC<BtnProps & ButtonProps & {
                     marginRight: 5
                 }}>
 
-                {icon}
+                {props.icon !== undefined && (<props.icon />)}
             </Fab>
 
         </Tooltip>

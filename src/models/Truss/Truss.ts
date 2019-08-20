@@ -51,7 +51,7 @@ class Truss {
     @action public moveNode(id: string, x: number, y: number): void {
         const node = this._nodes.get(id)
         if (!node) throw new Error("Не найден узел")
-        if (node.isStatic || node.fixation !== NodeFixation.None) return //throw new Error("Данный узел нельзя перемещать")
+        if (node.isStatic || node.fixation !== NodeFixation.none) return //throw new Error("Данный узел нельзя перемещать")
         for (let n of this._nodes.values()) {
             if (n.coord.x === x && n.coord.y === y) return
         }
@@ -136,7 +136,7 @@ class Truss {
         const LinkNodes: ICoord[] = []
         const Forces: number[] = []
         const LinkLength: number[] = []
-
+        if (this._nodes.size === 0) throw new Error("Ферма пуста")
         const { nodes, beams } = await this.updateBeforeCalc(
             [...this.nodesArray],
             [...this.beamsArray]
@@ -147,24 +147,24 @@ class Truss {
         nodes.forEach((node, i) => {
             NodeCoord.push({ ...node.coord })
             switch (node.fixation) {
-                case NodeFixation.X: {
+                case NodeFixation.x: {
                     _nodeVindex++
                     NodeV.push({ x: 0, y: _nodeVindex })
                     Forces.push(-node.forceY)
                     break;
                 }
-                case NodeFixation.Y: {
+                case NodeFixation.y: {
                     _nodeVindex++
                     NodeV.push({ x: _nodeVindex, y: 0 })
                     Forces.push(-node.forceX)
                     break;
                 }
-                case NodeFixation.YX:
-                case NodeFixation.XY: {
+                case NodeFixation.yx:
+                case NodeFixation.xy: {
                     NodeV.push({ x: 0, y: 0 })
                     break;
                 }
-                case NodeFixation.None: {
+                case NodeFixation.none: {
                     _nodeVindex++
                     NodeV.push({ x: _nodeVindex, y: _nodeVindex + 1 })
                     _nodeVindex++
@@ -256,6 +256,7 @@ class Truss {
     public clear() {
         this._beams.clear()
         this._nodes.clear()
+        this._calcData = undefined
     }
     private sortByName = (a: TEntity, b: TEntity): number => {
         if (a instanceof TBeam) {

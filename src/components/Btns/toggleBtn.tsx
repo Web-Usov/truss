@@ -1,5 +1,6 @@
 import { createStyles, Theme, Tooltip, withStyles } from '@material-ui/core';
 import { fade } from '@material-ui/core/styles';
+import { SvgIconProps } from '@material-ui/core/SvgIcon';
 import { ToggleButton } from '@material-ui/lab';
 import { ToggleButtonProps } from '@material-ui/lab/ToggleButton';
 import { WithStyles } from '@material-ui/styles';
@@ -44,12 +45,13 @@ export interface ToggleBtnProps extends WithStyles<typeof styles> {
     selected: boolean,
     value?: any,
     name?: string,
-    icon: JSX.Element
+    icon: React.ComponentType<SvgIconProps>,
 }
 
 
 
-const MyToggleButton: React.FC<ToggleBtnProps & ToggleButtonProps> = ({ selected, classes, value, name, icon, ...other }) => {
+const MyToggleButton: React.FC<ToggleBtnProps & ToggleButtonProps> = (props) => {
+    const { selected, classes, value, name, icon, ...other } = props
     return (
         <ToggleButton
             key={name}
@@ -64,7 +66,7 @@ const MyToggleButton: React.FC<ToggleBtnProps & ToggleButtonProps> = ({ selected
 
         >
             <Tooltip title={name}>
-                {icon}
+                {<props.icon />}
             </Tooltip>
         </ToggleButton>
     )

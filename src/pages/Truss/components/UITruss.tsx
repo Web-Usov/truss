@@ -5,15 +5,17 @@ import * as React from 'react';
 import KeyHandler from 'react-key-handler';
 import { Stage } from "react-konva";
 import Stats from 'react-stats';
-import { DialogFull } from 'src/components';
+import { DialogDrag } from 'src/components';
+import { DialogSimple } from 'src/components/modal';
 import { TBeam, TEntity, TNode, Truss } from 'src/models/Truss';
-import { UIEntityInfo, UITreePanel } from 'src/pages/Truss/components';
+import { UIEntityInfo, UISelectTruss, UITreePanel } from 'src/pages/Truss/components';
 import { canvas } from 'src/static/const';
 import { MyMath } from 'src/utils';
 import { UIModes } from 'src/utils/UI';
 import { UIHeader, UIStage, UIToolPanel } from '.';
-import { actions } from '../actions';
+import { types } from '../actions';
 import { TrussContainer } from '../TrussContainer';
+import { TrussBase } from '../trussList';
 import UICalcData from './UICalcData';
 
 
@@ -48,8 +50,10 @@ export interface UITrussProps extends WithStyles<typeof styles> {
     clearTruss: typeof TrussContainer.prototype.clearTruss
     cacheTruss: typeof TrussContainer.prototype.cacheTruss,
     calculate: typeof TrussContainer.prototype.calculate
+    selectTruss: typeof TrussContainer.prototype.selectTruss
     calculation: boolean,
     calculated: boolean,
+    trusses: TrussBase[]
 }
 
 export interface UITrussState {
@@ -84,6 +88,7 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         this.calculate = this.calculate.bind(this)
         this.handleBtnClick = this.handleBtnClick.bind(this)
         this.modalStateChange = this.modalStateChange.bind(this)
+        this.selectTruss = this.selectTruss.bind(this)
         this.stage = React.createRef();
     }
     componentDidMount() {
@@ -245,11 +250,14 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
             this.props.clearTruss()
     }
     saveFarm(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
-        if (window.confirm('Вы уверены, что хотите сохранить холст в кэш?'))
-            this.props.cacheTruss()
+        this.props.cacheTruss()
     }
     calculate(e?: React.MouseEvent<HTMLElement, MouseEvent>) {
         this.props.calculate()
+    }
+    selectTruss(value: string) {
+        this.modalStateChange(null)
+        this.props.selectTruss(value)
     }
     setSelectedMode(mode: UIModes) {
         const { calculation } = this.props
@@ -263,22 +271,26 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
     }
     handleBtnClick(e: React.MouseEvent<HTMLElement, MouseEvent>, a: string) {
         switch (a) {
-            case actions.HEADER.CANVAS.CLEAR: {
+            case types.HEADER.CANVAS.CLEAR: {
                 this.clearFarm()
                 break;
             }
-            case actions.HEADER.CANVAS.SAVE: {
+            case types.HEADER.CANVAS.SAVE: {
                 this.saveFarm(e)
                 break;
             }
-            case actions.TOOLS.TRUSS.CALC:
-            case actions.HEADER.CALC.DO: {
+            case types.TOOLS.TRUSS.CALC:
+            case types.HEADER.CALC.DO: {
                 this.calculate(e)
                 break;
             }
-            case actions.HEADER.CALC.RESULT: {
+            case types.HEADER.CALC.RESULT: {
                 if (this.props.farm.calcData)
-                    this.modalStateChange(actions.HEADER.CALC.RESULT)
+                    this.modalStateChange(a)
+                break;
+            }
+            case types.HEADER.TRUSS.SELECT: {
+                this.modalStateChange(a)
                 break;
             }
             default: {
@@ -290,13 +302,22 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
         this.setState({ openModal: s })
     }
     viewDialogs() {
-        if (this.props.farm.calcData) return (
-            <DialogFull
-                title="Результаты рассчетов"
-                open={this.state.openModal === actions.HEADER.CALC.RESULT}
-                handleClose={() => this.modalStateChange(null)}>
-                <UICalcData {...this.props.farm.calcData} />
-            </DialogFull>
+        return (
+            <React.Fragment>
+                {this.props.farm.calcData !== undefined && <DialogDrag
+                    title="Результаты рассчетов"
+                    open={this.state.openModal === types.HEADER.CALC.RESULT}
+                    handleClose={() => this.modalStateChange(null)}>
+                    <UICalcData {...this.props.farm.calcData} />
+                </DialogDrag>}
+
+                <DialogSimple
+                    title="Выбор фермы"
+                    open={this.state.openModal === types.HEADER.TRUSS.SELECT}
+                    handleClose={() => this.modalStateChange(null)}>
+                    <UISelectTruss trusses={this.props.trusses} onSelect={this.selectTruss} />
+                </DialogSimple>
+            </React.Fragment>
         )
 
     }
@@ -313,7 +334,7 @@ class UITruss extends React.Component<UITrussProps, UITrussState>{
                     onKeyHandle={this.onKeyHandle}
                 />
                 <UIHeader
-                    disabled={{ [actions.HEADER.CALC.RESULT]: !Boolean(this.props.farm.calcData) }}
+                    disabled={{ [types.HEADER.CALC.RESULT]: !Boolean(this.props.farm.calcData) }}
                     onClick={this.handleBtnClick} />
 
                 <div className={classes.toolbar} />

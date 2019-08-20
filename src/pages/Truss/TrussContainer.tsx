@@ -2,9 +2,10 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { TBeam, TNode, Truss as farm } from 'src/models/Truss';
 import TrussFactory from 'src/models/Truss/TFactory';
-import { ITBeam, ITNode, NodeFixation, TrussCalcProps } from 'src/models/Truss/TTypes';
+import { ITBeam, ITNode, TrussCalcProps } from 'src/models/Truss/TTypes';
 import { consts } from 'src/static';
-import { UIFarm } from './components';
+import { UITruss } from './components';
+import { trusses } from './trussList';
 
 interface State {
     calculation: boolean,
@@ -141,11 +142,6 @@ export class TrussContainer extends React.Component<Props, State>  {
 
             if (this.state.loadFromCache) {
                 this.loadTrussFromCache()
-            } else {
-                const _truss = genTruss()
-                farm.setNodes(_truss)
-                farm.sortNodesByCoord()
-                TrussFactory.firstPlacement(farm.nodesArray, farm.beamsArray)
             }
 
         } catch (e) {
@@ -167,6 +163,7 @@ export class TrussContainer extends React.Component<Props, State>  {
             const { nodes, beams } = await TrussFactory.parse(nodesJSON, beamsJSON)
             farm.setNodes(nodes)
             farm.setBeams(beams)
+            farm.sortNodesByCoord()
         }
     }
     clearTruss = async () => {
@@ -174,53 +171,29 @@ export class TrussContainer extends React.Component<Props, State>  {
         localStorage.removeItem(this.nodesCacheName)
         localStorage.removeItem(this.beamsCacheName)
         await farm.clear()
-        this.setDefaultTruss()
+    }
+    selectTruss = async (id: string) => {
+        const trussBase = trusses.find(t => t.id === id)
+        if (trussBase) {
+            const nodes = await TrussFactory.createNodes(trussBase.fixedNodes, trussBase.staticNodes, trussBase.simpleNodes)
+            await this.clearTruss()
+            farm.setNodes(nodes)
+            farm.sortNodesByCoord()
+            TrussFactory.firstPlacement(farm.nodesArray, farm.beamsArray)
+        }
+
     }
     render() {
         return (
-            <UIFarm
+            <UITruss
                 {...this.state}
                 {...this}
                 farm={farm}
+                trusses={trusses}
             />
         )
     }
 }
 
-const genTruss = () => {
-    return TrussFactory.createNodes(
-        [
-            {
-                x: 0,
-                y: 1000,
-                fixation: NodeFixation.XY,
-            },
-            {
-                x: 3000,
-                y: 1000,
-                fixation: NodeFixation.Y,
-            }
-        ],
-        [
-            {
-                x: 1000,
-                y: 1000,
-                forceY: 9000
-            }
-        ],
-        [
-            // {
-            //     x: 1000,
-            //     y: 1000
-            // }, {
-            //     x: 700,
-            //     y: 700
-            // }, {
-            //     x: 1000,
-            //     y: 700
-            // }
-        ]
-    )
-}
 
 export default TrussContainer

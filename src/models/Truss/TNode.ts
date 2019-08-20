@@ -1,6 +1,6 @@
+import { action, computed, observable } from "mobx";
 import TEntity from "./TEntity";
 import { ITNode, NodeFixation } from "./TTypes";
-import { observable, action, computed } from "mobx";
 
 class TNode extends TEntity {
     @observable private _beamsID: string[];
@@ -42,7 +42,7 @@ class TNode extends TEntity {
         this._forceX = forceX || 0
         this._forceY = forceY || 0
         this._isStatic = isStatic || false
-        this._fixation = fixation || NodeFixation.None
+        this._fixation = fixation || NodeFixation.none
     }
 
     @action public conncetBeam(id: string): boolean {

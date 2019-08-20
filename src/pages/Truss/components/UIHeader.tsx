@@ -3,8 +3,7 @@ import { WithStyles } from '@material-ui/styles';
 import * as React from 'react';
 import { AppBar } from 'src/components';
 import { DisabledBtn, MenuBtn } from 'src/components/Btns';
-import { headerMenu } from '../actions';
-
+import { headerMenu } from '../actions/header';
 const styles = (theme: Theme) => createStyles({
     root: {
 
@@ -38,7 +37,7 @@ const UIHeader: React.FC<UIHeaderProps> = (
                     b.disabled = disabled[b.todo] === true
                 })
                 return (
-                    <MenuBtn {...m} onClickToAction={onClick} size={"medium"} />
+                    <MenuBtn {...m} key={m.title} onClickToAction={onClick} size={"medium"} />
                 )
             })}
             <div className={classes.grow} />

@@ -1,6 +1,6 @@
-import { TNode, TBeam } from 'src/models/Truss';
-import { IFixedNodeCreate, ISimpleNodeCreate, IStaticNodeCreate, ITruss, ITNode, ITBeam } from "./TTypes";
+import { TBeam, TNode } from 'src/models/Truss';
 import { canvas, UI } from 'src/static/const';
+import { IFixedNodeCreate, ISimpleNodeCreate, IStaticNodeCreate, ITBeam, ITNode, ITruss, NodeFixation } from "./TTypes";
 
 
 export class TrussFactory {
@@ -46,17 +46,18 @@ export class TrussFactory {
         return { nodesJSON, beamsJSON }
     }
     static createNodes(
-        _fixedNodes: IFixedNodeCreate[] = [],
-        _staticNodes: IStaticNodeCreate[] = [],
+        _fixedNodes: IFixedNodeCreate[],
+        _staticNodes: IStaticNodeCreate[],
         _nodes: ISimpleNodeCreate[] = []
     ): Map<string, TNode> {
         const nodes: Map<string, TNode> = new Map()
 
         _fixedNodes.forEach(n => {
+            let fixation: NodeFixation = NodeFixation[n.fixation]
             const _n = new TNode({
                 coord: { x: n.x, y: n.y },
                 isStatic: true,
-                fixation: n.fixation
+                fixation: fixation
             })
             nodes.set(_n.id, _n)
         })
