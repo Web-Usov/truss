@@ -6,7 +6,7 @@
   "scripts": {
     "start": "craco  start",
     "build:windows": "set PUBLIC_URL=./&& craco  build",
-    "build": "PUBLIC_URL=./&& craco build",
+    "build": "PUBLIC_URL=./ craco build",
     "test": "craco  test",
     "eject": "craco  eject",
     "predeploy:windows": "set PUBLIC_URL=https://web-usov.github.io/truss&& craco build",
@@ -14,9 +14,9 @@
   },
   "dependencies": {
     "@craco/craco": "^5.2.3",
-    "@material-ui/core": "^4.2.0",
-    "@material-ui/icons": "^4.2.1",
-    "@material-ui/lab": "^4.0.0-alpha.19",
+    "@material-ui/core": "4.2.0",
+    "@material-ui/icons": "4.2.1",
+    "@material-ui/lab": "4.0.0-alpha.19",
     "clsx": "^1.0.4",
     "konva": "^3.3.3",
     "mathjs": "^6.0.4",
