@@ -5,11 +5,12 @@
   "homepage": "https://web-usov.github.io/truss/",
   "scripts": {
     "start": "craco  start",
-    "build": "set PUBLIC_URL=./&& craco  build",
+    "build:windows": "set PUBLIC_URL=./&& craco  build",
+    "build": "PUBLIC_URL=./&& craco build",
     "test": "craco  test",
     "eject": "craco  eject",
-    "predeploy": "set PUBLIC_URL=https://web-usov.github.io/truss&& craco build",
-    "deploy": "gh-pages -d build"
+    "predeploy:windows": "set PUBLIC_URL=https://web-usov.github.io/truss&& craco build",
+    "deploy:windows": "gh-pages -d build"
   },
   "dependencies": {
     "@craco/craco": "^5.2.3",
