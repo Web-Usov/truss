@@ -31,7 +31,6 @@
     "react-konva": "^16.8.7-3",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
-    "react-stats": "0.0.5",
     "typescript": "3.5.2",
     "use-image": "^1.0.4",
     "uuid": "^3.3.2"

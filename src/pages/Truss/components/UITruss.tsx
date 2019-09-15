@@ -4,7 +4,8 @@ import { observer } from "mobx-react";
 import * as React from 'react';
 import KeyHandler from 'react-key-handler';
 import { Stage } from "react-konva";
-import Stats from 'react-stats';
+// import Stats from 'react-stats';
+import Stats from '../../../../libs/react-stats/'
 import { DialogDrag } from 'src/components';
 import { DialogSimple } from 'src/components/modal';
 import { TBeam, TEntity, TNode, Truss } from 'src/models/Truss';

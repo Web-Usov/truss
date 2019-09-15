@@ -1,0 +1,59 @@
+{
+  "_from": "react-stats",
+  "_id": "react-stats@0.0.5",
+  "_inBundle": false,
+  "_integrity": "sha1-f8eUJ5mtlDaaVLZ0BZ9kXfQKsA8=",
+  "_location": "/react-stats",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "react-stats",
+    "name": "react-stats",
+    "escapedName": "react-stats",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/react-stats/-/react-stats-0.0.5.tgz",
+  "_shasum": "7fc7942799ad94369a54b674059f645df40ab00f",
+  "_spec": "react-stats",
+  "_where": "C:\\Users\\User\\Documents\\DEVELOP\\farm-client",
+  "author": {
+    "name": "Sebastian Slomski",
+    "email": "me@sebslomski.com"
+  },
+  "bugs": {
+    "url": "https://github.com/sebslomski/react-stats/issues"
+  },
+  "bundleDependencies": false,
+  "deprecated": false,
+  "description": "FPS Stats in React",
+  "devDependencies": {
+    "browserify": "^6.3.3",
+    "envify": "^3.2.0",
+    "react": "^0.12.2",
+    "reactify": "^0.17.1"
+  },
+  "homepage": "https://github.com/sebslomski/react-stats#readme",
+  "keywords": [
+    "react",
+    "stats",
+    "react-component"
+  ],
+  "licence": "MIT",
+  "main": "index.js",
+  "name": "react-stats",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebslomski/react-stats.git"
+  },
+  "scripts": {
+    "example": "browserify --debug --transform reactify examples/main.jsx > examples/bundle.js"
+  },
+  "version": "0.0.5"
+}
